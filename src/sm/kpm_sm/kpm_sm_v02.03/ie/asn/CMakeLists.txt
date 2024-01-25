@@ -77,6 +77,8 @@ set(ASN_MODULE_SRCS
   ENB-UE-X2AP-ID.c
   ENB-UE-X2AP-ID-Extension.c
   EN-GNB-ID.c
+  ENUMERATED_aper.c
+  ENUMERATED.c
   E-UTRA-ARFCN.c
   EUTRACellIdentity.c
   EUTRA-CGI.c

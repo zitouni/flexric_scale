@@ -121,6 +121,7 @@ kpm_act_def_format_1_t gen_act_def_frmt_1(const char* action)
   return dst;
 }
 
+#if defined KPM_V2_03 || KPM_V3_00
 static
 test_info_lst_t filter_predicate(test_cond_type_e type, test_cond_e cond, int value)
 {
@@ -146,7 +147,6 @@ test_info_lst_t filter_predicate(test_cond_type_e type, test_cond_e cond, int va
   return dst;
 } 
 
-#if defined KPM_V2_03 || KPM_V3_00
 static
 kpm_act_def_format_4_t gen_act_def_frmt_4(const char* action)
 {
