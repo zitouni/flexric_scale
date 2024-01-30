@@ -53,7 +53,7 @@ typedef struct{
 } sm_kpm_agent_t;
 
 static
-subscribe_timer_t on_subscription_kpm_sm_ag(sm_agent_t const* sm_agent, const sm_subs_data_t* data)
+sm_ag_if_ans_subs_t on_subscription_kpm_sm_ag(sm_agent_t const* sm_agent, const sm_subs_data_t* data)
 { 
   assert(sm_agent != NULL);
   assert(data != NULL);
@@ -75,7 +75,10 @@ subscribe_timer_t on_subscription_kpm_sm_ag(sm_agent_t const* sm_agent, const sm
 
   timer.act_def = tmp; 
 
-  return timer;
+  sm_ag_if_ans_subs_t ans = {.type = PERIODIC_SUBSCRIPTION_FLRC} ;
+  ans.per.t = timer;
+
+  return ans;
 }
 
 static 

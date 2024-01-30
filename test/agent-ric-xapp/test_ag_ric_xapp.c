@@ -190,19 +190,28 @@ sm_ag_if_ans_t write_ctrl_rc(void const* ctrl)
 }
 
 static
+uint32_t sta_ric_id;
+
+static
+void free_aperiodic_subscription(uint32_t ric_req_id)
+{
+  assert(ric_req_id == sta_ric_id); 
+  (void)ric_req_id;
+}
+
+static
 void* emulate_rrc_msg(void* ptr)
 {
-  uint32_t* ric_id = (uint32_t*)ptr; 
+  (void)ptr;
   for(size_t i = 0; i < 1000; ++i){
     usleep(rand()%50);
     rc_ind_data_t* d = calloc(1, sizeof(rc_ind_data_t)); 
     assert(d != NULL && "Memory exhausted");
     *d = fill_rnd_rc_ind_data();
-    async_event_agent_api(*ric_id, d);
-    printf("Event for RIC Req ID %u generated\n", *ric_id);
+    async_event_agent_api(sta_ric_id, d);
+    printf("Event for RIC Req ID %u generated\n", sta_ric_id);
   }
 
-  free(ptr);
   return NULL;
 }
 
@@ -215,14 +224,14 @@ sm_ag_if_ans_t write_subs_rc(void const* data)
   assert(data != NULL);
   wr_rc_sub_data_t const* wr_rc = (wr_rc_sub_data_t const*)data; 
 
-  uint32_t* ptr = malloc(sizeof(uint32_t));
-  assert(ptr != NULL);
-  *ptr = wr_rc->ric_req_id;
+  sta_ric_id = wr_rc->ric_req_id;
 
-  int rc = pthread_create(&t, NULL, emulate_rrc_msg, ptr);
+  int rc = pthread_create(&t, NULL, emulate_rrc_msg, NULL);
   assert(rc == 0);
 
-  sm_ag_if_ans_t ans = {0};
+  sm_ag_if_ans_t ans = {.type = SUBS_OUTCOME_SM_AG_IF_ANS_V0};
+  ans.subs_out.type = APERIODIC_SUBSCRIPTION_FLRC;
+  ans.subs_out.aper.free_aper_subs = free_aperiodic_subscription;
   return ans;
 }
 

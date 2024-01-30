@@ -112,7 +112,10 @@ void check_subscription(sm_agent_t* ag, sm_ric_t* ric)
   sm_subs_data_t data = ric->proc.on_subscription(ric, &sub.kpm);
   defer({ free_sm_subs_data(&data); });
 
-  subscribe_timer_t t = ag->proc.on_subscription(ag, &data); 
+  sm_ag_if_ans_subs_t const subs = ag->proc.on_subscription(ag, &data); 
+  assert(subs.type == PERIODIC_SUBSCRIPTION_FLRC);
+  subscribe_timer_t t = subs.per.t;
+
   defer({ free_kpm_action_def(t.act_def); free(t.act_def); });
   assert(t.ms != -1 && t.ms == sub.kpm.ev_trg_def.kpm_ric_event_trigger_format_1.report_period_ms);
   assert(eq_kpm_action_def(&sub.kpm.ad[0], t.act_def) == true);
