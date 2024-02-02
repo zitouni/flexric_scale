@@ -45,9 +45,9 @@ elseif(SM_ENCODING_RC STREQUAL "ASN" )
   add_library(rc_sm SHARED ${SM_ENCODING_RC_SRC_ASN})
 
   target_include_directories(rc_sm PRIVATE "ie/asn")
-  target_compile_options(rc_sm  PRIVATE "-DASN_DISABLE_OER_SUPPORT")
-  target_compile_options(rc_sm  PRIVATE "-DASN_DISABLE_JER_SUPPORT")
-  target_compile_options(rc_sm PRIVATE -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden )
+  target_compile_options(rc_sm PRIVATE "-DASN_DISABLE_OER_SUPPORT")
+  target_compile_options(rc_sm PRIVATE "-DASN_DISABLE_JER_SUPPORT")
+  target_compile_options(rc_sm PRIVATE -fPIC -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden)
   target_link_libraries(rc_sm PRIVATE -lm)  
 
 

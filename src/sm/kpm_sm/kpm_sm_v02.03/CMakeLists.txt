@@ -49,20 +49,19 @@ if(SM_ENCODING_KPM STREQUAL "ASN")
   # Shared library
   add_library(kpm_sm SHARED ${SM_ENCODING_KPM_SRC_ASN})
 
-  target_link_libraries(kpm_sm PRIVATE -lm)
   target_include_directories(kpm_sm PRIVATE "ie/asn")
-  target_compile_options(kpm_sm PRIVATE "-DASN_DISABLE_OER_SUPPORT" -fPIC)
-  target_compile_options(kpm_sm PRIVATE "-DASN_DISABLE_JER_SUPPORT" -fPIC)
+  target_compile_options(kpm_sm PRIVATE "-DASN_DISABLE_JER_SUPPORT" "-DASN_DISABLE_OER_SUPPORT")
   target_compile_options(kpm_sm PRIVATE -Wno-missing-field-initializers -Wno-unused-parameter -fPIC -fvisibility=hidden)
+  target_link_libraries(kpm_sm PRIVATE -lm)
 
   # Static Library
   add_library(kpm_sm_static STATIC ${SM_ENCODING_KPM_SRC_ASN})
 
-  target_link_libraries(kpm_sm_static PRIVATE -lm)
   target_include_directories(kpm_sm_static PRIVATE "ie/asn")
   target_compile_options(kpm_sm_static PRIVATE "-DASN_DISABLE_OER_SUPPORT")
   target_compile_options(kpm_sm_static PRIVATE "-DASN_DISABLE_JER_SUPPORT")
   target_compile_options(kpm_sm_static PRIVATE -Wno-missing-field-initializers -Wno-unused-parameter)
+  target_link_libraries(kpm_sm_static PRIVATE -lm)
 
 elseif(SM_ENCODING_KPM STREQUAL "PLAIN")
   message(FATAL_ERROR "KPM SM PLAIN not implemented")

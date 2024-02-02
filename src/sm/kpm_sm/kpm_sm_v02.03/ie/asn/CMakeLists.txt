@@ -261,6 +261,6 @@ target_include_directories(e2sm_kpm_asn1_obj
 
 target_compile_options(e2sm_kpm_asn1_obj PUBLIC "-DASN_DISABLE_OER_SUPPORT")
 target_compile_options(e2sm_kpm_asn1_obj PUBLIC "-DASN_DISABLE_JER_SUPPORT")
-target_compile_options(e2sm_kpm_asn1_obj PRIVATE -Wno-missing-field-initializers -Wno-unused-parameter -fPIC)
+target_compile_options(e2sm_kpm_asn1_obj PRIVATE -Wno-missing-field-initializers -Wno-unused-parameter -fPIC -fvisibility=hidden)
 
 

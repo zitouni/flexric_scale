@@ -244,6 +244,9 @@ else()
   message(FATAL_ERROR "E2AP Unknown version selected")
 endif()
 
+target_compile_options(e2ap_ran_func_obj PRIVATE -fPIC -fvisibility=hidden)
+
+
 #######
 ## Service Models 
 #######
