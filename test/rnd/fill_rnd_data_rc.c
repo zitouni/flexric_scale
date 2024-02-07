@@ -1081,7 +1081,6 @@ e2sm_rc_action_def_t fill_rnd_rc_action_def(void)
   return dst;
 }
 
-static
 e2sm_rc_ind_hdr_frmt_1_t fill_rnd_rc_ind_hdr_frmt_1(void)
 {
   e2sm_rc_ind_hdr_frmt_1_t dst = {0};
@@ -1650,7 +1649,6 @@ seq_ue_id_t fill_rnd_seq_ue_id(void)
   return dst;
 }
 
-static
 e2sm_rc_ind_msg_frmt_2_t fill_rnd_ind_msg_frmt_2(void)
 {
   e2sm_rc_ind_msg_frmt_2_t dst = {0}; 

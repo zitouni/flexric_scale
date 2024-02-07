@@ -2525,7 +2525,7 @@ struct E2AP_PDU* e2ap_enc_e42_subscription_request_asn_pdu(const e42_ric_subscri
   setup_rid->id = ProtocolIE_ID_id_GlobalE2node_ID;
   setup_rid->criticality = Criticality_reject;
   setup_rid->value.present = E42RICsubscriptionRequest_IEs__value_PR_GlobalE2node_ID;
-  assert(e42_sr->id.type == ngran_gNB || e42_sr->id.type == ngran_gNB_CU || e42_sr->id.type == ngran_gNB_CUUP ||e42_sr->id.type == ngran_gNB_DU || e42_sr->id.type == ngran_eNB);
+  assert(e42_sr->id.type == ngran_gNB || e42_sr->id.type == ngran_gNB_CU || e42_sr->id.type == ngran_gNB_CUCP || e42_sr->id.type == ngran_gNB_CUUP ||e42_sr->id.type == ngran_gNB_DU || e42_sr->id.type == ngran_eNB);
   if (e42_sr->id.type != ngran_eNB) {
     setup_rid->value.choice.GlobalE2node_ID.present = GlobalE2node_ID_PR_gNB;
 
