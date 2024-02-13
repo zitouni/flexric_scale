@@ -59,11 +59,12 @@ set(XAPP_SRC
   $<TARGET_OBJECTS:pending_events_obj>
   $<TARGET_OBJECTS:e42_xapp_db_obj>
 
+  $<TARGET_OBJECTS:sm_common_ie_obj>
+  $<TARGET_OBJECTS:3gpp_derived_ie_obj>
+
   # KPM SM
   ${KPM_VERSION_SRC}
- 
   ../../test/rnd/fill_rnd_data_kpm.c
-  #$<TARGET_OBJECTS:e2sm_kpm_asn1_obj>
   $<TARGET_OBJECTS:kpm_ric_info_common_obj>
   $<TARGET_OBJECTS:kpm_ric_info_obj>
 
@@ -71,16 +72,7 @@ set(XAPP_SRC
   ../sm/rc_sm/ie/rc_data_ie.c
   ../../test/rnd/fill_rnd_data_rc.c
   $<TARGET_OBJECTS:e2sm_rc_ir_obj>
-  $<TARGET_OBJECTS:e2sm_common_ie_obj>
-  $<TARGET_OBJECTS:3gpp_common_ie_obj>
-  $<TARGET_OBJECTS:sm_common_ie_obj>
-  $<TARGET_OBJECTS:3gpp_derived_ie_obj>
-  $<TARGET_OBJECTS:3gpp_derived_ie_dec_asn_obj>
-  $<TARGET_OBJECTS:3gpp_derived_ie_enc_asn_obj>
-  $<TARGET_OBJECTS:sm_common_dec_asn_obj>
-  $<TARGET_OBJECTS:sm_common_enc_asn_obj>
-  $<TARGET_OBJECTS:sm_common_ie_obj>
-
+  
   ../util/ngran_types.c
   ../sm/mac_sm/ie/mac_data_ie.c
   ../sm/rlc_sm/ie/rlc_data_ie.c

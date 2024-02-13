@@ -8777,7 +8777,7 @@ asn_TYPE_descriptor_t asn_DEF_RICaction_ToBeSetup_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICaction_ToBeSetup_ItemIEs_1,
 	3,	/* Elements count */
@@ -8925,7 +8925,7 @@ asn_TYPE_descriptor_t asn_DEF_RICaction_Admitted_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICaction_Admitted_ItemIEs_5,
 	3,	/* Elements count */
@@ -9073,7 +9073,7 @@ asn_TYPE_descriptor_t asn_DEF_RICaction_NotAdmitted_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICaction_NotAdmitted_ItemIEs_9,
 	3,	/* Elements count */
@@ -9221,7 +9221,7 @@ asn_TYPE_descriptor_t asn_DEF_RICsubscription_withCause_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICsubscription_withCause_ItemIEs_13,
 	3,	/* Elements count */
@@ -9369,7 +9369,7 @@ asn_TYPE_descriptor_t asn_DEF_E2connectionUpdate_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2connectionUpdate_ItemIEs_17,
 	3,	/* Elements count */
@@ -9517,7 +9517,7 @@ asn_TYPE_descriptor_t asn_DEF_E2connectionUpdateRemove_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2connectionUpdateRemove_ItemIEs_21,
 	3,	/* Elements count */
@@ -9665,7 +9665,7 @@ asn_TYPE_descriptor_t asn_DEF_E2connectionSetupFailed_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2connectionSetupFailed_ItemIEs_25,
 	3,	/* Elements count */
@@ -9813,7 +9813,7 @@ asn_TYPE_descriptor_t asn_DEF_E2nodeComponentConfigAddition_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeComponentConfigAddition_ItemIEs_29,
 	3,	/* Elements count */
@@ -9961,7 +9961,7 @@ asn_TYPE_descriptor_t asn_DEF_E2nodeComponentConfigUpdate_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeComponentConfigUpdate_ItemIEs_33,
 	3,	/* Elements count */
@@ -10109,7 +10109,7 @@ asn_TYPE_descriptor_t asn_DEF_E2nodeComponentConfigRemoval_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeComponentConfigRemoval_ItemIEs_37,
 	3,	/* Elements count */
@@ -10257,7 +10257,7 @@ asn_TYPE_descriptor_t asn_DEF_E2nodeTNLassociationRemoval_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeTNLassociationRemoval_ItemIEs_41,
 	3,	/* Elements count */
@@ -10405,7 +10405,7 @@ asn_TYPE_descriptor_t asn_DEF_E2nodeComponentConfigAdditionAck_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeComponentConfigAdditionAck_ItemIEs_45,
 	3,	/* Elements count */
@@ -10553,7 +10553,7 @@ asn_TYPE_descriptor_t asn_DEF_E2nodeComponentConfigUpdateAck_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeComponentConfigUpdateAck_ItemIEs_49,
 	3,	/* Elements count */
@@ -10701,7 +10701,7 @@ asn_TYPE_descriptor_t asn_DEF_E2nodeComponentConfigRemovalAck_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeComponentConfigRemovalAck_ItemIEs_53,
 	3,	/* Elements count */
@@ -10849,7 +10849,7 @@ asn_TYPE_descriptor_t asn_DEF_RANfunction_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RANfunction_ItemIEs_57,
 	3,	/* Elements count */
@@ -10997,7 +10997,7 @@ asn_TYPE_descriptor_t asn_DEF_RANfunctionID_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RANfunctionID_ItemIEs_61,
 	3,	/* Elements count */
@@ -11145,7 +11145,7 @@ asn_TYPE_descriptor_t asn_DEF_RANfunctionIDcause_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RANfunctionIDcause_ItemIEs_65,
 	3,	/* Elements count */
@@ -11332,7 +11332,7 @@ asn_TYPE_descriptor_t asn_DEF_RICsubscriptionRequest_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICsubscriptionRequest_IEs_69,
 	3,	/* Elements count */
@@ -11537,7 +11537,7 @@ asn_TYPE_descriptor_t asn_DEF_RICsubscriptionResponse_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICsubscriptionResponse_IEs_73,
 	3,	/* Elements count */
@@ -11747,7 +11747,7 @@ asn_TYPE_descriptor_t asn_DEF_RICsubscriptionFailure_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICsubscriptionFailure_IEs_77,
 	3,	/* Elements count */
@@ -11916,7 +11916,7 @@ asn_TYPE_descriptor_t asn_DEF_RICsubscriptionDeleteRequest_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICsubscriptionDeleteRequest_IEs_81,
 	3,	/* Elements count */
@@ -12142,7 +12142,7 @@ asn_TYPE_descriptor_t asn_DEF_E42RICsubscriptionRequest_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E42RICsubscriptionRequest_IEs_85,
 	3,	/* Elements count */
@@ -12329,7 +12329,7 @@ asn_TYPE_descriptor_t asn_DEF_E42RICsubscriptionDeleteRequest_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E42RICsubscriptionDeleteRequest_IEs_89,
 	3,	/* Elements count */
@@ -12498,7 +12498,7 @@ asn_TYPE_descriptor_t asn_DEF_RICsubscriptionDeleteResponse_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICsubscriptionDeleteResponse_IEs_93,
 	3,	/* Elements count */
@@ -12708,7 +12708,7 @@ asn_TYPE_descriptor_t asn_DEF_RICsubscriptionDeleteFailure_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICsubscriptionDeleteFailure_IEs_97,
 	3,	/* Elements count */
@@ -12856,7 +12856,7 @@ asn_TYPE_descriptor_t asn_DEF_RICsubscriptionDeleteRequired_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICsubscriptionDeleteRequired_IEs_101,
 	3,	/* Elements count */
@@ -13133,7 +13133,7 @@ asn_TYPE_descriptor_t asn_DEF_RICindication_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICindication_IEs_105,
 	3,	/* Elements count */
@@ -13374,7 +13374,7 @@ asn_TYPE_descriptor_t asn_DEF_RICcontrolRequest_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICcontrolRequest_IEs_109,
 	3,	/* Elements count */
@@ -13654,7 +13654,7 @@ asn_TYPE_descriptor_t asn_DEF_E42RICcontrolRequest_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E42RICcontrolRequest_IEs_113,
 	3,	/* Elements count */
@@ -13859,7 +13859,7 @@ asn_TYPE_descriptor_t asn_DEF_RICcontrolAcknowledge_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICcontrolAcknowledge_IEs_117,
 	3,	/* Elements count */
@@ -14105,7 +14105,7 @@ asn_TYPE_descriptor_t asn_DEF_RICcontrolFailure_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICcontrolFailure_IEs_121,
 	3,	/* Elements count */
@@ -14333,7 +14333,7 @@ asn_TYPE_descriptor_t asn_DEF_ErrorIndication_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_ErrorIndication_IEs_125,
 	3,	/* Elements count */
@@ -14541,7 +14541,7 @@ asn_TYPE_descriptor_t asn_DEF_E2setupRequestIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2setupRequestIEs_129,
 	3,	/* Elements count */
@@ -14689,7 +14689,7 @@ asn_TYPE_descriptor_t asn_DEF_E42setupRequestIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E42setupRequestIEs_133,
 	3,	/* Elements count */
@@ -14909,7 +14909,7 @@ asn_TYPE_descriptor_t asn_DEF_E2setupResponseIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2setupResponseIEs_137,
 	3,	/* Elements count */
@@ -15075,7 +15075,7 @@ asn_TYPE_descriptor_t asn_DEF_E42setupResponseIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E42setupResponseIEs_141,
 	3,	/* Elements count */
@@ -15303,7 +15303,7 @@ asn_TYPE_descriptor_t asn_DEF_E2setupFailureIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2setupFailureIEs_145,
 	3,	/* Elements count */
@@ -15505,7 +15505,7 @@ asn_TYPE_descriptor_t asn_DEF_E2connectionUpdate_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2connectionUpdate_IEs_149,
 	3,	/* Elements count */
@@ -15689,7 +15689,7 @@ asn_TYPE_descriptor_t asn_DEF_E2connectionUpdateAck_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2connectionUpdateAck_IEs_153,
 	3,	/* Elements count */
@@ -15899,7 +15899,7 @@ asn_TYPE_descriptor_t asn_DEF_E2connectionUpdateFailure_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2connectionUpdateFailure_IEs_157,
 	3,	/* Elements count */
@@ -16143,7 +16143,7 @@ asn_TYPE_descriptor_t asn_DEF_E2nodeConfigurationUpdate_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeConfigurationUpdate_IEs_161,
 	3,	/* Elements count */
@@ -16345,7 +16345,7 @@ asn_TYPE_descriptor_t asn_DEF_E2nodeConfigurationUpdateAcknowledge_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeConfigurationUpdateAcknowledge_IEs_165,
 	3,	/* Elements count */
@@ -16555,7 +16555,7 @@ asn_TYPE_descriptor_t asn_DEF_E2nodeConfigurationUpdateFailure_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeConfigurationUpdateFailure_IEs_169,
 	3,	/* Elements count */
@@ -16726,7 +16726,7 @@ asn_TYPE_descriptor_t asn_DEF_ResetRequestIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_ResetRequestIEs_173,
 	3,	/* Elements count */
@@ -16892,7 +16892,7 @@ asn_TYPE_descriptor_t asn_DEF_ResetResponseIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_ResetResponseIEs_177,
 	3,	/* Elements count */
@@ -17094,7 +17094,7 @@ asn_TYPE_descriptor_t asn_DEF_RICserviceUpdate_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICserviceUpdate_IEs_181,
 	3,	/* Elements count */
@@ -17284,7 +17284,7 @@ asn_TYPE_descriptor_t asn_DEF_E2nodeConnected_ItemIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeConnected_ItemIEs_185,
 	3,	/* Elements count */
@@ -17468,7 +17468,7 @@ asn_TYPE_descriptor_t asn_DEF_RICserviceUpdateAcknowledge_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICserviceUpdateAcknowledge_IEs_189,
 	3,	/* Elements count */
@@ -17678,7 +17678,7 @@ asn_TYPE_descriptor_t asn_DEF_RICserviceUpdateFailure_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICserviceUpdateFailure_IEs_193,
 	3,	/* Elements count */
@@ -17844,7 +17844,7 @@ asn_TYPE_descriptor_t asn_DEF_RICserviceQuery_IEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICserviceQuery_IEs_197,
 	3,	/* Elements count */
@@ -17992,7 +17992,7 @@ asn_TYPE_descriptor_t asn_DEF_E2RemovalRequestIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2RemovalRequestIEs_201,
 	3,	/* Elements count */
@@ -18158,7 +18158,7 @@ asn_TYPE_descriptor_t asn_DEF_E2RemovalResponseIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2RemovalResponseIEs_205,
 	3,	/* Elements count */
@@ -18350,7 +18350,7 @@ asn_TYPE_descriptor_t asn_DEF_E2RemovalFailureIEs = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2RemovalFailureIEs_209,
 	3,	/* Elements count */

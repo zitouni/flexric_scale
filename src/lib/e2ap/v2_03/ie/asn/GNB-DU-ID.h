@@ -26,7 +26,7 @@ extern asn_per_constraints_t asn_PER_type_GNB_DU_ID_constr_1;
 extern asn_TYPE_descriptor_t asn_DEF_GNB_DU_ID;
 asn_struct_free_f GNB_DU_ID_free;
 asn_struct_print_f GNB_DU_ID_print;
-asn_constr_check_f GNB_DU_ID_constraint;
+asn_constr_check_f GNB_DU_ID_constraint_e2ap_v2_03;
 ber_type_decoder_f GNB_DU_ID_decode_ber;
 der_type_encoder_f GNB_DU_ID_encode_der;
 xer_type_decoder_f GNB_DU_ID_decode_xer;

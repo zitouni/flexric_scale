@@ -8,7 +8,7 @@
 #include "GNB-CU-UP-ID.h"
 
 int
-GNB_CU_UP_ID_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+GNB_CU_UP_ID_constraint_e2ap_v2_03(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const INTEGER_t *st = (const INTEGER_t *)sptr;
 	long value;
@@ -20,7 +20,7 @@ GNB_CU_UP_ID_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
-	if(asn_INTEGER2long(st, &value)) {
+	if(asn_INTEGER2long_e2ap_v2_03(st, &value)) {
 		ASN__CTFAIL(app_key, td, sptr,
 			"%s: value too large (%s:%d)",
 			td->name, __FILE__, __LINE__);
@@ -69,7 +69,7 @@ asn_TYPE_descriptor_t asn_DEF_GNB_CU_UP_ID = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		&asn_PER_type_GNB_CU_UP_ID_constr_1,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		GNB_CU_UP_ID_constraint
+		GNB_CU_UP_ID_constraint_e2ap_v2_03
 	},
 	0, 0,	/* No members */
 	0	/* No specifics */

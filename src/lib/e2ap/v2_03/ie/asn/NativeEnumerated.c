@@ -19,23 +19,23 @@ static const ber_tlv_tag_t asn_DEF_NativeEnumerated_tags[] = {
     (ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
 asn_TYPE_operation_t asn_OP_NativeEnumerated = {
-    NativeInteger_free,
+    NativeInteger_free_e2ap_v2_03,
 #if !defined(ASN_DISABLE_PRINT_SUPPORT)
-    NativeInteger_print,
+    NativeInteger_print_e2ap_v2_03,
 #else
     0,
 #endif  /* !defined(ASN_DISABLE_PRINT_SUPPORT) */
-    NativeInteger_compare,
+    NativeInteger_compare_e2ap_v2_03,
 #if !defined(ASN_DISABLE_BER_SUPPORT)
-    NativeInteger_decode_ber,
-    NativeInteger_encode_der,
+    NativeInteger_decode_ber_e2ap_v2_03,
+    NativeInteger_encode_der_e2ap_v2_03,
 #else
     0,
     0,
 #endif  /* !defined(ASN_DISABLE_BER_SUPPORT) */
 #if !defined(ASN_DISABLE_XER_SUPPORT)
-    NativeInteger_decode_xer,
-    NativeEnumerated_encode_xer,
+    NativeInteger_decode_xer_e2ap_v2_03,
+    NativeEnumerated_encode_xer_e2ap_v2_03,
 #else
     0,
     0,
@@ -53,15 +53,15 @@ asn_TYPE_operation_t asn_OP_NativeEnumerated = {
     0,
 #endif  /* !defined(ASN_DISABLE_OER_SUPPORT) */
 #if !defined(ASN_DISABLE_UPER_SUPPORT)
-    NativeEnumerated_decode_uper,
-    NativeEnumerated_encode_uper,
+    NativeEnumerated_decode_uper_e2ap_v2_03,
+    NativeEnumerated_encode_uper_e2ap_v2_03,
 #else
     0,
     0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) */
 #if !defined(ASN_DISABLE_APER_SUPPORT)
-    NativeEnumerated_decode_aper,
-    NativeEnumerated_encode_aper,
+    NativeEnumerated_decode_aper_e2ap_v2_03,
+    NativeEnumerated_encode_aper_e2ap_v2_03,
 #else
     0,
     0,
@@ -88,7 +88,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
         0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-        asn_generic_no_constraint
+        asn_generic_no_constraint_e2ap_v2_03
     },
     0, 0,  /* No members */
     0  /* No specifics */
@@ -96,7 +96,7 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 int
-NativeEnumerated__compar_value2enum(const void *ap, const void *bp) {
+NativeEnumerated__compar_value2enum_e2ap_v2_03(const void *ap, const void *bp) {
     const asn_INTEGER_enum_map_t *a = ap;
     const asn_INTEGER_enum_map_t *b = bp;
     if(a->nat_value == b->nat_value)

@@ -26,7 +26,7 @@ extern asn_per_constraints_t asn_PER_type_AMFName_constr_1;
 extern asn_TYPE_descriptor_t asn_DEF_AMFName;
 asn_struct_free_f AMFName_free;
 asn_struct_print_f AMFName_print;
-asn_constr_check_f AMFName_constraint;
+asn_constr_check_f AMFName_constraint_e2ap_v2_03;
 ber_type_decoder_f AMFName_decode_ber;
 der_type_encoder_f AMFName_encode_der;
 xer_type_decoder_f AMFName_decode_xer;

@@ -75,7 +75,7 @@ asn_TYPE_descriptor_t asn_DEF_RANfunctionIDcause_Item = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RANfunctionIDcause_Item_1,
 	2,	/* Elements count */

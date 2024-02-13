@@ -8,7 +8,7 @@
 #include "TransactionID.h"
 
 int
-TransactionID_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+TransactionID_constraint_e2ap_v2_03(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	long value;
 	
@@ -63,7 +63,7 @@ asn_TYPE_descriptor_t asn_DEF_TransactionID = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		&asn_PER_type_TransactionID_constr_1,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		TransactionID_constraint
+		TransactionID_constraint_e2ap_v2_03
 	},
 	0, 0,	/* No members */
 	0	/* No specifics */

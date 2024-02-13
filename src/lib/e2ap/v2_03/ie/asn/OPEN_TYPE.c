@@ -42,14 +42,14 @@ asn_TYPE_operation_t asn_OP_OPEN_TYPE = {
 #endif  /* !defined(ASN_DISABLE_OER_SUPPORT) */
 #if !defined(ASN_DISABLE_UPER_SUPPORT)
     OPEN_TYPE_decode_uper,
-    OPEN_TYPE_encode_uper,
+    OPEN_TYPE_encode_uper_e2ap_v2_03,
 #else
     0,
     0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) */
 #if !defined(ASN_DISABLE_APER_SUPPORT)
     OPEN_TYPE_decode_aper,
-    OPEN_TYPE_encode_aper,
+    OPEN_TYPE_encode_aper_e2ap_v2_03,
 #else
     0,
     0,

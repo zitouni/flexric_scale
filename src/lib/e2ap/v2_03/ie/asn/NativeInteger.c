@@ -20,23 +20,23 @@ static const ber_tlv_tag_t asn_DEF_NativeInteger_tags[] = {
     (ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_operation_t asn_OP_NativeInteger = {
-    NativeInteger_free,
+    NativeInteger_free_e2ap_v2_03,
 #if !defined(ASN_DISABLE_PRINT_SUPPORT)
-    NativeInteger_print,
+    NativeInteger_print_e2ap_v2_03,
 #else
     0,
 #endif  /* !defined(ASN_DISABLE_PRINT_SUPPORT) */
-    NativeInteger_compare,
+    NativeInteger_compare_e2ap_v2_03,
 #if !defined(ASN_DISABLE_BER_SUPPORT)
-    NativeInteger_decode_ber,
-    NativeInteger_encode_der,
+    NativeInteger_decode_ber_e2ap_v2_03,
+    NativeInteger_encode_der_e2ap_v2_03,
 #else
     0,
     0,
 #endif  /* !defined(ASN_DISABLE_BER_SUPPORT) */
 #if !defined(ASN_DISABLE_XER_SUPPORT)
-    NativeInteger_decode_xer,
-    NativeInteger_encode_xer,
+    NativeInteger_decode_xer_e2ap_v2_03,
+    NativeInteger_encode_xer_e2ap_v2_03,
 #else
     0,
     0,
@@ -54,21 +54,21 @@ asn_TYPE_operation_t asn_OP_NativeInteger = {
     0,
 #endif  /* !defined(ASN_DISABLE_OER_SUPPORT) */
 #if !defined(ASN_DISABLE_UPER_SUPPORT)
-    NativeInteger_decode_uper,  /* Unaligned PER decoder */
-    NativeInteger_encode_uper,  /* Unaligned PER encoder */
+    NativeInteger_decode_uper_e2ap_v2_03,  /* Unaligned PER decoder */
+    NativeInteger_encode_uper_e2ap_v2_03,  /* Unaligned PER encoder */
 #else
     0,
     0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) */
 #if !defined(ASN_DISABLE_APER_SUPPORT)
-    NativeInteger_decode_aper,  /* Aligned PER decoder */
-    NativeInteger_encode_aper,  /* Aligned PER encoder */
+    NativeInteger_decode_aper_e2ap_v2_03,  /* Aligned PER decoder */
+    NativeInteger_encode_aper_e2ap_v2_03,  /* Aligned PER encoder */
 #else
     0,
     0,
 #endif  /* !defined(ASN_DISABLE_APER_SUPPORT) */
 #if !defined(ASN_DISABLE_RFILL_SUPPORT)
-    NativeInteger_random_fill,
+    NativeInteger_random_fill_e2ap_v2_03,
 #else
     0,
 #endif  /* !defined(ASN_DISABLE_RFILL_SUPPORT) */
@@ -89,14 +89,14 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
         0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-        asn_generic_no_constraint
+        asn_generic_no_constraint_e2ap_v2_03
     },
     0, 0,  /* No members */
     0  /* No specifics */
 };
 
 void
-NativeInteger_free(const asn_TYPE_descriptor_t *td, void *ptr,
+NativeInteger_free_e2ap_v2_03(const asn_TYPE_descriptor_t *td, void *ptr,
                    enum asn_struct_free_method method) {
     if(!td || !ptr)
 		return;
@@ -117,7 +117,7 @@ NativeInteger_free(const asn_TYPE_descriptor_t *td, void *ptr,
 }
 
 int
-NativeInteger_compare(const asn_TYPE_descriptor_t *td, const void *aptr, const void *bptr) {
+NativeInteger_compare_e2ap_v2_03(const asn_TYPE_descriptor_t *td, const void *aptr, const void *bptr) {
     (void)td;
 
     if(aptr && bptr) {

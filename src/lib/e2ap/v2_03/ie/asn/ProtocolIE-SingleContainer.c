@@ -95,7 +95,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P0 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICaction_ToBeSetup_ItemIEs_1,
 	3,	/* Elements count */
@@ -122,7 +122,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P1 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICaction_Admitted_ItemIEs_5,
 	3,	/* Elements count */
@@ -149,7 +149,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P2 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICaction_NotAdmitted_ItemIEs_9,
 	3,	/* Elements count */
@@ -176,7 +176,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P3 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RICsubscription_withCause_ItemIEs_13,
 	3,	/* Elements count */
@@ -203,7 +203,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P4 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2connectionUpdate_ItemIEs_17,
 	3,	/* Elements count */
@@ -230,7 +230,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P5 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2connectionUpdateRemove_ItemIEs_21,
 	3,	/* Elements count */
@@ -257,7 +257,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P6 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2connectionSetupFailed_ItemIEs_25,
 	3,	/* Elements count */
@@ -284,7 +284,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P7 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeComponentConfigAddition_ItemIEs_29,
 	3,	/* Elements count */
@@ -311,7 +311,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P8 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeComponentConfigUpdate_ItemIEs_33,
 	3,	/* Elements count */
@@ -338,7 +338,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P9 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeComponentConfigRemoval_ItemIEs_37,
 	3,	/* Elements count */
@@ -365,7 +365,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P10 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeTNLassociationRemoval_ItemIEs_41,
 	3,	/* Elements count */
@@ -392,7 +392,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P11 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeComponentConfigAdditionAck_ItemIEs_45,
 	3,	/* Elements count */
@@ -419,7 +419,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P12 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeComponentConfigUpdateAck_ItemIEs_49,
 	3,	/* Elements count */
@@ -446,7 +446,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P13 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeComponentConfigRemovalAck_ItemIEs_53,
 	3,	/* Elements count */
@@ -473,7 +473,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P14 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RANfunction_ItemIEs_57,
 	3,	/* Elements count */
@@ -500,7 +500,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P15 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RANfunctionID_ItemIEs_61,
 	3,	/* Elements count */
@@ -527,7 +527,7 @@ asn_TYPE_descriptor_t asn_DEF_ProtocolIE_SingleContainer_2151P16 = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		SEQUENCE_constraint
+		SEQUENCE_constraint_e2ap_v2_03
 	},
 	asn_MBR_RANfunctionIDcause_ItemIEs_65,
 	3,	/* Elements count */

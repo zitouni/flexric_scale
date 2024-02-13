@@ -267,7 +267,7 @@ asn_TYPE_descriptor_t asn_DEF_ENB_ID = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		&asn_PER_type_ENB_ID_constr_1,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		CHOICE_constraint
+		CHOICE_constraint_e2ap_v2_03
 	},
 	asn_MBR_ENB_ID_1,
 	4,	/* Elements count */

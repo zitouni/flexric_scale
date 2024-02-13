@@ -40,7 +40,7 @@ static int check_permitted_alphabet_1(const void *sptr) {
 }
 
 int
-RANfunctionOID_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+RANfunctionOID_constraint_e2ap_v2_03(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const PrintableString_t *st = (const PrintableString_t *)sptr;
 	size_t size;
@@ -108,7 +108,7 @@ asn_TYPE_descriptor_t asn_DEF_RANfunctionOID = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		&asn_PER_type_RANfunctionOID_constr_1,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		RANfunctionOID_constraint
+		RANfunctionOID_constraint_e2ap_v2_03
 	},
 	0, 0,	/* No members */
 	0	/* No specifics */

@@ -8,7 +8,7 @@
 #include "PLMN-Identity.h"
 
 int
-PLMN_Identity_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+PLMN_Identity_constraint_e2ap_v2_03(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
 	size_t size;
@@ -64,7 +64,7 @@ asn_TYPE_descriptor_t asn_DEF_PLMN_Identity = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		&asn_PER_type_PLMN_Identity_constr_1,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		PLMN_Identity_constraint
+		PLMN_Identity_constraint_e2ap_v2_03
 	},
 	0, 0,	/* No members */
 	&asn_SPC_OCTET_STRING_specs	/* Additional specs */

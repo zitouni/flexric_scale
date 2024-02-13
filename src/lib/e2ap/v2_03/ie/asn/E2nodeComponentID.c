@@ -176,7 +176,7 @@ asn_TYPE_descriptor_t asn_DEF_E2nodeComponentID = {
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
 		&asn_PER_type_E2nodeComponentID_constr_1,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-		CHOICE_constraint
+		CHOICE_constraint_e2ap_v2_03
 	},
 	asn_MBR_E2nodeComponentID_1,
 	7,	/* Elements count */
