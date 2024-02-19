@@ -34,7 +34,7 @@ asn_TYPE_member_t asn_MBR_RICactions_ToBeSetup_List_1[] = {
 		""
 		},
 };
-static const ber_tlv_tag_t asn_DEF_RICactions_ToBeSetup_List_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_RICactions_ToBeSetup_List_tags_1_e2ap_v2_03[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 asn_SET_OF_specifics_t asn_SPC_RICactions_ToBeSetup_List_specs_1 = {
@@ -46,12 +46,12 @@ asn_TYPE_descriptor_t asn_DEF_RICactions_ToBeSetup_List = {
 	"RICactions-ToBeSetup-List",
 	"RICactions-ToBeSetup-List",
 	&asn_OP_SEQUENCE_OF,
-	asn_DEF_RICactions_ToBeSetup_List_tags_1,
-	sizeof(asn_DEF_RICactions_ToBeSetup_List_tags_1)
-		/sizeof(asn_DEF_RICactions_ToBeSetup_List_tags_1[0]), /* 1 */
-	asn_DEF_RICactions_ToBeSetup_List_tags_1,	/* Same as above */
-	sizeof(asn_DEF_RICactions_ToBeSetup_List_tags_1)
-		/sizeof(asn_DEF_RICactions_ToBeSetup_List_tags_1[0]), /* 1 */
+	asn_DEF_RICactions_ToBeSetup_List_tags_1_e2ap_v2_03,
+	sizeof(asn_DEF_RICactions_ToBeSetup_List_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_RICactions_ToBeSetup_List_tags_1_e2ap_v2_03[0]), /* 1 */
+	asn_DEF_RICactions_ToBeSetup_List_tags_1_e2ap_v2_03,	/* Same as above */
+	sizeof(asn_DEF_RICactions_ToBeSetup_List_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_RICactions_ToBeSetup_List_tags_1_e2ap_v2_03[0]), /* 1 */
 	{
 #if !defined(ASN_DISABLE_OER_SUPPORT)
 		0,

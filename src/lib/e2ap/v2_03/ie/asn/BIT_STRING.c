@@ -8,7 +8,7 @@
 /*
  * BIT STRING basic type description.
  */
-static const ber_tlv_tag_t asn_DEF_BIT_STRING_tags[] = {
+static const ber_tlv_tag_t asn_DEF_BIT_STRING_tags_e2ap_v2_03[] = {
     (ASN_TAG_CLASS_UNIVERSAL | (3 << 2))
 };
 asn_OCTET_STRING_specifics_t asn_SPC_BIT_STRING_specs = {
@@ -75,12 +75,12 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
     "BIT STRING",
     "BIT_STRING",
     &asn_OP_BIT_STRING,
-    asn_DEF_BIT_STRING_tags,
-    sizeof(asn_DEF_BIT_STRING_tags)
-      / sizeof(asn_DEF_BIT_STRING_tags[0]),
-    asn_DEF_BIT_STRING_tags,  /* Same as above */
-    sizeof(asn_DEF_BIT_STRING_tags)
-      / sizeof(asn_DEF_BIT_STRING_tags[0]),
+    asn_DEF_BIT_STRING_tags_e2ap_v2_03,
+    sizeof(asn_DEF_BIT_STRING_tags_e2ap_v2_03)
+      / sizeof(asn_DEF_BIT_STRING_tags_e2ap_v2_03[0]),
+    asn_DEF_BIT_STRING_tags_e2ap_v2_03,  /* Same as above */
+    sizeof(asn_DEF_BIT_STRING_tags_e2ap_v2_03)
+      / sizeof(asn_DEF_BIT_STRING_tags_e2ap_v2_03[0]),
     {
 #if !defined(ASN_DISABLE_OER_SUPPORT)
         0,

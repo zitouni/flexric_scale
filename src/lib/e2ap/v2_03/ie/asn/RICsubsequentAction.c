@@ -43,17 +43,17 @@ asn_TYPE_member_t asn_MBR_RICsubsequentAction_1[] = {
 		"ricTimeToWait"
 		},
 };
-static const ber_tlv_tag_t asn_DEF_RICsubsequentAction_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_RICsubsequentAction_tags_1_e2ap_v2_03[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static const asn_TYPE_tag2member_t asn_MAP_RICsubsequentAction_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_RICsubsequentAction_tag2el_1_e2ap_v2_03[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* ricSubsequentActionType */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* ricTimeToWait */
 };
 asn_SEQUENCE_specifics_t asn_SPC_RICsubsequentAction_specs_1 = {
 	sizeof(struct RICsubsequentAction),
 	offsetof(struct RICsubsequentAction, _asn_ctx),
-	asn_MAP_RICsubsequentAction_tag2el_1,
+	asn_MAP_RICsubsequentAction_tag2el_1_e2ap_v2_03,
 	2,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	2,	/* First extension addition */
@@ -62,12 +62,12 @@ asn_TYPE_descriptor_t asn_DEF_RICsubsequentAction = {
 	"RICsubsequentAction",
 	"RICsubsequentAction",
 	&asn_OP_SEQUENCE,
-	asn_DEF_RICsubsequentAction_tags_1,
-	sizeof(asn_DEF_RICsubsequentAction_tags_1)
-		/sizeof(asn_DEF_RICsubsequentAction_tags_1[0]), /* 1 */
-	asn_DEF_RICsubsequentAction_tags_1,	/* Same as above */
-	sizeof(asn_DEF_RICsubsequentAction_tags_1)
-		/sizeof(asn_DEF_RICsubsequentAction_tags_1[0]), /* 1 */
+	asn_DEF_RICsubsequentAction_tags_1_e2ap_v2_03,
+	sizeof(asn_DEF_RICsubsequentAction_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_RICsubsequentAction_tags_1_e2ap_v2_03[0]), /* 1 */
+	asn_DEF_RICsubsequentAction_tags_1_e2ap_v2_03,	/* Same as above */
+	sizeof(asn_DEF_RICsubsequentAction_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_RICsubsequentAction_tags_1_e2ap_v2_03[0]), /* 1 */
 	{
 #if !defined(ASN_DISABLE_OER_SUPPORT)
 		0,

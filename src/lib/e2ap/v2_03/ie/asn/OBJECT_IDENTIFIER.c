@@ -13,7 +13,7 @@
 /*
  * OBJECT IDENTIFIER basic type description.
  */
-static const ber_tlv_tag_t asn_DEF_OBJECT_IDENTIFIER_tags[] = {
+static const ber_tlv_tag_t asn_DEF_OBJECT_IDENTIFIER_tags_e2ap_v2_03[] = {
     (ASN_TAG_CLASS_UNIVERSAL | (6 << 2))
 };
 asn_TYPE_operation_t asn_OP_OBJECT_IDENTIFIER = {
@@ -75,12 +75,12 @@ asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER = {
     "OBJECT IDENTIFIER",
     "OBJECT_IDENTIFIER",
     &asn_OP_OBJECT_IDENTIFIER,
-    asn_DEF_OBJECT_IDENTIFIER_tags,
-    sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
-        / sizeof(asn_DEF_OBJECT_IDENTIFIER_tags[0]),
-    asn_DEF_OBJECT_IDENTIFIER_tags,  /* Same as above */
-    sizeof(asn_DEF_OBJECT_IDENTIFIER_tags)
-        / sizeof(asn_DEF_OBJECT_IDENTIFIER_tags[0]),
+    asn_DEF_OBJECT_IDENTIFIER_tags_e2ap_v2_03,
+    sizeof(asn_DEF_OBJECT_IDENTIFIER_tags_e2ap_v2_03)
+        / sizeof(asn_DEF_OBJECT_IDENTIFIER_tags_e2ap_v2_03[0]),
+    asn_DEF_OBJECT_IDENTIFIER_tags_e2ap_v2_03,  /* Same as above */
+    sizeof(asn_DEF_OBJECT_IDENTIFIER_tags_e2ap_v2_03)
+        / sizeof(asn_DEF_OBJECT_IDENTIFIER_tags_e2ap_v2_03[0]),
     {
 #if !defined(ASN_DISABLE_OER_SUPPORT)
         0,

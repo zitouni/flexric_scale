@@ -24,7 +24,7 @@ static const asn_INTEGER_enum_map_t asn_MAP_RICactionType_value2enum_1[] = {
 	{ 2,	6,	"policy" }
 	/* This list is extensible */
 };
-static const unsigned int asn_MAP_RICactionType_enum2value_1[] = {
+static const unsigned int asn_MAP_RICactionType_enum2value_1_e2ap_v2_03[] = {
 	1,	/* insert(1) */
 	2,	/* policy(2) */
 	0	/* report(0) */
@@ -32,26 +32,26 @@ static const unsigned int asn_MAP_RICactionType_enum2value_1[] = {
 };
 const asn_INTEGER_specifics_t asn_SPC_RICactionType_specs_1 = {
 	asn_MAP_RICactionType_value2enum_1,	/* "tag" => N; sorted by tag */
-	asn_MAP_RICactionType_enum2value_1,	/* N => "tag"; sorted by N */
+	asn_MAP_RICactionType_enum2value_1_e2ap_v2_03,	/* N => "tag"; sorted by N */
 	3,	/* Number of elements in the maps */
 	4,	/* Extensions before this member */
 	1,	/* Strict enumeration */
 	0,	/* Native long size */
 	0
 };
-static const ber_tlv_tag_t asn_DEF_RICactionType_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_RICactionType_tags_1_e2ap_v2_03[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_RICactionType = {
 	"RICactionType",
 	"RICactionType",
 	&asn_OP_NativeEnumerated,
-	asn_DEF_RICactionType_tags_1,
-	sizeof(asn_DEF_RICactionType_tags_1)
-		/sizeof(asn_DEF_RICactionType_tags_1[0]), /* 1 */
-	asn_DEF_RICactionType_tags_1,	/* Same as above */
-	sizeof(asn_DEF_RICactionType_tags_1)
-		/sizeof(asn_DEF_RICactionType_tags_1[0]), /* 1 */
+	asn_DEF_RICactionType_tags_1_e2ap_v2_03,
+	sizeof(asn_DEF_RICactionType_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_RICactionType_tags_1_e2ap_v2_03[0]), /* 1 */
+	asn_DEF_RICactionType_tags_1_e2ap_v2_03,	/* Same as above */
+	sizeof(asn_DEF_RICactionType_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_RICactionType_tags_1_e2ap_v2_03[0]), /* 1 */
 	{
 #if !defined(ASN_DISABLE_OER_SUPPORT)
 		0,

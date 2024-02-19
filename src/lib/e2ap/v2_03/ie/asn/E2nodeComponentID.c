@@ -142,7 +142,7 @@ asn_TYPE_member_t asn_MBR_E2nodeComponentID_1[] = {
 		"e2nodeComponentInterfaceTypeX2"
 		},
 };
-static const asn_TYPE_tag2member_t asn_MAP_E2nodeComponentID_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_E2nodeComponentID_tag2el_1_e2ap_v2_03[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* e2nodeComponentInterfaceTypeNG */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* e2nodeComponentInterfaceTypeXn */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* e2nodeComponentInterfaceTypeE1 */
@@ -156,7 +156,7 @@ asn_CHOICE_specifics_t asn_SPC_E2nodeComponentID_specs_1 = {
 	offsetof(struct E2nodeComponentID, _asn_ctx),
 	offsetof(struct E2nodeComponentID, present),
 	sizeof(((struct E2nodeComponentID *)0)->present),
-	asn_MAP_E2nodeComponentID_tag2el_1,
+	asn_MAP_E2nodeComponentID_tag2el_1_e2ap_v2_03,
 	7,	/* Count of tags in the map */
 	0, 0,
 	7	/* Extensions start */

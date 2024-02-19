@@ -71,7 +71,7 @@ asn_TYPE_member_t asn_MBR_ENGNB_ID_1[] = {
 		"gNB-ID"
 		},
 };
-static const asn_TYPE_tag2member_t asn_MAP_ENGNB_ID_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_ENGNB_ID_tag2el_1_e2ap_v2_03[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* gNB-ID */
 };
 asn_CHOICE_specifics_t asn_SPC_ENGNB_ID_specs_1 = {
@@ -79,7 +79,7 @@ asn_CHOICE_specifics_t asn_SPC_ENGNB_ID_specs_1 = {
 	offsetof(struct ENGNB_ID, _asn_ctx),
 	offsetof(struct ENGNB_ID, present),
 	sizeof(((struct ENGNB_ID *)0)->present),
-	asn_MAP_ENGNB_ID_tag2el_1,
+	asn_MAP_ENGNB_ID_tag2el_1_e2ap_v2_03,
 	1,	/* Count of tags in the map */
 	0, 0,
 	1	/* Extensions start */

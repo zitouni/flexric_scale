@@ -96,11 +96,11 @@ asn_TYPE_member_t asn_MBR_CriticalityDiagnostics_1[] = {
 		"iEsCriticalityDiagnostics"
 		},
 };
-static const int asn_MAP_CriticalityDiagnostics_oms_1[] = { 0, 1, 2, 3, 4 };
-static const ber_tlv_tag_t asn_DEF_CriticalityDiagnostics_tags_1[] = {
+static const int asn_MAP_CriticalityDiagnostics_oms_1_e2ap_v2_03[] = { 0, 1, 2, 3, 4 };
+static const ber_tlv_tag_t asn_DEF_CriticalityDiagnostics_tags_1_e2ap_v2_03[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static const asn_TYPE_tag2member_t asn_MAP_CriticalityDiagnostics_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_CriticalityDiagnostics_tag2el_1_e2ap_v2_03[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* procedureCode */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* triggeringMessage */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* procedureCriticality */
@@ -110,9 +110,9 @@ static const asn_TYPE_tag2member_t asn_MAP_CriticalityDiagnostics_tag2el_1[] = {
 asn_SEQUENCE_specifics_t asn_SPC_CriticalityDiagnostics_specs_1 = {
 	sizeof(struct CriticalityDiagnostics),
 	offsetof(struct CriticalityDiagnostics, _asn_ctx),
-	asn_MAP_CriticalityDiagnostics_tag2el_1,
+	asn_MAP_CriticalityDiagnostics_tag2el_1_e2ap_v2_03,
 	5,	/* Count of tags in the map */
-	asn_MAP_CriticalityDiagnostics_oms_1,	/* Optional members */
+	asn_MAP_CriticalityDiagnostics_oms_1_e2ap_v2_03,	/* Optional members */
 	5, 0,	/* Root/Additions */
 	5,	/* First extension addition */
 };
@@ -120,12 +120,12 @@ asn_TYPE_descriptor_t asn_DEF_CriticalityDiagnostics = {
 	"CriticalityDiagnostics",
 	"CriticalityDiagnostics",
 	&asn_OP_SEQUENCE,
-	asn_DEF_CriticalityDiagnostics_tags_1,
-	sizeof(asn_DEF_CriticalityDiagnostics_tags_1)
-		/sizeof(asn_DEF_CriticalityDiagnostics_tags_1[0]), /* 1 */
-	asn_DEF_CriticalityDiagnostics_tags_1,	/* Same as above */
-	sizeof(asn_DEF_CriticalityDiagnostics_tags_1)
-		/sizeof(asn_DEF_CriticalityDiagnostics_tags_1[0]), /* 1 */
+	asn_DEF_CriticalityDiagnostics_tags_1_e2ap_v2_03,
+	sizeof(asn_DEF_CriticalityDiagnostics_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_CriticalityDiagnostics_tags_1_e2ap_v2_03[0]), /* 1 */
+	asn_DEF_CriticalityDiagnostics_tags_1_e2ap_v2_03,	/* Same as above */
+	sizeof(asn_DEF_CriticalityDiagnostics_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_CriticalityDiagnostics_tags_1_e2ap_v2_03[0]), /* 1 */
 	{
 #if !defined(ASN_DISABLE_OER_SUPPORT)
 		0,

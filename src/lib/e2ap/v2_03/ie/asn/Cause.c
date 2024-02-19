@@ -118,7 +118,7 @@ asn_TYPE_member_t asn_MBR_Cause_1[] = {
 		"misc"
 		},
 };
-static const asn_TYPE_tag2member_t asn_MAP_Cause_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_Cause_tag2el_1_e2ap_v2_03[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* ricRequest */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* ricService */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* e2Node */
@@ -131,7 +131,7 @@ asn_CHOICE_specifics_t asn_SPC_Cause_specs_1 = {
 	offsetof(struct Cause, _asn_ctx),
 	offsetof(struct Cause, present),
 	sizeof(((struct Cause *)0)->present),
-	asn_MAP_Cause_tag2el_1,
+	asn_MAP_Cause_tag2el_1_e2ap_v2_03,
 	6,	/* Count of tags in the map */
 	0, 0,
 	6	/* Extensions start */

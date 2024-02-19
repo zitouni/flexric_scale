@@ -23,33 +23,33 @@ static const asn_INTEGER_enum_map_t asn_MAP_RICcontrolAckRequest_value2enum_1[] 
 	{ 1,	3,	"ack" }
 	/* This list is extensible */
 };
-static const unsigned int asn_MAP_RICcontrolAckRequest_enum2value_1[] = {
+static const unsigned int asn_MAP_RICcontrolAckRequest_enum2value_1_e2ap_v2_03[] = {
 	1,	/* ack(1) */
 	0	/* noAck(0) */
 	/* This list is extensible */
 };
 const asn_INTEGER_specifics_t asn_SPC_RICcontrolAckRequest_specs_1 = {
 	asn_MAP_RICcontrolAckRequest_value2enum_1,	/* "tag" => N; sorted by tag */
-	asn_MAP_RICcontrolAckRequest_enum2value_1,	/* N => "tag"; sorted by N */
+	asn_MAP_RICcontrolAckRequest_enum2value_1_e2ap_v2_03,	/* N => "tag"; sorted by N */
 	2,	/* Number of elements in the maps */
 	3,	/* Extensions before this member */
 	1,	/* Strict enumeration */
 	0,	/* Native long size */
 	0
 };
-static const ber_tlv_tag_t asn_DEF_RICcontrolAckRequest_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_RICcontrolAckRequest_tags_1_e2ap_v2_03[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_RICcontrolAckRequest = {
 	"RICcontrolAckRequest",
 	"RICcontrolAckRequest",
 	&asn_OP_NativeEnumerated,
-	asn_DEF_RICcontrolAckRequest_tags_1,
-	sizeof(asn_DEF_RICcontrolAckRequest_tags_1)
-		/sizeof(asn_DEF_RICcontrolAckRequest_tags_1[0]), /* 1 */
-	asn_DEF_RICcontrolAckRequest_tags_1,	/* Same as above */
-	sizeof(asn_DEF_RICcontrolAckRequest_tags_1)
-		/sizeof(asn_DEF_RICcontrolAckRequest_tags_1[0]), /* 1 */
+	asn_DEF_RICcontrolAckRequest_tags_1_e2ap_v2_03,
+	sizeof(asn_DEF_RICcontrolAckRequest_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_RICcontrolAckRequest_tags_1_e2ap_v2_03[0]), /* 1 */
+	asn_DEF_RICcontrolAckRequest_tags_1_e2ap_v2_03,	/* Same as above */
+	sizeof(asn_DEF_RICcontrolAckRequest_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_RICcontrolAckRequest_tags_1_e2ap_v2_03[0]), /* 1 */
 	{
 #if !defined(ASN_DISABLE_OER_SUPPORT)
 		0,

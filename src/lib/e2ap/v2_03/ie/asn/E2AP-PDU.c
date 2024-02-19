@@ -70,7 +70,7 @@ static asn_TYPE_member_t asn_MBR_E2AP_PDU_1[] = {
 		"unsuccessfulOutcome"
 		},
 };
-static const asn_TYPE_tag2member_t asn_MAP_E2AP_PDU_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_E2AP_PDU_tag2el_1_e2ap_v2_03[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* initiatingMessage */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* successfulOutcome */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 } /* unsuccessfulOutcome */
@@ -80,7 +80,7 @@ static asn_CHOICE_specifics_t asn_SPC_E2AP_PDU_specs_1 = {
 	offsetof(struct E2AP_PDU, _asn_ctx),
 	offsetof(struct E2AP_PDU, present),
 	sizeof(((struct E2AP_PDU *)0)->present),
-	asn_MAP_E2AP_PDU_tag2el_1,
+	asn_MAP_E2AP_PDU_tag2el_1_e2ap_v2_03,
 	3,	/* Count of tags in the map */
 	0, 0,
 	3	/* Extensions start */

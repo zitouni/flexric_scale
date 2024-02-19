@@ -119,20 +119,20 @@ asn_TYPE_member_t asn_MBR_TNLinformation_1[] = {
 		"tnlPort"
 		},
 };
-static const int asn_MAP_TNLinformation_oms_1[] = { 1 };
-static const ber_tlv_tag_t asn_DEF_TNLinformation_tags_1[] = {
+static const int asn_MAP_TNLinformation_oms_1_e2ap_v2_03[] = { 1 };
+static const ber_tlv_tag_t asn_DEF_TNLinformation_tags_1_e2ap_v2_03[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static const asn_TYPE_tag2member_t asn_MAP_TNLinformation_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_TNLinformation_tag2el_1_e2ap_v2_03[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* tnlAddress */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* tnlPort */
 };
 asn_SEQUENCE_specifics_t asn_SPC_TNLinformation_specs_1 = {
 	sizeof(struct TNLinformation),
 	offsetof(struct TNLinformation, _asn_ctx),
-	asn_MAP_TNLinformation_tag2el_1,
+	asn_MAP_TNLinformation_tag2el_1_e2ap_v2_03,
 	2,	/* Count of tags in the map */
-	asn_MAP_TNLinformation_oms_1,	/* Optional members */
+	asn_MAP_TNLinformation_oms_1_e2ap_v2_03,	/* Optional members */
 	1, 0,	/* Root/Additions */
 	2,	/* First extension addition */
 };
@@ -140,12 +140,12 @@ asn_TYPE_descriptor_t asn_DEF_TNLinformation = {
 	"TNLinformation",
 	"TNLinformation",
 	&asn_OP_SEQUENCE,
-	asn_DEF_TNLinformation_tags_1,
-	sizeof(asn_DEF_TNLinformation_tags_1)
-		/sizeof(asn_DEF_TNLinformation_tags_1[0]), /* 1 */
-	asn_DEF_TNLinformation_tags_1,	/* Same as above */
-	sizeof(asn_DEF_TNLinformation_tags_1)
-		/sizeof(asn_DEF_TNLinformation_tags_1[0]), /* 1 */
+	asn_DEF_TNLinformation_tags_1_e2ap_v2_03,
+	sizeof(asn_DEF_TNLinformation_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_TNLinformation_tags_1_e2ap_v2_03[0]), /* 1 */
+	asn_DEF_TNLinformation_tags_1_e2ap_v2_03,	/* Same as above */
+	sizeof(asn_DEF_TNLinformation_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_TNLinformation_tags_1_e2ap_v2_03[0]), /* 1 */
 	{
 #if !defined(ASN_DISABLE_OER_SUPPORT)
 		0,

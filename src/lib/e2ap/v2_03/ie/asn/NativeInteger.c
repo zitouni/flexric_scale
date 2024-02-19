@@ -16,7 +16,7 @@
 /*
  * NativeInteger basic type description.
  */
-static const ber_tlv_tag_t asn_DEF_NativeInteger_tags[] = {
+static const ber_tlv_tag_t asn_DEF_NativeInteger_tags_e2ap_v2_03[] = {
     (ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_operation_t asn_OP_NativeInteger = {
@@ -78,10 +78,10 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
     "INTEGER",  /* The ASN.1 type is still INTEGER */
     "INTEGER",
     &asn_OP_NativeInteger,
-    asn_DEF_NativeInteger_tags,
-    sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
-    asn_DEF_NativeInteger_tags,  /* Same as above */
-    sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
+    asn_DEF_NativeInteger_tags_e2ap_v2_03,
+    sizeof(asn_DEF_NativeInteger_tags_e2ap_v2_03) / sizeof(asn_DEF_NativeInteger_tags_e2ap_v2_03[0]),
+    asn_DEF_NativeInteger_tags_e2ap_v2_03,  /* Same as above */
+    sizeof(asn_DEF_NativeInteger_tags_e2ap_v2_03) / sizeof(asn_DEF_NativeInteger_tags_e2ap_v2_03[0]),
     {
 #if !defined(ASN_DISABLE_OER_SUPPORT)
         0,

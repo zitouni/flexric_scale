@@ -67,7 +67,7 @@ static asn_TYPE_member_t asn_MBR_encoding_5[] = {
 		"arbitrary"
 		},
 };
-static const asn_TYPE_tag2member_t asn_MAP_encoding_tag2el_5[] = {
+static const asn_TYPE_tag2member_t asn_MAP_encoding_tag2el_5_e2ap_v2_03[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* single-ASN1-type */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* octet-aligned */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 } /* arbitrary */
@@ -77,7 +77,7 @@ static asn_CHOICE_specifics_t asn_SPC_encoding_specs_5 = {
 	offsetof(struct EXTERNAL__encoding, _asn_ctx),
 	offsetof(struct EXTERNAL__encoding, present),
 	sizeof(((struct EXTERNAL__encoding *)0)->present),
-	asn_MAP_encoding_tag2el_5,
+	asn_MAP_encoding_tag2el_5_e2ap_v2_03,
 	3,	/* Count of tags in the map */
 	0, 0,
 	-1	/* Extensions start */
@@ -175,12 +175,12 @@ static asn_TYPE_member_t asn_MBR_EXTERNAL_1[] = {
 		"encoding"
 		},
 };
-static const int asn_MAP_EXTERNAL_oms_1[] = { 0, 1, 2 };
-static const ber_tlv_tag_t asn_DEF_EXTERNAL_tags_1[] = {
+static const int asn_MAP_EXTERNAL_oms_1_e2ap_v2_03[] = { 0, 1, 2 };
+static const ber_tlv_tag_t asn_DEF_EXTERNAL_tags_1_e2ap_v2_03[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (8 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static const asn_TYPE_tag2member_t asn_MAP_EXTERNAL_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_EXTERNAL_tag2el_1_e2ap_v2_03[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 1, 0, 0 }, /* indirect-reference */
     { (ASN_TAG_CLASS_UNIVERSAL | (6 << 2)), 0, 0, 0 }, /* direct-reference */
     { (ASN_TAG_CLASS_UNIVERSAL | (7 << 2)), 2, 0, 0 }, /* data-value-descriptor */
@@ -191,9 +191,9 @@ static const asn_TYPE_tag2member_t asn_MAP_EXTERNAL_tag2el_1[] = {
 static asn_SEQUENCE_specifics_t asn_SPC_EXTERNAL_specs_1 = {
 	sizeof(struct EXTERNAL),
 	offsetof(struct EXTERNAL, _asn_ctx),
-	asn_MAP_EXTERNAL_tag2el_1,
+	asn_MAP_EXTERNAL_tag2el_1_e2ap_v2_03,
 	6,	/* Count of tags in the map */
-	asn_MAP_EXTERNAL_oms_1,	/* Optional members */
+	asn_MAP_EXTERNAL_oms_1_e2ap_v2_03,	/* Optional members */
 	3, 0,	/* Root/Additions */
 	-1,	/* First extension addition */
 };
@@ -201,12 +201,12 @@ asn_TYPE_descriptor_t asn_DEF_EXTERNAL = {
 	"EXTERNAL",
 	"EXTERNAL",
 	&asn_OP_SEQUENCE,
-	asn_DEF_EXTERNAL_tags_1,
-	sizeof(asn_DEF_EXTERNAL_tags_1)
-		/sizeof(asn_DEF_EXTERNAL_tags_1[0]) - 1, /* 1 */
-	asn_DEF_EXTERNAL_tags_1,	/* Same as above */
-	sizeof(asn_DEF_EXTERNAL_tags_1)
-		/sizeof(asn_DEF_EXTERNAL_tags_1[0]), /* 2 */
+	asn_DEF_EXTERNAL_tags_1_e2ap_v2_03,
+	sizeof(asn_DEF_EXTERNAL_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_EXTERNAL_tags_1_e2ap_v2_03[0]) - 1, /* 1 */
+	asn_DEF_EXTERNAL_tags_1_e2ap_v2_03,	/* Same as above */
+	sizeof(asn_DEF_EXTERNAL_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_EXTERNAL_tags_1_e2ap_v2_03[0]), /* 2 */
 	{
 #if !defined(ASN_DISABLE_OER_SUPPORT)
 		0,

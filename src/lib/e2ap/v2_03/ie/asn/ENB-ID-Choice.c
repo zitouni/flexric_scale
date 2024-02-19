@@ -181,7 +181,7 @@ asn_TYPE_member_t asn_MBR_ENB_ID_Choice_1[] = {
 		"enb-ID-longmacro"
 		},
 };
-static const asn_TYPE_tag2member_t asn_MAP_ENB_ID_Choice_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_ENB_ID_Choice_tag2el_1_e2ap_v2_03[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* enb-ID-macro */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* enb-ID-shortmacro */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 } /* enb-ID-longmacro */
@@ -191,7 +191,7 @@ asn_CHOICE_specifics_t asn_SPC_ENB_ID_Choice_specs_1 = {
 	offsetof(struct ENB_ID_Choice, _asn_ctx),
 	offsetof(struct ENB_ID_Choice, present),
 	sizeof(((struct ENB_ID_Choice *)0)->present),
-	asn_MAP_ENB_ID_Choice_tag2el_1,
+	asn_MAP_ENB_ID_Choice_tag2el_1_e2ap_v2_03,
 	3,	/* Count of tags in the map */
 	0, 0,
 	3	/* Extensions start */

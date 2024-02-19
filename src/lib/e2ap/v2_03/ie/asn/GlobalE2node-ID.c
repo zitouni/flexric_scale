@@ -88,7 +88,7 @@ asn_TYPE_member_t asn_MBR_GlobalE2node_ID_1[] = {
 		"eNB"
 		},
 };
-static const asn_TYPE_tag2member_t asn_MAP_GlobalE2node_ID_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_GlobalE2node_ID_tag2el_1_e2ap_v2_03[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* gNB */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* en-gNB */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 }, /* ng-eNB */
@@ -99,7 +99,7 @@ asn_CHOICE_specifics_t asn_SPC_GlobalE2node_ID_specs_1 = {
 	offsetof(struct GlobalE2node_ID, _asn_ctx),
 	offsetof(struct GlobalE2node_ID, present),
 	sizeof(((struct GlobalE2node_ID *)0)->present),
-	asn_MAP_GlobalE2node_ID_tag2el_1,
+	asn_MAP_GlobalE2node_ID_tag2el_1_e2ap_v2_03,
 	4,	/* Count of tags in the map */
 	0, 0,
 	4	/* Extensions start */

@@ -88,19 +88,19 @@ asn_per_constraints_t asn_PER_type_AMFName_constr_1 CC_NOTUSED = {
 	asn_PER_MAP_AMFName_1_c2v	/* PER code to value map */
 };
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-static const ber_tlv_tag_t asn_DEF_AMFName_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_AMFName_tags_1_e2ap_v2_03[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (19 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_AMFName = {
 	"AMFName",
 	"AMFName",
 	&asn_OP_PrintableString,
-	asn_DEF_AMFName_tags_1,
-	sizeof(asn_DEF_AMFName_tags_1)
-		/sizeof(asn_DEF_AMFName_tags_1[0]), /* 1 */
-	asn_DEF_AMFName_tags_1,	/* Same as above */
-	sizeof(asn_DEF_AMFName_tags_1)
-		/sizeof(asn_DEF_AMFName_tags_1[0]), /* 1 */
+	asn_DEF_AMFName_tags_1_e2ap_v2_03,
+	sizeof(asn_DEF_AMFName_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_AMFName_tags_1_e2ap_v2_03[0]), /* 1 */
+	asn_DEF_AMFName_tags_1_e2ap_v2_03,	/* Same as above */
+	sizeof(asn_DEF_AMFName_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_AMFName_tags_1_e2ap_v2_03[0]), /* 1 */
 	{
 #if !defined(ASN_DISABLE_OER_SUPPORT)
 		0,

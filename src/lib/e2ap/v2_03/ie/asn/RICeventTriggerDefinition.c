@@ -11,19 +11,19 @@
  * This type is implemented using OCTET_STRING,
  * so here we adjust the DEF accordingly.
  */
-static const ber_tlv_tag_t asn_DEF_RICeventTriggerDefinition_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_RICeventTriggerDefinition_tags_1_e2ap_v2_03[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_RICeventTriggerDefinition = {
 	"RICeventTriggerDefinition",
 	"RICeventTriggerDefinition",
 	&asn_OP_OCTET_STRING,
-	asn_DEF_RICeventTriggerDefinition_tags_1,
-	sizeof(asn_DEF_RICeventTriggerDefinition_tags_1)
-		/sizeof(asn_DEF_RICeventTriggerDefinition_tags_1[0]), /* 1 */
-	asn_DEF_RICeventTriggerDefinition_tags_1,	/* Same as above */
-	sizeof(asn_DEF_RICeventTriggerDefinition_tags_1)
-		/sizeof(asn_DEF_RICeventTriggerDefinition_tags_1[0]), /* 1 */
+	asn_DEF_RICeventTriggerDefinition_tags_1_e2ap_v2_03,
+	sizeof(asn_DEF_RICeventTriggerDefinition_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_RICeventTriggerDefinition_tags_1_e2ap_v2_03[0]), /* 1 */
+	asn_DEF_RICeventTriggerDefinition_tags_1_e2ap_v2_03,	/* Same as above */
+	sizeof(asn_DEF_RICeventTriggerDefinition_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_RICeventTriggerDefinition_tags_1_e2ap_v2_03[0]), /* 1 */
 	{
 #if !defined(ASN_DISABLE_OER_SUPPORT)
 		0,

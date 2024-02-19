@@ -8,7 +8,7 @@
 /*
  * GraphicString basic type description.
  */
-static const ber_tlv_tag_t asn_DEF_GraphicString_tags[] = {
+static const ber_tlv_tag_t asn_DEF_GraphicString_tags_e2ap_v2_03[] = {
     (ASN_TAG_CLASS_UNIVERSAL | (25 << 2)),  /* [UNIVERSAL 25] IMPLICIT ...*/
     (ASN_TAG_CLASS_UNIVERSAL | (4 << 2))    /* ... OCTET STRING */
 };
@@ -71,12 +71,12 @@ asn_TYPE_descriptor_t asn_DEF_GraphicString = {
     "GraphicString",
     "GraphicString",
     &asn_OP_GraphicString,
-    asn_DEF_GraphicString_tags,
-    sizeof(asn_DEF_GraphicString_tags)
-      / sizeof(asn_DEF_GraphicString_tags[0]) - 1,
-    asn_DEF_GraphicString_tags,
-    sizeof(asn_DEF_GraphicString_tags)
-      / sizeof(asn_DEF_GraphicString_tags[0]),
+    asn_DEF_GraphicString_tags_e2ap_v2_03,
+    sizeof(asn_DEF_GraphicString_tags_e2ap_v2_03)
+      / sizeof(asn_DEF_GraphicString_tags_e2ap_v2_03[0]) - 1,
+    asn_DEF_GraphicString_tags_e2ap_v2_03,
+    sizeof(asn_DEF_GraphicString_tags_e2ap_v2_03)
+      / sizeof(asn_DEF_GraphicString_tags_e2ap_v2_03[0]),
     {
 #if !defined(ASN_DISABLE_OER_SUPPORT)
         0,

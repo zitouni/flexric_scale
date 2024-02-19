@@ -52,7 +52,7 @@ asn_TYPE_member_t asn_MBR_GlobalNG_RANNode_ID_1[] = {
 		"ng-eNB"
 		},
 };
-static const asn_TYPE_tag2member_t asn_MAP_GlobalNG_RANNode_ID_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_GlobalNG_RANNode_ID_tag2el_1_e2ap_v2_03[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* gNB */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 } /* ng-eNB */
 };
@@ -61,7 +61,7 @@ asn_CHOICE_specifics_t asn_SPC_GlobalNG_RANNode_ID_specs_1 = {
 	offsetof(struct GlobalNG_RANNode_ID, _asn_ctx),
 	offsetof(struct GlobalNG_RANNode_ID, present),
 	sizeof(((struct GlobalNG_RANNode_ID *)0)->present),
-	asn_MAP_GlobalNG_RANNode_ID_tag2el_1,
+	asn_MAP_GlobalNG_RANNode_ID_tag2el_1_e2ap_v2_03,
 	2,	/* Count of tags in the map */
 	0, 0,
 	2	/* Extensions start */

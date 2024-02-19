@@ -43,19 +43,19 @@ asn_per_constraints_t asn_PER_type_RICindicationSN_constr_1 CC_NOTUSED = {
 	0, 0	/* No PER value map */
 };
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-static const ber_tlv_tag_t asn_DEF_RICindicationSN_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_RICindicationSN_tags_1_e2ap_v2_03[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_RICindicationSN = {
 	"RICindicationSN",
 	"RICindicationSN",
 	&asn_OP_NativeInteger,
-	asn_DEF_RICindicationSN_tags_1,
-	sizeof(asn_DEF_RICindicationSN_tags_1)
-		/sizeof(asn_DEF_RICindicationSN_tags_1[0]), /* 1 */
-	asn_DEF_RICindicationSN_tags_1,	/* Same as above */
-	sizeof(asn_DEF_RICindicationSN_tags_1)
-		/sizeof(asn_DEF_RICindicationSN_tags_1[0]), /* 1 */
+	asn_DEF_RICindicationSN_tags_1_e2ap_v2_03,
+	sizeof(asn_DEF_RICindicationSN_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_RICindicationSN_tags_1_e2ap_v2_03[0]), /* 1 */
+	asn_DEF_RICindicationSN_tags_1_e2ap_v2_03,	/* Same as above */
+	sizeof(asn_DEF_RICindicationSN_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_RICindicationSN_tags_1_e2ap_v2_03[0]), /* 1 */
 	{
 #if !defined(ASN_DISABLE_OER_SUPPORT)
 		0,
