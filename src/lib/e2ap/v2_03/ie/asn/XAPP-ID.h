@@ -22,8 +22,8 @@ extern "C" {
 typedef long	 XAPP_ID_t;
 
 /* Implementation */
-extern asn_per_constraints_t asn_PER_type_XAPP_ID_constr_1;
-extern asn_TYPE_descriptor_t asn_DEF_XAPP_ID;
+extern asn_per_constraints_t asn_PER_type_XAPP_ID_constr_1_e2ap_v2_03;
+extern asn_TYPE_descriptor_t asn_DEF_XAPP_ID_e2ap_v2_03;
 asn_struct_free_f XAPP_ID_free;
 asn_struct_print_f XAPP_ID_print;
 asn_constr_check_f XAPP_ID_constraint_e2ap_v2_03;

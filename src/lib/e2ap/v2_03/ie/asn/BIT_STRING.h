@@ -20,9 +20,9 @@ typedef struct BIT_STRING_s {
 	asn_struct_ctx_t _asn_ctx;	/* Parsing across buffer boundaries */
 } BIT_STRING_t;
 
-extern asn_TYPE_descriptor_t asn_DEF_BIT_STRING;
-extern asn_TYPE_operation_t asn_OP_BIT_STRING;
-extern asn_OCTET_STRING_specifics_t asn_SPC_BIT_STRING_specs;
+extern asn_TYPE_descriptor_t asn_DEF_BIT_STRING_e2ap_v2_03;
+extern asn_TYPE_operation_t asn_OP_BIT_STRING_e2ap_v2_03;
+extern asn_OCTET_STRING_specifics_t asn_SPC_BIT_STRING_specs_e2ap_v2_03;
 
 #define BIT_STRING_free OCTET_STRING_free_e2ap_v2_03
 

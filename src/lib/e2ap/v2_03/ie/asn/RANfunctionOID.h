@@ -22,8 +22,8 @@ extern "C" {
 typedef PrintableString_t	 RANfunctionOID_t;
 
 /* Implementation */
-extern asn_per_constraints_t asn_PER_type_RANfunctionOID_constr_1;
-extern asn_TYPE_descriptor_t asn_DEF_RANfunctionOID;
+extern asn_per_constraints_t asn_PER_type_RANfunctionOID_constr_1_e2ap_v2_03;
+extern asn_TYPE_descriptor_t asn_DEF_RANfunctionOID_e2ap_v2_03;
 asn_struct_free_f RANfunctionOID_free;
 asn_struct_print_f RANfunctionOID_print;
 asn_constr_check_f RANfunctionOID_constraint_e2ap_v2_03;

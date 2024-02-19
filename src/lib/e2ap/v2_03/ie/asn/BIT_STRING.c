@@ -8,15 +8,15 @@
 /*
  * BIT STRING basic type description.
  */
-static const ber_tlv_tag_t asn_DEF_BIT_STRING_tags_e2ap_v2_03[] = {
+static const ber_tlv_tag_t asn_DEF_BIT_STRING_e2ap_v2_03_tags_e2ap_v2_03[] = {
     (ASN_TAG_CLASS_UNIVERSAL | (3 << 2))
 };
-asn_OCTET_STRING_specifics_t asn_SPC_BIT_STRING_specs = {
+asn_OCTET_STRING_specifics_t asn_SPC_BIT_STRING_specs_e2ap_v2_03 = {
     sizeof(BIT_STRING_t),
     offsetof(BIT_STRING_t, _asn_ctx),
     ASN_OSUBV_BIT
 };
-asn_TYPE_operation_t asn_OP_BIT_STRING = {
+asn_TYPE_operation_t asn_OP_BIT_STRING_e2ap_v2_03 = {
     OCTET_STRING_free_e2ap_v2_03,         /* Implemented in terms of OCTET STRING */
 #if !defined(ASN_DISABLE_PRINT_SUPPORT)
     BIT_STRING_print_e2ap_v2_03,
@@ -71,16 +71,16 @@ asn_TYPE_operation_t asn_OP_BIT_STRING = {
 #endif  /* !defined(ASN_DISABLE_RFILL_SUPPORT) */
     0  /* Use generic outmost tag fetcher */
 };
-asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
+asn_TYPE_descriptor_t asn_DEF_BIT_STRING_e2ap_v2_03 = {
     "BIT STRING",
     "BIT_STRING",
-    &asn_OP_BIT_STRING,
-    asn_DEF_BIT_STRING_tags_e2ap_v2_03,
-    sizeof(asn_DEF_BIT_STRING_tags_e2ap_v2_03)
-      / sizeof(asn_DEF_BIT_STRING_tags_e2ap_v2_03[0]),
-    asn_DEF_BIT_STRING_tags_e2ap_v2_03,  /* Same as above */
-    sizeof(asn_DEF_BIT_STRING_tags_e2ap_v2_03)
-      / sizeof(asn_DEF_BIT_STRING_tags_e2ap_v2_03[0]),
+    &asn_OP_BIT_STRING_e2ap_v2_03,
+    asn_DEF_BIT_STRING_e2ap_v2_03_tags_e2ap_v2_03,
+    sizeof(asn_DEF_BIT_STRING_e2ap_v2_03_tags_e2ap_v2_03)
+      / sizeof(asn_DEF_BIT_STRING_e2ap_v2_03_tags_e2ap_v2_03[0]),
+    asn_DEF_BIT_STRING_e2ap_v2_03_tags_e2ap_v2_03,  /* Same as above */
+    sizeof(asn_DEF_BIT_STRING_e2ap_v2_03_tags_e2ap_v2_03)
+      / sizeof(asn_DEF_BIT_STRING_e2ap_v2_03_tags_e2ap_v2_03[0]),
     {
 #if !defined(ASN_DISABLE_OER_SUPPORT)
         0,
@@ -91,7 +91,7 @@ asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
         BIT_STRING_constraint_e2ap_v2_03
     },
     0, 0,  /* No members */
-    &asn_SPC_BIT_STRING_specs
+    &asn_SPC_BIT_STRING_specs_e2ap_v2_03
 };
 
 /*

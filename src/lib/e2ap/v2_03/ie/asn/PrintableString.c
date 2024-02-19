@@ -29,27 +29,27 @@ static const int _PrintableString_code2value[74] = {
 /*
  * PrintableString basic type description.
  */
-static const ber_tlv_tag_t asn_DEF_PrintableString_tags_e2ap_v2_03[] = {
+static const ber_tlv_tag_t asn_DEF_PrintableString_e2ap_v2_03_tags_e2ap_v2_03[] = {
     (ASN_TAG_CLASS_UNIVERSAL | (19 << 2)),  /* [UNIVERSAL 19] IMPLICIT ...*/
     (ASN_TAG_CLASS_UNIVERSAL | (4 << 2))    /* ... OCTET STRING */
 };
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
-static int asn_DEF_PrintableString_v2c(unsigned int value) {
+static int asn_DEF_PrintableString_e2ap_v2_03_v2c(unsigned int value) {
     return _PrintableString_alphabet[value > 255 ? 0 : value] - 1;
 }
-static int asn_DEF_PrintableString_c2v(unsigned int code) {
+static int asn_DEF_PrintableString_e2ap_v2_03_c2v(unsigned int code) {
     if(code < 74)
         return _PrintableString_code2value[code];
     return -1;
 }
-static asn_per_constraints_t asn_DEF_PrintableString_per_constraints = {
+static asn_per_constraints_t asn_DEF_PrintableString_e2ap_v2_03_per_constraints = {
     { APC_CONSTRAINED, 4, 4, 0x20, 0x39 },   /* Value */
     { APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },  /* Size */
-    asn_DEF_PrintableString_v2c,
-    asn_DEF_PrintableString_c2v
+    asn_DEF_PrintableString_e2ap_v2_03_v2c,
+    asn_DEF_PrintableString_e2ap_v2_03_c2v
 };
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-asn_TYPE_operation_t asn_OP_PrintableString = {
+asn_TYPE_operation_t asn_OP_PrintableString_e2ap_v2_03 = {
     OCTET_STRING_free_e2ap_v2_03,
 #if !defined(ASN_DISABLE_PRINT_SUPPORT)
     OCTET_STRING_print_e2ap_v2_03_utf8,  /* ASCII subset */
@@ -104,22 +104,22 @@ asn_TYPE_operation_t asn_OP_PrintableString = {
 #endif  /* !defined(ASN_DISABLE_RFILL_SUPPORT) */
     0  /* Use generic outmost tag fetcher */
 };
-asn_TYPE_descriptor_t asn_DEF_PrintableString = {
+asn_TYPE_descriptor_t asn_DEF_PrintableString_e2ap_v2_03 = {
     "PrintableString",
     "PrintableString",
-    &asn_OP_PrintableString,
-    asn_DEF_PrintableString_tags_e2ap_v2_03,
-    sizeof(asn_DEF_PrintableString_tags_e2ap_v2_03)
-      / sizeof(asn_DEF_PrintableString_tags_e2ap_v2_03[0]) - 1,
-    asn_DEF_PrintableString_tags_e2ap_v2_03,
-    sizeof(asn_DEF_PrintableString_tags_e2ap_v2_03)
-      / sizeof(asn_DEF_PrintableString_tags_e2ap_v2_03[0]),
+    &asn_OP_PrintableString_e2ap_v2_03,
+    asn_DEF_PrintableString_e2ap_v2_03_tags_e2ap_v2_03,
+    sizeof(asn_DEF_PrintableString_e2ap_v2_03_tags_e2ap_v2_03)
+      / sizeof(asn_DEF_PrintableString_e2ap_v2_03_tags_e2ap_v2_03[0]) - 1,
+    asn_DEF_PrintableString_e2ap_v2_03_tags_e2ap_v2_03,
+    sizeof(asn_DEF_PrintableString_e2ap_v2_03_tags_e2ap_v2_03)
+      / sizeof(asn_DEF_PrintableString_e2ap_v2_03_tags_e2ap_v2_03[0]),
     {
 #if !defined(ASN_DISABLE_OER_SUPPORT)
         0,
 #endif  /* !defined(ASN_DISABLE_OER_SUPPORT) */
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
-        &asn_DEF_PrintableString_per_constraints,
+        &asn_DEF_PrintableString_e2ap_v2_03_per_constraints,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
         PrintableString_constraint_e2ap_v2_03
     },

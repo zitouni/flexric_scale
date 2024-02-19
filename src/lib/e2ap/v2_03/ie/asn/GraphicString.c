@@ -8,11 +8,11 @@
 /*
  * GraphicString basic type description.
  */
-static const ber_tlv_tag_t asn_DEF_GraphicString_tags_e2ap_v2_03[] = {
+static const ber_tlv_tag_t asn_DEF_GraphicString_e2ap_v2_03_tags_e2ap_v2_03[] = {
     (ASN_TAG_CLASS_UNIVERSAL | (25 << 2)),  /* [UNIVERSAL 25] IMPLICIT ...*/
     (ASN_TAG_CLASS_UNIVERSAL | (4 << 2))    /* ... OCTET STRING */
 };
-asn_TYPE_operation_t asn_OP_GraphicString = {
+asn_TYPE_operation_t asn_OP_GraphicString_e2ap_v2_03 = {
     OCTET_STRING_free_e2ap_v2_03,
 #if !defined(ASN_DISABLE_PRINT_SUPPORT)
     OCTET_STRING_print_e2ap_v2_03,  /* non-ascii string */
@@ -67,16 +67,16 @@ asn_TYPE_operation_t asn_OP_GraphicString = {
 #endif  /* !defined(ASN_DISABLE_RFILL_SUPPORT) */
     0  /* Use generic outmost tag fetcher */
 };
-asn_TYPE_descriptor_t asn_DEF_GraphicString = {
+asn_TYPE_descriptor_t asn_DEF_GraphicString_e2ap_v2_03 = {
     "GraphicString",
     "GraphicString",
-    &asn_OP_GraphicString,
-    asn_DEF_GraphicString_tags_e2ap_v2_03,
-    sizeof(asn_DEF_GraphicString_tags_e2ap_v2_03)
-      / sizeof(asn_DEF_GraphicString_tags_e2ap_v2_03[0]) - 1,
-    asn_DEF_GraphicString_tags_e2ap_v2_03,
-    sizeof(asn_DEF_GraphicString_tags_e2ap_v2_03)
-      / sizeof(asn_DEF_GraphicString_tags_e2ap_v2_03[0]),
+    &asn_OP_GraphicString_e2ap_v2_03,
+    asn_DEF_GraphicString_e2ap_v2_03_tags_e2ap_v2_03,
+    sizeof(asn_DEF_GraphicString_e2ap_v2_03_tags_e2ap_v2_03)
+      / sizeof(asn_DEF_GraphicString_e2ap_v2_03_tags_e2ap_v2_03[0]) - 1,
+    asn_DEF_GraphicString_e2ap_v2_03_tags_e2ap_v2_03,
+    sizeof(asn_DEF_GraphicString_e2ap_v2_03_tags_e2ap_v2_03)
+      / sizeof(asn_DEF_GraphicString_e2ap_v2_03_tags_e2ap_v2_03[0]),
     {
 #if !defined(ASN_DISABLE_OER_SUPPORT)
         0,

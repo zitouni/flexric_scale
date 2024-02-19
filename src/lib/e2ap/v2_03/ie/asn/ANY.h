@@ -18,9 +18,9 @@ typedef struct ANY {
 	asn_struct_ctx_t _asn_ctx;	/* Parsing across buffer boundaries */
 } ANY_t;
 
-extern asn_TYPE_descriptor_t asn_DEF_ANY;
-extern asn_TYPE_operation_t asn_OP_ANY;
-extern asn_OCTET_STRING_specifics_t asn_SPC_ANY_specs;
+extern asn_TYPE_descriptor_t asn_DEF_ANY_e2ap_v2_03;
+extern asn_TYPE_operation_t asn_OP_ANY_e2ap_v2_03;
+extern asn_OCTET_STRING_specifics_t asn_SPC_ANY_specs_e2ap_v2_03;
 
 #define ANY_free OCTET_STRING_free_e2ap_v2_03
 
@@ -75,7 +75,7 @@ int ANY_to_type_e2ap_v2_03_aper_e2ap_v2_03(ANY_t *, asn_TYPE_descriptor_t *td, v
 
 #define	ANY_fromBuf(s, buf, size)	OCTET_STRING_fromBuf_e2ap_v2_03((s), (buf), (size))
 #define	ANY_new_fromBuf(buf, size)	OCTET_STRING_new_fromBuf_e2ap_v2_03(	\
-						&asn_DEF_ANY, (buf), (size))
+						&asn_DEF_ANY_e2ap_v2_03, (buf), (size))
 
 #ifdef __cplusplus
 }

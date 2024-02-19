@@ -115,7 +115,7 @@ OCTET_STRING_decode_ber_e2ap_v2_03(const asn_codec_ctx_t *opt_codec_ctx,
                         const void *buf_ptr, size_t size, int tag_mode) {
     const asn_OCTET_STRING_specifics_t *specs = td->specifics
         ? (const asn_OCTET_STRING_specifics_t *)td->specifics
-        : &asn_SPC_OCTET_STRING_specs;
+        : &asn_SPC_OCTET_STRING_specs_e2ap_v2_03;
     BIT_STRING_t *st = (BIT_STRING_t *)*sptr;
     asn_dec_rval_t rval;
     asn_struct_ctx_t *ctx;
@@ -469,7 +469,7 @@ OCTET_STRING_encode_der_e2ap_v2_03(const asn_TYPE_descriptor_t *td, const void *
     asn_enc_rval_t er = { 0, 0, 0 };
     const asn_OCTET_STRING_specifics_t *specs = td->specifics
         ? (const asn_OCTET_STRING_specifics_t *)td->specifics
-        : &asn_SPC_OCTET_STRING_specs;
+        : &asn_SPC_OCTET_STRING_specs_e2ap_v2_03;
     const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
     enum asn_OS_Subvariant type_variant = specs->subvariant;
     int fix_last_byte = 0;

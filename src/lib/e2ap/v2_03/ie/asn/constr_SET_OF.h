@@ -68,7 +68,7 @@ per_type_encoder_f SET_OF_encode_aper_e2ap_v2_03;
 asn_random_fill_e2ap_v2_03_f SET_OF_random_fill_e2ap_v2_03;
 #endif  /* !defined(ASN_DISABLE_RFILL_SUPPORT) */
 
-extern asn_TYPE_operation_t asn_OP_SET_OF;
+extern asn_TYPE_operation_t asn_OP_SET_OF_e2ap_v2_03;
 
 /*
  * Internally visible buffer holding a single encoded element.

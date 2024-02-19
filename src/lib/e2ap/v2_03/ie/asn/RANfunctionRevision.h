@@ -22,8 +22,8 @@ extern "C" {
 typedef long	 RANfunctionRevision_t;
 
 /* Implementation */
-extern asn_per_constraints_t asn_PER_type_RANfunctionRevision_constr_1;
-extern asn_TYPE_descriptor_t asn_DEF_RANfunctionRevision;
+extern asn_per_constraints_t asn_PER_type_RANfunctionRevision_constr_1_e2ap_v2_03;
+extern asn_TYPE_descriptor_t asn_DEF_RANfunctionRevision_e2ap_v2_03;
 asn_struct_free_f RANfunctionRevision_free;
 asn_struct_print_f RANfunctionRevision_print;
 asn_constr_check_f RANfunctionRevision_constraint_e2ap_v2_03;

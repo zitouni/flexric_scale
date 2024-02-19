@@ -5,12 +5,12 @@
 #include <asn_internal.h>
 #include <ANY.h>
 
-asn_OCTET_STRING_specifics_t asn_SPC_ANY_specs = {
+asn_OCTET_STRING_specifics_t asn_SPC_ANY_specs_e2ap_v2_03 = {
     sizeof(ANY_t),
     offsetof(ANY_t, _asn_ctx),
     ASN_OSUBV_ANY
 };
-asn_TYPE_operation_t asn_OP_ANY = {
+asn_TYPE_operation_t asn_OP_ANY_e2ap_v2_03 = {
     OCTET_STRING_free_e2ap_v2_03,
 #if !defined(ASN_DISABLE_PRINT_SUPPORT)
     OCTET_STRING_print_e2ap_v2_03,
@@ -61,10 +61,10 @@ asn_TYPE_operation_t asn_OP_ANY = {
     0,  /* Random fill is not defined for ANY type */
     0  /* Use generic outmost tag fetcher */
 };
-asn_TYPE_descriptor_t asn_DEF_ANY = {
+asn_TYPE_descriptor_t asn_DEF_ANY_e2ap_v2_03 = {
     "ANY",
     "ANY",
-    &asn_OP_ANY,
+    &asn_OP_ANY_e2ap_v2_03,
     0, 0, 0, 0,
     {
 #if !defined(ASN_DISABLE_OER_SUPPORT)
@@ -76,5 +76,5 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
         asn_generic_no_constraint_e2ap_v2_03
     },  /* No constraints */
     0, 0,  /* No members */
-    &asn_SPC_ANY_specs,
+    &asn_SPC_ANY_specs_e2ap_v2_03,
 };

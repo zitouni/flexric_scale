@@ -6,7 +6,7 @@
 #include <asn_internal.h>
 #include <constr_SET_OF.h>
 
-asn_TYPE_operation_t asn_OP_SET_OF = {
+asn_TYPE_operation_t asn_OP_SET_OF_e2ap_v2_03 = {
     SET_OF_free_e2ap_v2_03,
 #if !defined(ASN_DISABLE_PRINT_SUPPORT)
     SET_OF_print_e2ap_v2_03,

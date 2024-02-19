@@ -83,7 +83,7 @@ asn_random_fill_e2ap_v2_03_f CHOICE_random_fill_e2ap_v2_03;
 
 asn_outmost_tag_f CHOICE_outmost_tag_e2ap_v2_03;
 
-extern asn_TYPE_operation_t asn_OP_CHOICE;
+extern asn_TYPE_operation_t asn_OP_CHOICE_e2ap_v2_03;
 
 unsigned _fetch_present_idx_e2ap_v2_03(
         const void *struct_ptr,

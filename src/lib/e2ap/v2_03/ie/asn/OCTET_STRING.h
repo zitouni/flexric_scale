@@ -18,8 +18,8 @@ typedef struct OCTET_STRING {
 	asn_struct_ctx_t _asn_ctx;	/* Parsing across buffer boundaries */
 } OCTET_STRING_t;
 
-extern asn_TYPE_descriptor_t asn_DEF_OCTET_STRING;
-extern asn_TYPE_operation_t asn_OP_OCTET_STRING;
+extern asn_TYPE_descriptor_t asn_DEF_OCTET_STRING_e2ap_v2_03;
+extern asn_TYPE_operation_t asn_OP_OCTET_STRING_e2ap_v2_03;
 
 asn_struct_free_f OCTET_STRING_free_e2ap_v2_03;
 
@@ -135,7 +135,7 @@ typedef struct asn_OCTET_STRING_specifics_s {
     } subvariant;
 } asn_OCTET_STRING_specifics_t;
 
-extern asn_OCTET_STRING_specifics_t asn_SPC_OCTET_STRING_specs;
+extern asn_OCTET_STRING_specifics_t asn_SPC_OCTET_STRING_specs_e2ap_v2_03;
 
 size_t OCTET_STRING_random_length_constrained_e2ap_v2_03(
     const asn_TYPE_descriptor_t *, const asn_encoding_constraints_t *,

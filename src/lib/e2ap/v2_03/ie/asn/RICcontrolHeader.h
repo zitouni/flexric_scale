@@ -22,7 +22,7 @@ extern "C" {
 typedef OCTET_STRING_t	 RICcontrolHeader_t;
 
 /* Implementation */
-extern asn_TYPE_descriptor_t asn_DEF_RICcontrolHeader;
+extern asn_TYPE_descriptor_t asn_DEF_RICcontrolHeader_e2ap_v2_03;
 asn_struct_free_f RICcontrolHeader_free;
 asn_struct_print_f RICcontrolHeader_print;
 asn_constr_check_f RICcontrolHeader_constraint;

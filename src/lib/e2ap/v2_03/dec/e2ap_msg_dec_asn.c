@@ -2688,12 +2688,12 @@ E2AP_PDU_t* e2ap_create_pdu(const uint8_t* buffer, int buffer_len)
 
   E2AP_PDU_t* pdu = calloc(1, sizeof(E2AP_PDU_t));
   const enum asn_transfer_syntax syntax = ATS_ALIGNED_BASIC_PER;
-  const asn_dec_rval_t rval = asn_decode_e2ap_v2_03(NULL, syntax, &asn_DEF_E2AP_PDU, (void**)&pdu, buffer, buffer_len);
+  const asn_dec_rval_t rval = asn_decode_e2ap_v2_03(NULL, syntax, &asn_DEF_E2AP_PDU_e2ap_v2_03, (void**)&pdu, buffer, buffer_len);
   //printf("rval.code = %d\n", rval.code);
   //fprintf(stdout, "length of data %ld\n", rval.consumed);
   assert(rval.code == RC_OK && "Are you sending data in ATS_ALIGEND_BASIC_PER syntax?");
 
-  //xer_fprint_e2ap_v2_03(stdout, &asn_DEF_E2AP_PDU, pdu);
+  //xer_fprint_e2ap_v2_03(stdout, &asn_DEF_E2AP_PDU_e2ap_v2_03, pdu);
   //fflush(stdout);
 
   return pdu;
@@ -2708,9 +2708,9 @@ e2ap_msg_t e2ap_msg_dec_asn(e2ap_asn_t* asn, byte_array_t ba)
   //printf("Decoding message type = %d \n", msg_type);
   assert(asn->dec_msg[msg_type] != NULL);
   e2ap_msg_t msg = asn->dec_msg[msg_type](pdu);
-//  xer_fprint_e2ap_v2_03(stdout, &asn_DEF_E2AP_PDU, pdu);
+//  xer_fprint_e2ap_v2_03(stdout, &asn_DEF_E2AP_PDU_e2ap_v2_03, pdu);
 //  fflush(stdout);
-  ASN_STRUCT_FREE(asn_DEF_E2AP_PDU,pdu);
+  ASN_STRUCT_FREE(asn_DEF_E2AP_PDU_e2ap_v2_03,pdu);
   return msg; 
 }
 

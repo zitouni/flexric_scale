@@ -6,7 +6,7 @@
 #include <asn_internal.h>
 #include <constr_SEQUENCE.h>
 
-asn_TYPE_operation_t asn_OP_SEQUENCE = {
+asn_TYPE_operation_t asn_OP_SEQUENCE_e2ap_v2_03 = {
     SEQUENCE_free_e2ap_v2_03,
 #if !defined(ASN_DISABLE_PRINT_SUPPORT)
     SEQUENCE_print_e2ap_v2_03,

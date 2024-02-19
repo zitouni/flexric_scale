@@ -43,31 +43,31 @@ GNB_CU_UP_ID_constraint_e2ap_v2_03(const asn_TYPE_descriptor_t *td, const void *
  * so here we adjust the DEF accordingly.
  */
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
-asn_per_constraints_t asn_PER_type_GNB_CU_UP_ID_constr_1 CC_NOTUSED = {
+asn_per_constraints_t asn_PER_type_GNB_CU_UP_ID_constr_1_e2ap_v2_03 CC_NOTUSED = {
 	{ APC_CONSTRAINED,	 36, -1,  0,  68719476735 }	/* (0..68719476735) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-static const ber_tlv_tag_t asn_DEF_GNB_CU_UP_ID_tags_1_e2ap_v2_03[] = {
+static const ber_tlv_tag_t asn_DEF_GNB_CU_UP_ID_e2ap_v2_03_tags_1_e2ap_v2_03[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_GNB_CU_UP_ID = {
+asn_TYPE_descriptor_t asn_DEF_GNB_CU_UP_ID_e2ap_v2_03 = {
 	"GNB-CU-UP-ID",
 	"GNB-CU-UP-ID",
-	&asn_OP_INTEGER,
-	asn_DEF_GNB_CU_UP_ID_tags_1_e2ap_v2_03,
-	sizeof(asn_DEF_GNB_CU_UP_ID_tags_1_e2ap_v2_03)
-		/sizeof(asn_DEF_GNB_CU_UP_ID_tags_1_e2ap_v2_03[0]), /* 1 */
-	asn_DEF_GNB_CU_UP_ID_tags_1_e2ap_v2_03,	/* Same as above */
-	sizeof(asn_DEF_GNB_CU_UP_ID_tags_1_e2ap_v2_03)
-		/sizeof(asn_DEF_GNB_CU_UP_ID_tags_1_e2ap_v2_03[0]), /* 1 */
+	&asn_OP_INTEGER_e2ap_v2_03,
+	asn_DEF_GNB_CU_UP_ID_e2ap_v2_03_tags_1_e2ap_v2_03,
+	sizeof(asn_DEF_GNB_CU_UP_ID_e2ap_v2_03_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_GNB_CU_UP_ID_e2ap_v2_03_tags_1_e2ap_v2_03[0]), /* 1 */
+	asn_DEF_GNB_CU_UP_ID_e2ap_v2_03_tags_1_e2ap_v2_03,	/* Same as above */
+	sizeof(asn_DEF_GNB_CU_UP_ID_e2ap_v2_03_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_GNB_CU_UP_ID_e2ap_v2_03_tags_1_e2ap_v2_03[0]), /* 1 */
 	{
 #if !defined(ASN_DISABLE_OER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_OER_SUPPORT) */
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
-		&asn_PER_type_GNB_CU_UP_ID_constr_1,
+		&asn_PER_type_GNB_CU_UP_ID_constr_1_e2ap_v2_03,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
 		GNB_CU_UP_ID_constraint_e2ap_v2_03
 	},

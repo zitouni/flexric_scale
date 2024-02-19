@@ -12,13 +12,13 @@
  * so here we adjust the DEF accordingly.
  */
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
-asn_per_constraints_t asn_PER_type_CauseRICrequest_constr_1 CC_NOTUSED = {
+asn_per_constraints_t asn_PER_type_CauseRICrequest_constr_1_e2ap_v2_03 CC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  4,  4,  0,  13 }	/* (0..13,...) */,
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	0, 0	/* No PER value map */
 };
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
-static const asn_INTEGER_enum_map_t asn_MAP_CauseRICrequest_value2enum_1[] = {
+static const asn_INTEGER_enum_map_t asn_MAP_CauseRICrequest_value2enum_1_e2ap_v2_03[] = {
 	{ 0,	23,	"ran-function-id-invalid" },
 	{ 1,	20,	"action-not-supported" },
 	{ 2,	17,	"excessive-actions" },
@@ -52,8 +52,8 @@ static const unsigned int asn_MAP_CauseRICrequest_enum2value_1_e2ap_v2_03[] = {
 	13	/* unspecified(13) */
 	/* This list is extensible */
 };
-const asn_INTEGER_specifics_t asn_SPC_CauseRICrequest_specs_1 = {
-	asn_MAP_CauseRICrequest_value2enum_1,	/* "tag" => N; sorted by tag */
+const asn_INTEGER_specifics_t asn_SPC_CauseRICrequest_specs_1_e2ap_v2_03 = {
+	asn_MAP_CauseRICrequest_value2enum_1_e2ap_v2_03,	/* "tag" => N; sorted by tag */
 	asn_MAP_CauseRICrequest_enum2value_1_e2ap_v2_03,	/* N => "tag"; sorted by N */
 	14,	/* Number of elements in the maps */
 	15,	/* Extensions before this member */
@@ -61,29 +61,29 @@ const asn_INTEGER_specifics_t asn_SPC_CauseRICrequest_specs_1 = {
 	0,	/* Native long size */
 	0
 };
-static const ber_tlv_tag_t asn_DEF_CauseRICrequest_tags_1_e2ap_v2_03[] = {
+static const ber_tlv_tag_t asn_DEF_Cause_e2ap_v2_03RICrequest_tags_1_e2ap_v2_03[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
-asn_TYPE_descriptor_t asn_DEF_CauseRICrequest = {
+asn_TYPE_descriptor_t asn_DEF_Cause_e2ap_v2_03RICrequest = {
 	"CauseRICrequest",
 	"CauseRICrequest",
-	&asn_OP_NativeEnumerated,
-	asn_DEF_CauseRICrequest_tags_1_e2ap_v2_03,
-	sizeof(asn_DEF_CauseRICrequest_tags_1_e2ap_v2_03)
-		/sizeof(asn_DEF_CauseRICrequest_tags_1_e2ap_v2_03[0]), /* 1 */
-	asn_DEF_CauseRICrequest_tags_1_e2ap_v2_03,	/* Same as above */
-	sizeof(asn_DEF_CauseRICrequest_tags_1_e2ap_v2_03)
-		/sizeof(asn_DEF_CauseRICrequest_tags_1_e2ap_v2_03[0]), /* 1 */
+	&asn_OP_NativeEnumerated_e2ap_v2_03,
+	asn_DEF_Cause_e2ap_v2_03RICrequest_tags_1_e2ap_v2_03,
+	sizeof(asn_DEF_Cause_e2ap_v2_03RICrequest_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_Cause_e2ap_v2_03RICrequest_tags_1_e2ap_v2_03[0]), /* 1 */
+	asn_DEF_Cause_e2ap_v2_03RICrequest_tags_1_e2ap_v2_03,	/* Same as above */
+	sizeof(asn_DEF_Cause_e2ap_v2_03RICrequest_tags_1_e2ap_v2_03)
+		/sizeof(asn_DEF_Cause_e2ap_v2_03RICrequest_tags_1_e2ap_v2_03[0]), /* 1 */
 	{
 #if !defined(ASN_DISABLE_OER_SUPPORT)
 		0,
 #endif  /* !defined(ASN_DISABLE_OER_SUPPORT) */
 #if !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT)
-		&asn_PER_type_CauseRICrequest_constr_1,
+		&asn_PER_type_CauseRICrequest_constr_1_e2ap_v2_03,
 #endif  /* !defined(ASN_DISABLE_UPER_SUPPORT) || !defined(ASN_DISABLE_APER_SUPPORT) */
 		NativeEnumerated_constraint
 	},
 	0, 0,	/* Defined elsewhere */
-	&asn_SPC_CauseRICrequest_specs_1	/* Additional specs */
+	&asn_SPC_CauseRICrequest_specs_1_e2ap_v2_03	/* Additional specs */
 };
 

@@ -8,11 +8,11 @@
 /*
  * ObjectDescriptor basic type description.
  */
-static const ber_tlv_tag_t asn_DEF_ObjectDescriptor_tags_e2ap_v2_03[] = {
+static const ber_tlv_tag_t asn_DEF_ObjectDescriptor_e2ap_v2_03_tags_e2ap_v2_03[] = {
     (ASN_TAG_CLASS_UNIVERSAL | (7 << 2)),  /* [UNIVERSAL 7] IMPLICIT ... */
     (ASN_TAG_CLASS_UNIVERSAL | (4 << 2))   /* ... OCTET STRING */
 };
-asn_TYPE_operation_t asn_OP_ObjectDescriptor = {
+asn_TYPE_operation_t asn_OP_ObjectDescriptor_e2ap_v2_03 = {
     OCTET_STRING_free_e2ap_v2_03,
 #if !defined(ASN_DISABLE_PRINT_SUPPORT)
     OCTET_STRING_print_e2ap_v2_03_utf8,  /* Treat as ASCII subset (it's not) */
@@ -67,16 +67,16 @@ asn_TYPE_operation_t asn_OP_ObjectDescriptor = {
 #endif  /* !defined(ASN_DISABLE_RFILL_SUPPORT) */
     0  /* Use generic outmost tag fetcher */
 };
-asn_TYPE_descriptor_t asn_DEF_ObjectDescriptor = {
+asn_TYPE_descriptor_t asn_DEF_ObjectDescriptor_e2ap_v2_03 = {
     "ObjectDescriptor",
     "ObjectDescriptor",
-    &asn_OP_ObjectDescriptor,
-    asn_DEF_ObjectDescriptor_tags_e2ap_v2_03,
-    sizeof(asn_DEF_ObjectDescriptor_tags_e2ap_v2_03)
-      / sizeof(asn_DEF_ObjectDescriptor_tags_e2ap_v2_03[0]) - 1,
-    asn_DEF_ObjectDescriptor_tags_e2ap_v2_03,
-    sizeof(asn_DEF_ObjectDescriptor_tags_e2ap_v2_03)
-      / sizeof(asn_DEF_ObjectDescriptor_tags_e2ap_v2_03[0]),
+    &asn_OP_ObjectDescriptor_e2ap_v2_03,
+    asn_DEF_ObjectDescriptor_e2ap_v2_03_tags_e2ap_v2_03,
+    sizeof(asn_DEF_ObjectDescriptor_e2ap_v2_03_tags_e2ap_v2_03)
+      / sizeof(asn_DEF_ObjectDescriptor_e2ap_v2_03_tags_e2ap_v2_03[0]) - 1,
+    asn_DEF_ObjectDescriptor_e2ap_v2_03_tags_e2ap_v2_03,
+    sizeof(asn_DEF_ObjectDescriptor_e2ap_v2_03_tags_e2ap_v2_03)
+      / sizeof(asn_DEF_ObjectDescriptor_e2ap_v2_03_tags_e2ap_v2_03[0]),
     {
 #if !defined(ASN_DISABLE_OER_SUPPORT)
         0,

@@ -13,8 +13,8 @@ extern "C" {
 
 typedef OCTET_STRING_t GraphicString_t;	/* Implemented via OCTET STRING */
 
-extern asn_TYPE_descriptor_t asn_DEF_GraphicString;
-extern asn_TYPE_operation_t asn_OP_GraphicString;
+extern asn_TYPE_descriptor_t asn_DEF_GraphicString_e2ap_v2_03;
+extern asn_TYPE_operation_t asn_OP_GraphicString_e2ap_v2_03;
 
 #define GraphicString_free OCTET_STRING_free_e2ap_v2_03
 

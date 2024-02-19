@@ -22,8 +22,8 @@ extern "C" {
 typedef long	 ProcedureCode_t;
 
 /* Implementation */
-extern asn_per_constraints_t asn_PER_type_ProcedureCode_constr_1;
-extern asn_TYPE_descriptor_t asn_DEF_ProcedureCode;
+extern asn_per_constraints_t asn_PER_type_ProcedureCode_constr_1_e2ap_v2_03;
+extern asn_TYPE_descriptor_t asn_DEF_ProcedureCode_e2ap_v2_03;
 asn_struct_free_f ProcedureCode_free;
 asn_struct_print_f ProcedureCode_print;
 asn_constr_check_f ProcedureCode_constraint_e2ap_v2_03;

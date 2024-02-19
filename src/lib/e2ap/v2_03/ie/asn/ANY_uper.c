@@ -23,7 +23,7 @@ ANY_decode_uper_e2ap_v2_03(const asn_codec_ctx_t *opt_codec_ctx,
                 asn_per_data_t *pd) {
     const asn_OCTET_STRING_specifics_t *specs =
         td->specifics ? (const asn_OCTET_STRING_specifics_t *)td->specifics
-                      : &asn_SPC_ANY_specs;
+                      : &asn_SPC_ANY_specs_e2ap_v2_03;
     size_t consumed_myself = 0;
     int repeat;
     ANY_t *st = (ANY_t *)*sptr;

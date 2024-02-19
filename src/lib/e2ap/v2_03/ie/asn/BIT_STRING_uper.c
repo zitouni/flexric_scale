@@ -15,7 +15,7 @@
         return tmprval;                     \
     } while(0)
 
-static asn_per_constraint_t asn_DEF_BIT_STRING_constraint_e2ap_v2_03_size = {
+static asn_per_constraint_t asn_DEF_BIT_STRING_e2ap_v2_03_constraint_e2ap_v2_03_size = {
     APC_SEMI_CONSTRAINED, -1, -1, 0, 0};
 
 asn_dec_rval_t
@@ -25,7 +25,7 @@ BIT_STRING_decode_uper_e2ap_v2_03(const asn_codec_ctx_t *opt_codec_ctx,
                        asn_per_data_t *pd) {
     const asn_OCTET_STRING_specifics_t *specs = td->specifics
         ? (const asn_OCTET_STRING_specifics_t *)td->specifics
-        : &asn_SPC_BIT_STRING_specs;
+        : &asn_SPC_BIT_STRING_specs_e2ap_v2_03;
     const asn_per_constraints_t *pc =
         constraints ? constraints : td->encoding_constraints.per_constraints;
     const asn_per_constraint_t *csiz;
@@ -39,7 +39,7 @@ BIT_STRING_decode_uper_e2ap_v2_03(const asn_codec_ctx_t *opt_codec_ctx,
     if(pc) {
         csiz = &pc->size;
     } else {
-        csiz = &asn_DEF_BIT_STRING_constraint_e2ap_v2_03_size;
+        csiz = &asn_DEF_BIT_STRING_e2ap_v2_03_constraint_e2ap_v2_03_size;
     }
 
     if(specs->subvariant != ASN_OSUBV_BIT) {
@@ -63,7 +63,7 @@ BIT_STRING_decode_uper_e2ap_v2_03(const asn_codec_ctx_t *opt_codec_ctx,
         int inext = per_get_few_bits(pd, 1);
         if(inext < 0) RETURN(RC_WMORE);
         if(inext) {
-            csiz = &asn_DEF_BIT_STRING_constraint_e2ap_v2_03_size;
+            csiz = &asn_DEF_BIT_STRING_e2ap_v2_03_constraint_e2ap_v2_03_size;
         }
     }
 
@@ -128,7 +128,7 @@ BIT_STRING_encode_uper_e2ap_v2_03(const asn_TYPE_descriptor_t *td,
                        const void *sptr, asn_per_outp_t *po) {
     const asn_OCTET_STRING_specifics_t *specs =
         td->specifics ? (const asn_OCTET_STRING_specifics_t *)td->specifics
-                      : &asn_SPC_BIT_STRING_specs;
+                      : &asn_SPC_BIT_STRING_specs_e2ap_v2_03;
     const asn_per_constraints_t *pc =
         constraints ? constraints : td->encoding_constraints.per_constraints;
     const asn_per_constraint_t *csiz;
@@ -154,7 +154,7 @@ BIT_STRING_encode_uper_e2ap_v2_03(const asn_TYPE_descriptor_t *td,
     if(pc) {
         csiz = &pc->size;
     } else {
-        csiz = &asn_DEF_BIT_STRING_constraint_e2ap_v2_03_size;
+        csiz = &asn_DEF_BIT_STRING_e2ap_v2_03_constraint_e2ap_v2_03_size;
     }
     ct_extensible = csiz->flags & APC_EXTENSIBLE;
 
@@ -173,7 +173,7 @@ BIT_STRING_encode_uper_e2ap_v2_03(const asn_TYPE_descriptor_t *td,
     if(csiz->effective_bits >= 0) {
         if((ssize_t)size_in_bits > csiz->upper_bound) {
             if(ct_extensible) {
-                csiz = &asn_DEF_BIT_STRING_constraint_e2ap_v2_03_size;
+                csiz = &asn_DEF_BIT_STRING_e2ap_v2_03_constraint_e2ap_v2_03_size;
                 inext = 1;
             } else {
                 ASN__ENCODE_FAILED;

@@ -22,7 +22,7 @@ extern "C" {
 typedef OCTET_STRING_t	 RICindicationHeader_t;
 
 /* Implementation */
-extern asn_TYPE_descriptor_t asn_DEF_RICindicationHeader;
+extern asn_TYPE_descriptor_t asn_DEF_RICindication_e2ap_v2_03Header;
 asn_struct_free_f RICindicationHeader_free;
 asn_struct_print_f RICindicationHeader_print;
 asn_constr_check_f RICindicationHeader_constraint;

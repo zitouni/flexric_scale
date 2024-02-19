@@ -540,7 +540,7 @@ OCTET_STRING__decode_xer(
     OCTET_STRING_t *st = (OCTET_STRING_t *)*sptr;
     const asn_OCTET_STRING_specifics_t *specs = td->specifics
         ? (const asn_OCTET_STRING_specifics_t *)td->specifics
-        : &asn_SPC_OCTET_STRING_specs;
+        : &asn_SPC_OCTET_STRING_specs_e2ap_v2_03;
     const char *xml_tag = opt_mname ? opt_mname : td->xml_tag;
     asn_struct_ctx_t *ctx;  /* Per-structure parser context */
     asn_dec_rval_t rval;  /* Return value from the decoder */

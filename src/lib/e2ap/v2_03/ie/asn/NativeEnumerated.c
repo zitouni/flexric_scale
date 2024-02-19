@@ -15,10 +15,10 @@
 /*
  * NativeEnumerated basic type description.
  */
-static const ber_tlv_tag_t asn_DEF_NativeEnumerated_tags_e2ap_v2_03[] = {
+static const ber_tlv_tag_t asn_DEF_NativeEnumerated_e2ap_v2_03_tags_e2ap_v2_03[] = {
     (ASN_TAG_CLASS_UNIVERSAL | (10 << 2))
 };
-asn_TYPE_operation_t asn_OP_NativeEnumerated = {
+asn_TYPE_operation_t asn_OP_NativeEnumerated_e2ap_v2_03 = {
     NativeInteger_free_e2ap_v2_03,
 #if !defined(ASN_DISABLE_PRINT_SUPPORT)
     NativeInteger_print_e2ap_v2_03,
@@ -73,14 +73,14 @@ asn_TYPE_operation_t asn_OP_NativeEnumerated = {
 #endif  /* !defined(ASN_DISABLE_RFILL_SUPPORT) */
     0  /* Use generic outmost tag fetcher */
 };
-asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
+asn_TYPE_descriptor_t asn_DEF_NativeEnumerated_e2ap_v2_03 = {
     "ENUMERATED",  /* The ASN.1 type is still ENUMERATED */
     "ENUMERATED",
-    &asn_OP_NativeEnumerated,
-    asn_DEF_NativeEnumerated_tags_e2ap_v2_03,
-    sizeof(asn_DEF_NativeEnumerated_tags_e2ap_v2_03) / sizeof(asn_DEF_NativeEnumerated_tags_e2ap_v2_03[0]),
-    asn_DEF_NativeEnumerated_tags_e2ap_v2_03,  /* Same as above */
-    sizeof(asn_DEF_NativeEnumerated_tags_e2ap_v2_03) / sizeof(asn_DEF_NativeEnumerated_tags_e2ap_v2_03[0]),
+    &asn_OP_NativeEnumerated_e2ap_v2_03,
+    asn_DEF_NativeEnumerated_e2ap_v2_03_tags_e2ap_v2_03,
+    sizeof(asn_DEF_NativeEnumerated_e2ap_v2_03_tags_e2ap_v2_03) / sizeof(asn_DEF_NativeEnumerated_e2ap_v2_03_tags_e2ap_v2_03[0]),
+    asn_DEF_NativeEnumerated_e2ap_v2_03_tags_e2ap_v2_03,  /* Same as above */
+    sizeof(asn_DEF_NativeEnumerated_e2ap_v2_03_tags_e2ap_v2_03) / sizeof(asn_DEF_NativeEnumerated_e2ap_v2_03_tags_e2ap_v2_03[0]),
     {
 #if !defined(ASN_DISABLE_OER_SUPPORT)
         0,

@@ -6,7 +6,7 @@
 #include <OPEN_TYPE.h>
 #include <constr_CHOICE.h>
 
-asn_TYPE_operation_t asn_OP_OPEN_TYPE = {
+asn_TYPE_operation_t asn_OP_OPEN_TYPE_e2ap_v2_03 = {
     OPEN_TYPE_free,
 #if !defined(ASN_DISABLE_PRINT_SUPPORT)
     OPEN_TYPE_print,

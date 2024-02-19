@@ -22,8 +22,8 @@ extern "C" {
 typedef long	 RANfunctionID_t;
 
 /* Implementation */
-extern asn_per_constraints_t asn_PER_type_RANfunctionID_constr_1;
-extern asn_TYPE_descriptor_t asn_DEF_RANfunctionID;
+extern asn_per_constraints_t asn_PER_type_RANfunctionID_constr_1_e2ap_v2_03;
+extern asn_TYPE_descriptor_t asn_DEF_RANfunctionID_e2ap_v2_03;
 asn_struct_free_f RANfunctionID_free;
 asn_struct_print_f RANfunctionID_print;
 asn_constr_check_f RANfunctionID_constraint_e2ap_v2_03;

@@ -108,7 +108,7 @@ asn_dec_rval_t OPEN_TYPE_aper_unknown_type_discard_bytes_e2ap_v2_03(
     asn_per_data_t *pd);
 #endif  /* !defined(ASN_DISABLE_APER_SUPPORT) */
 
-extern asn_TYPE_operation_t asn_OP_OPEN_TYPE;
+extern asn_TYPE_operation_t asn_OP_OPEN_TYPE_e2ap_v2_03;
 
 #ifdef __cplusplus
 }

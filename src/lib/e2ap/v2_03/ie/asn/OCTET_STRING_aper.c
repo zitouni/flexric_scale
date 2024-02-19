@@ -15,7 +15,7 @@
         return tmprval;\
     } while(0)
 
-static asn_per_constraints_t asn_DEF_OCTET_STRING_constraints = {
+static asn_per_constraints_t asn_DEF_OCTET_STRING_e2ap_v2_03_constraints_e2ap_v2_03 = {
     { APC_CONSTRAINED, 8, 8, 0, 255 },
     { APC_SEMI_CONSTRAINED, -1, -1, 0, 0 },
     0, 0
@@ -29,7 +29,7 @@ OCTET_STRING_decode_aper_e2ap_v2_03(const asn_codec_ctx_t *opt_codec_ctx,
 
     const asn_OCTET_STRING_specifics_t *specs = td->specifics
         ? (const asn_OCTET_STRING_specifics_t *)td->specifics
-        : &asn_SPC_OCTET_STRING_specs;
+        : &asn_SPC_OCTET_STRING_specs_e2ap_v2_03;
     const asn_per_constraints_t *pc = constraints
         ? constraints
         : td->encoding_constraints.per_constraints;
@@ -54,8 +54,8 @@ OCTET_STRING_decode_aper_e2ap_v2_03(const asn_codec_ctx_t *opt_codec_ctx,
         cval = &pc->value;
         csiz = &pc->size;
     } else {
-        cval = &asn_DEF_OCTET_STRING_constraints.value;
-        csiz = &asn_DEF_OCTET_STRING_constraints.size;
+        cval = &asn_DEF_OCTET_STRING_e2ap_v2_03_constraints_e2ap_v2_03.value;
+        csiz = &asn_DEF_OCTET_STRING_e2ap_v2_03_constraints_e2ap_v2_03.size;
     }
 
     switch(specs->subvariant) {
@@ -109,8 +109,8 @@ OCTET_STRING_decode_aper_e2ap_v2_03(const asn_codec_ctx_t *opt_codec_ctx,
         int inext = per_get_few_bits(pd, 1);
         if(inext < 0) RETURN(RC_WMORE);
         if(inext) {
-            csiz = &asn_DEF_OCTET_STRING_constraints.size;
-            cval = &asn_DEF_OCTET_STRING_constraints.value;
+            csiz = &asn_DEF_OCTET_STRING_e2ap_v2_03_constraints_e2ap_v2_03.size;
+            cval = &asn_DEF_OCTET_STRING_e2ap_v2_03_constraints_e2ap_v2_03.value;
             unit_bits = canonical_unit_bits;
         }
     }
@@ -234,7 +234,7 @@ OCTET_STRING_encode_aper_e2ap_v2_03(const asn_TYPE_descriptor_t *td,
 
     const asn_OCTET_STRING_specifics_t *specs = td->specifics
         ? (const asn_OCTET_STRING_specifics_t *)td->specifics
-        : &asn_SPC_OCTET_STRING_specs;
+        : &asn_SPC_OCTET_STRING_specs_e2ap_v2_03;
     const asn_per_constraints_t *pc = constraints
         ? constraints
         : td->encoding_constraints.per_constraints;
@@ -263,8 +263,8 @@ OCTET_STRING_encode_aper_e2ap_v2_03(const asn_TYPE_descriptor_t *td,
         cval = &pc->value;
         csiz = &pc->size;
     } else {
-        cval = &asn_DEF_OCTET_STRING_constraints.value;
-        csiz = &asn_DEF_OCTET_STRING_constraints.size;
+        cval = &asn_DEF_OCTET_STRING_e2ap_v2_03_constraints_e2ap_v2_03.value;
+        csiz = &asn_DEF_OCTET_STRING_e2ap_v2_03_constraints_e2ap_v2_03.size;
     }
     ct_extensible = csiz->flags & APC_EXTENSIBLE;
 
@@ -320,8 +320,8 @@ OCTET_STRING_encode_aper_e2ap_v2_03(const asn_TYPE_descriptor_t *td,
         if((int)sizeinunits < csiz->lower_bound
         || (int)sizeinunits > csiz->upper_bound) {
             if(ct_extensible) {
-                cval = &asn_DEF_OCTET_STRING_constraints.value;
-                csiz = &asn_DEF_OCTET_STRING_constraints.size;
+                cval = &asn_DEF_OCTET_STRING_e2ap_v2_03_constraints_e2ap_v2_03.value;
+                csiz = &asn_DEF_OCTET_STRING_e2ap_v2_03_constraints_e2ap_v2_03.size;
                 unit_bits = canonical_unit_bits;
                 inext = 1;
             } else

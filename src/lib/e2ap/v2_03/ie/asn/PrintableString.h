@@ -13,8 +13,8 @@ extern "C" {
 
 typedef OCTET_STRING_t PrintableString_t;  /* Implemented via OCTET STRING */
 
-extern asn_TYPE_descriptor_t asn_DEF_PrintableString;
-extern asn_TYPE_operation_t asn_OP_PrintableString;
+extern asn_TYPE_descriptor_t asn_DEF_PrintableString_e2ap_v2_03;
+extern asn_TYPE_operation_t asn_OP_PrintableString_e2ap_v2_03;
 
 #define PrintableString_free OCTET_STRING_free_e2ap_v2_03
 

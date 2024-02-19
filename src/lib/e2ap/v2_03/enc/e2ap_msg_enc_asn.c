@@ -60,7 +60,7 @@ static
 void free_pdu(E2AP_PDU_t* pdu)
 {
   assert(pdu != NULL);
-  ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_E2AP_PDU,pdu);
+  ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_E2AP_PDU_e2ap_v2_03,pdu);
   free(pdu);
 }
 
@@ -69,9 +69,9 @@ bool encode(byte_array_t* b, const E2AP_PDU_t* pdu)
 {
   assert(pdu != NULL);
   assert(b->buf != NULL);
-  //xer_fprint_e2ap_v2_03(stderr, &asn_DEF_E2AP_PDU, pdu);
+  //xer_fprint_e2ap_v2_03(stderr, &asn_DEF_E2AP_PDU_e2ap_v2_03, pdu);
   const enum asn_transfer_syntax syntax = ATS_ALIGNED_BASIC_PER;
-  asn_enc_rval_t er = asn_encode_e2ap_v2_03_to_buffer(NULL, syntax, &asn_DEF_E2AP_PDU, pdu, b->buf, b->len);
+  asn_enc_rval_t er = asn_encode_e2ap_v2_03_to_buffer(NULL, syntax, &asn_DEF_E2AP_PDU_e2ap_v2_03, pdu, b->buf, b->len);
   assert(er.encoded < (ssize_t) b->len);
   if(er.encoded == -1) {
     printf("Failed the encoding in type %s and xml_type = %s\n", er.failed_type->name, er.failed_type->xml_tag);

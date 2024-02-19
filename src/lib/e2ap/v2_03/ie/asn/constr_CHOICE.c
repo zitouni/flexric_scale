@@ -5,7 +5,7 @@
 #include <asn_internal.h>
 #include <constr_CHOICE.h>
 
-asn_TYPE_operation_t asn_OP_CHOICE = {
+asn_TYPE_operation_t asn_OP_CHOICE_e2ap_v2_03 = {
     CHOICE_free_e2ap_v2_03,
 #if !defined(ASN_DISABLE_PRINT_SUPPORT)
     CHOICE_print_e2ap_v2_03,

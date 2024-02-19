@@ -12,7 +12,7 @@ BIT_STRING_random_fill_e2ap_v2_03(const asn_TYPE_descriptor_t *td, void **sptr,
                        size_t max_length) {
     const asn_OCTET_STRING_specifics_t *specs =
         td->specifics ? (const asn_OCTET_STRING_specifics_t *)td->specifics
-                      : &asn_SPC_BIT_STRING_specs;
+                      : &asn_SPC_BIT_STRING_specs_e2ap_v2_03;
     asn_random_fill_e2ap_v2_03_result_t result_ok = {ARFILL_OK, 1};
     asn_random_fill_e2ap_v2_03_result_t result_failed = {ARFILL_FAILED, 0};
     asn_random_fill_e2ap_v2_03_result_t result_skipped = {ARFILL_SKIPPED, 0};

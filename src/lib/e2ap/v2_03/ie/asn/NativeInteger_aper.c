@@ -38,7 +38,7 @@ NativeInteger_decode_aper_e2ap_v2_03(const asn_codec_ctx_t *opt_codec_ctx,
                       td->name, *native);
 	}
     }
-    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
+    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER_e2ap_v2_03, &tmpint);
 
     return rval;
 }
@@ -65,6 +65,6 @@ NativeInteger_encode_aper_e2ap_v2_03(const asn_TYPE_descriptor_t *td,
             : asn_long2INTEGER_e2ap_v2_03(&tmpint, native))
         ASN__ENCODE_FAILED;
     er = INTEGER_encode_aper_e2ap_v2_03(td, constraints, &tmpint, po);
-    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
+    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER_e2ap_v2_03, &tmpint);
     return er;
 }

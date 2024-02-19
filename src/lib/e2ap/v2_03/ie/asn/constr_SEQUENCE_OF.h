@@ -58,7 +58,7 @@ per_type_encoder_f SEQUENCE_OF_encode_aper_e2ap_v2_03;
 #define SEQUENCE_OF_random_fill SET_OF_random_fill_e2ap_v2_03
 #endif  /* !defined(ASN_DISABLE_RFILL_SUPPORT) */
 
-extern asn_TYPE_operation_t asn_OP_SEQUENCE_OF;
+extern asn_TYPE_operation_t asn_OP_SEQUENCE_e2ap_v2_03_OF;
 
 #ifdef __cplusplus
 }

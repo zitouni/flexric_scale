@@ -18,8 +18,8 @@
 extern "C" {
 #endif
 
-extern asn_TYPE_descriptor_t asn_DEF_NativeEnumerated;
-extern asn_TYPE_operation_t asn_OP_NativeEnumerated;
+extern asn_TYPE_descriptor_t asn_DEF_NativeEnumerated_e2ap_v2_03;
+extern asn_TYPE_operation_t asn_OP_NativeEnumerated_e2ap_v2_03;
 
 #define NativeEnumerated_free NativeInteger_free_e2ap_v2_03
 

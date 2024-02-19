@@ -7,7 +7,7 @@
 #include <constr_SEQUENCE_OF.h>
 #include <asn_SEQUENCE_OF.h>
 
-asn_TYPE_operation_t asn_OP_SEQUENCE_OF = {
+asn_TYPE_operation_t asn_OP_SEQUENCE_e2ap_v2_03_OF = {
     SEQUENCE_OF_free,
 #if !defined(ASN_DISABLE_PRINT_SUPPORT)
     SEQUENCE_OF_print,

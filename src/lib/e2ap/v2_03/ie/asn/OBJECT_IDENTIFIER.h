@@ -18,8 +18,8 @@ typedef uint32_t asn_oid_arc_t;
 
 typedef ASN__PRIMITIVE_TYPE_t OBJECT_IDENTIFIER_t;
 
-extern asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER;
-extern asn_TYPE_operation_t asn_OP_OBJECT_IDENTIFIER;
+extern asn_TYPE_descriptor_t asn_DEF_OBJECT_IDENTIFIER_e2ap_v2_03;
+extern asn_TYPE_operation_t asn_OP_OBJECT_IDENTIFIER_e2ap_v2_03;
 
 ssize_t OBJECT_IDENTIFIER__dump_body_e2ap_v2_03(const OBJECT_IDENTIFIER_t *st,
                                      asn_app_consume_bytes_f *cb,

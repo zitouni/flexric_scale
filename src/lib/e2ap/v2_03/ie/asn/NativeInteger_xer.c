@@ -47,7 +47,7 @@ NativeInteger_decode_xer_e2ap_v2_03(const asn_codec_ctx_t *opt_codec_ctx,
          */
         rval.consumed = 0;
     }
-    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &st);
+    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER_e2ap_v2_03, &st);
     return rval;
 }
 

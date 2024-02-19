@@ -13,8 +13,8 @@ extern "C" {
 
 typedef GraphicString_t ObjectDescriptor_t;  /* Implemented via GraphicString */
 
-extern asn_TYPE_descriptor_t asn_DEF_ObjectDescriptor;
-extern asn_TYPE_operation_t asn_OP_ObjectDescriptor;
+extern asn_TYPE_descriptor_t asn_DEF_ObjectDescriptor_e2ap_v2_03;
+extern asn_TYPE_operation_t asn_OP_ObjectDescriptor_e2ap_v2_03;
 
 #define ObjectDescriptor_free OCTET_STRING_free_e2ap_v2_03
 
