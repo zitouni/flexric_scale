@@ -17,14 +17,13 @@ add_library(test_agent_obj OBJECT
   ../../../src/util/alg_ds/ds/seq_container/seq_arr.c
   ../../../src/util/alg_ds/alg/murmur_hash_32.c
   sm_gtp.c
-  
   sm_mac.c
   sm_pdcp.c
   sm_rc.c
   sm_rlc.c
   sm_slice.c
   sm_tc.c
-      )
+  )
 
 target_compile_definitions(test_agent_obj PRIVATE ${E2AP_VERSION}  ${KPM_VERSION}  )
 
@@ -44,10 +43,7 @@ target_link_libraries(emu_agent_gnb
                       e2_agent
                       kpm_sm_static 
                       ${FlatCC} 
-                      -pthread
-                      -lsctp
-                      -ldl
-                      -lm)
+                      )
 
 target_compile_definitions(emu_agent_gnb PRIVATE TEST_AGENT_GNB 
                                                  TEST_AGENT_RAN_TYPE=ngran_gNB
@@ -76,9 +72,7 @@ target_link_libraries(emu_agent_gnb_cu
                         e2_agent
                         kpm_sm_static 
                         ${FlatCC}
-                        -pthread
-                        -lsctp
-                        -ldl)
+                        )
 
 target_compile_definitions(emu_agent_gnb_cu PRIVATE TEST_AGENT_GNB_CU
                                                     TEST_AGENT_RAN_TYPE=ngran_gNB_CU
@@ -107,9 +101,7 @@ target_link_libraries(emu_agent_gnb_du
                         e2_agent
                         kpm_sm_static 
                         ${FlatCC}
-                        -pthread
-                        -lsctp
-                        -ldl)
+                        )
 
 target_compile_definitions(emu_agent_gnb_du PRIVATE TEST_AGENT_GNB_DU
                                                     TEST_AGENT_RAN_TYPE=ngran_gNB_DU
@@ -137,9 +129,7 @@ target_link_libraries(emu_agent_enb
                         e2_agent
                         kpm_sm_static 
                         ${FlatCC}
-                        -pthread
-                        -lsctp
-                        -ldl)
+                        )
 
 target_compile_definitions(emu_agent_enb PRIVATE TEST_AGENT_ENB
                                                  TEST_AGENT_RAN_TYPE=ngran_eNB
