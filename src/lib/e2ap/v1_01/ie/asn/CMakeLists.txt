@@ -581,7 +581,7 @@ endif()
 
 
 
-add_library(e2ap_asn1_obj OBJECT ${ASN_MODULE_SRCS})
+add_library(e2ap_asn1_obj STATIC ${ASN_MODULE_SRCS})
 #${ASN_MODULE_HDRS})
 target_include_directories(e2ap_asn1_obj
                           PUBLIC

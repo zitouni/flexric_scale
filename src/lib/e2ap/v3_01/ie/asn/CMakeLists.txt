@@ -317,7 +317,7 @@ xer_encoder.c
 xer_support.c
   )
 
-add_library(e2ap_asn1_obj OBJECT ${ASN_MODULE_SRCS})
+add_library(e2ap_asn1_obj STATIC ${ASN_MODULE_SRCS})
 target_include_directories(e2ap_asn1_obj
                           PUBLIC
                            "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
