@@ -50,6 +50,7 @@ pipeline {
     disableConcurrentBuilds()
     timestamps()
     ansiColor('xterm')
+    gitLabConnection('OAI GitLab')
     // Minimal checks
     gitlabBuilds(builds: [
       "Build Ubuntu FLEXRIC Image"
