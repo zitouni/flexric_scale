@@ -4,3 +4,5 @@
 *.json
 build/
 tags
+archives/
+test_results*.html
