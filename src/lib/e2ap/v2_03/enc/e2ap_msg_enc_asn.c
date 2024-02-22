@@ -580,7 +580,7 @@ struct E2AP_PDU* e2ap_enc_subscription_response_asn_pdu(const ric_subscription_r
     ai->id = ProtocolIE_ID_id_RICaction_Admitted_Item;
 
     // Check ASN definition to see the ignore
-    ai->criticality =  Criticality_ignore;
+    ai->criticality = Criticality_ignore;
     ai->value.present = RICaction_Admitted_ItemIEs__value_PR_RICaction_Admitted_Item;
     const ric_action_admitted_t* src = &sr->admitted[i];
     ai->value.choice.RICaction_Admitted_Item.ricActionID = src->ric_act_id; 
@@ -1521,7 +1521,7 @@ E2AP_PDU_t* e2ap_enc_setup_request_asn_pdu(const e2_setup_request_t* sr)
     e2enb->global_eNB_ID.eNB_ID.present = ENB_ID_PR_macro_eNB_ID;
     const e2ap_plmn_t* plmn = &sr->id.plmn;
     MCC_MNC_TO_PLMNID(plmn->mcc, plmn->mnc, plmn->mnc_digit_len, &e2enb->global_eNB_ID.pLMN_Identity);
-    // ToDo: Take care of the unused bits
+    // ToDo: consider unused bits
     MACRO_ENB_ID_TO_BIT_STRING(sr->id.nb_id.nb_id, &e2enb->global_eNB_ID.eNB_ID.choice.macro_eNB_ID);
     setup_rid->value.choice.GlobalE2node_ID.choice.eNB = e2enb;
     rc = ASN_SEQUENCE_ADD(&out->protocolIEs.list, setup_rid);
@@ -2303,8 +2303,7 @@ E2AP_PDU_t* e2ap_enc_service_update_failure_asn_pdu(const ric_service_update_fai
     crit_diag_ie->value.present = RICserviceUpdateFailure_IEs__value_PR_CriticalityDiagnostics; 
     assert(0!=0 && "Not implememnted");
 //    crit_diag_ie->value.choice.CriticalityDiagnostics = *crit_diag;
-    rc =
-      ASN_SEQUENCE_ADD(&out->protocolIEs.list, update_failure);
+    rc = ASN_SEQUENCE_ADD(&out->protocolIEs.list, update_failure);
     assert(rc == 0);
   }
   return pdu;

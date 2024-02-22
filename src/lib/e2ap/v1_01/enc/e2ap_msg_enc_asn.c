@@ -106,6 +106,7 @@ E2nodeComponentType_t get_e2nodeComponentType(ngran_node_t type)
 static inline
 OCTET_STRING_t copy_ba_to_ostring(byte_array_t ba)
 {
+  assert(ba.buf != NULL && ba.len > 0);
   OCTET_STRING_t os = { .size = ba.len }; 
   os.buf = malloc(ba.len);
   memcpy(os.buf, ba.buf, ba.len);

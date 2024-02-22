@@ -335,7 +335,7 @@ int main(int argc, char *argv[])
   sm_ans_xapp_t* kpm_handle = NULL;
   if(nodes.len > 0){
     kpm_handle = calloc( nodes.len, sizeof(sm_ans_xapp_t) ); 
-    assert(kpm_handle  != NULL);
+    assert(kpm_handle != NULL);
   }
 
   const int KPM_ran_function = 2;
@@ -400,7 +400,7 @@ int main(int argc, char *argv[])
     }
 
 
-
+    
     kpm_handle[i] = report_sm_xapp_api(&nodes.n[i].id, KPM_ran_function, &kpm_sub, sm_cb_kpm);
     assert(kpm_handle[i].success == true);
 

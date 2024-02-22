@@ -410,7 +410,6 @@ bool valid_ran_func_id(uint16_t ran_func_id)\
   return false;
 }
 
-
 static
 ric_gen_id_t generate_ric_gen_id(e42_xapp_t* xapp, act_proc_val_e type, uint16_t ran_func_id, global_e2_node_id_t const* id, sm_cb cb)
 {
@@ -425,7 +424,6 @@ ric_gen_id_t generate_ric_gen_id(e42_xapp_t* xapp, act_proc_val_e type, uint16_t
 
   return ric_req;
 }
-
 
 sm_ans_xapp_t report_sm_sync_xapp(e42_xapp_t* xapp, global_e2_node_id_t* id, uint16_t rf_id , void* data, sm_cb cb)
 {
@@ -445,7 +443,6 @@ sm_ans_xapp_t report_sm_sync_xapp(e42_xapp_t* xapp, global_e2_node_id_t* id, uin
   printf("[xApp]: Successfully subscribed to RAN_FUNC_ID %d \n", rf_id);
 
   // The RIC_SUBSCRIPTION_PROCEDURE is still active
-
   sm_ans_xapp_t ans = {0};
   ans.success = true;
   ans.u.handle = ric_id.ric_req_id;
