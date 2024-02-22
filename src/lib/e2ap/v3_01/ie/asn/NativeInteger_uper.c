@@ -34,9 +34,10 @@ NativeInteger_decode_uper_e2ap_v3_01(const asn_codec_ctx_t *opt_codec_ctx,
             ? asn_INTEGER2ulong_e2ap_v3_01(&tmpint, (unsigned long *)native)
             : asn_INTEGER2long_e2ap_v3_01(&tmpint, native))
             rval.code = RC_FAIL;
-        else
+        else {
             ASN_DEBUG("NativeInteger %s got value %ld",
                       td->name, *native);
+        }
     }
     ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER_e2ap_v3_01, &tmpint);
 

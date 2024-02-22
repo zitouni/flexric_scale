@@ -31,7 +31,7 @@ aper_encode_e2ap_v3_01_to_buffer(const asn_TYPE_descriptor_t *td,
     key.buffer = buffer;
     key.left = buffer_size;
 
-    if(td) ASN_DEBUG("Encoding \"%s\" using ALIGNED PER", td->name);
+    if(td) {ASN_DEBUG("Encoding \"%s\" using ALIGNED PER", td->name);}
 
     return aper_encode_e2ap_v3_01(td, constraints, sptr, encode_to_buffer_cb, &key);
 }
