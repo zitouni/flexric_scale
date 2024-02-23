@@ -96,7 +96,7 @@ class HtmlReport():
         with open(os.path.join(cwd, REPORT_NAME), 'w') as wfile:
             wfile.write(generate_header(args))
             wfile.write(generate_git_info(args))
-            wfile.write(build_summary(args, 'flexric', '22', 'N/A'))
+            wfile.write(build_summary(args, 'flexric', '22', '9'))
             wfile.write(ctest_summary(args, 'flexric_ctests.log'))
             wfile.write(generate_footer())
 
