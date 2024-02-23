@@ -155,6 +155,26 @@ pipeline {
       }
     }
 
+    stage ('Running CTests') {
+      steps {
+        lock(ubuntuBuildResource) {
+          script {
+            gitlabCommitStatus(name: "Running CTests") {
+              sh "docker image rm oai-flexric-ctest:${flexric_tag} || true"
+              sh "docker buildx build --target oai-flexric-builder --tag oai-flexric-ctest:${flexric_tag} --file ci-scripts/Dockerfile.ctest . > archives/flexric_ctests.log 2>&1"
+            }
+          }
+        }
+      }
+      post {
+        cleanup {
+          script {
+            sh "docker image rm oai-flexric-ctest:${flexric_tag} || true"
+          }
+        }
+      }
+    }
+
     // We are only publishing the Ubuntu image to Docker-Hub
     // For Post-Merge events.
     // Temporary Images from Merge-Request Runs are kept in local private registry

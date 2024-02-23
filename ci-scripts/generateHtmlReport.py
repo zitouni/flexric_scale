@@ -33,6 +33,10 @@ from common.python.generate_html import (
     generate_header,
     generate_footer,
     generate_git_info,
+    generate_chapter,
+    generate_list_header,
+    generate_list_footer,
+    generate_list_row,
 )
 
 from common.python.code_format_checker import (
@@ -49,6 +53,40 @@ from common.python.building_report import (
 
 REPORT_NAME = 'test_results_oai_flexric.html'
 
+def ctest_summary(args, reportName):
+    cwd = os.getcwd()
+    status = True
+    chapterName = 'CTests Summary'
+    summary = ''
+    if os.path.isfile(f'{cwd}/archives/{reportName}'):
+        status = True
+        section_start_pattern = 'Test project /flexric/build'
+        section_end_pattern = 'Total Test time'
+        section_status = False
+        summary = generate_list_header()
+        with open(f'{cwd}/archives/{reportName}', 'r') as logfile:
+            for line in logfile:
+                if re.search(section_start_pattern, line) is not None and not section_status:
+                    section_status = True
+                if section_status and re.search(section_end_pattern, line) is not None:
+                    section_status = False
+                if section_status:
+                    result = re.search('(Test *#[0-9]+: Unit_test_[A-Za-z0-9_]+) [\.]+', line)
+                    passed = re.search('Passed', line)
+                    if result is not None and passed is not None:
+                        summary += generate_list_row(result.group(1), 'thumbs-up')
+                    elif result is not None:
+                        summary += generate_list_row(result.group(1), 'thumbs-down')
+        summary += generate_list_footer()
+    else:
+        summary = generate_chapter(chapterName, 'CTests report file not found! Not run?', False)
+        return summary
+    if status:
+        summary = generate_chapter(chapterName, 'All CTests passed', True) + summary
+    else:
+        summary = generate_chapter(chapterName, 'Some CTests failed', False) + summary
+    return summary
+
 class HtmlReport():
     def __init__(self):
         pass
@@ -59,6 +97,7 @@ class HtmlReport():
             wfile.write(generate_header(args))
             wfile.write(generate_git_info(args))
             wfile.write(build_summary(args, 'flexric', '22', 'N/A'))
+            wfile.write(ctest_summary(args, 'flexric_ctests.log'))
             wfile.write(generate_footer())
 
 if __name__ == '__main__':
