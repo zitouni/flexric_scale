@@ -22,51 +22,53 @@
 #---------------------------------------------------------------------
 #
 # Dockerfile for the Open-Air-Interface FlexRIC service
-#   Valid for Ubuntu-22.04 (jammy)
+#   Valid for Rocky Linux 9.+
 #
 #---------------------------------------------------------------------
 # BUILDER IMAGE
 #---------------------------------------------------------------------
-ARG BASE_IMAGE=ubuntu:jammy
-
-FROM $BASE_IMAGE AS oai-flexric-base
-ENV DEBIAN_FRONTEND=noninteractive
+FROM docker.io/rockylinux:9 AS oai-flexric-base
 ENV TZ=Europe/Paris
 
 #install developers pkg/repo
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get upgrade --yes && \
-    DEBIAN_FRONTEND=noninteractive apt-get install --yes \
-       build-essential \
-       libsctp-dev \
+RUN dnf install 'dnf-command(config-manager)' -y && \
+    dnf install epel-release -y && crb enable && \
+    dnf update -y && \
+    # here just to display the current version
+    cat /etc/os-release && \
+    dnf install -y \
+       lksctp-tools-devel \
        git \
+       bash \
        wget \
        tar \
        m4 \
        automake \
        libtool \
        python3 \
+       make \
        cmake \
-       cmake-curses-gui \
+       cmake-gui \
        bison \
        flex \
        gdb \
-       libpcre2-dev \
-       python3-dev \
+       pcre2-devel \
+       python3-devel \
        python3-pip \
-       gcc-12 \
-       g++-12 \
-       mold \
+       gcc-toolset-12-gcc \
+       gcc-toolset-12-gcc-c++ \
        ninja-build && \
-    apt-get clean
+    echo "/usr/local/lib" > /etc/ld.so.conf.d/local-lib.conf && \
+    echo "/usr/local/lib64" >> /etc/ld.so.conf.d/local-lib.conf
 
 RUN git clone https://github.com/swig/swig.git && \
     cd swig && \
     git checkout release-4.1 && \
+    scl enable gcc-toolset-12 "\
     ./autogen.sh && \
     ./configure --prefix=/usr/ && \
     make -j8 && \
-    make install && \
+    make install" && \
     ldconfig
 
 FROM oai-flexric-base as oai-flexric-builder
@@ -76,9 +78,10 @@ COPY . .
 
 RUN mkdir build && \
     cd build && \
-    cmake -GNinja -DCMAKE_C_COMPILER=gcc-12 .. && \
+    scl enable gcc-toolset-12 "\
+    cmake -GNinja -DCMAKE_BUILD_TYPE=Release .. && \
     ninja && \
-    ninja install && \
+    ninja install" && \
     echo "--- Check shared objects dependencies for executable nearRT-RIC ---" && \
     ldd /flexric/build/examples/ric/nearRT-RIC && \
     echo "--- Check shared objects dependencies for xApp shared library ---" && \
@@ -88,36 +91,37 @@ RUN mkdir build && \
 # TARGET IMAGE
 #---------------------------------------------------------------------
 
-FROM $BASE_IMAGE AS oai-flexric
-ENV DEBIAN_FRONTEND=noninteractive
+FROM docker.io/rockylinux:9-minimal AS oai-flexric
 ENV TZ=Europe/Paris
 
-#install pkg/repo needed to run
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get upgrade --yes && \
-    DEBIAN_FRONTEND=noninteractive apt-get install --yes \
+#install developers pkg/repo
+RUN microdnf update -y && \
+    microdnf install -y \
+       tzdata \
        psmisc \
        gpg \
        wget \
-       libsctp1 \
+       lksctp-tools \
        python3 \
        python3-pip && \
-    apt-get autoremove -y && \
-    apt-get autoclean -y
+    microdnf clean all -y && \
+    echo "/usr/local/lib" > /etc/ld.so.conf.d/local-lib.conf && \
+    echo "/usr/local/lib64" >> /etc/ld.so.conf.d/local-lib.conf
 
-WORKDIR /
+WORKDIR /usr/local/lib64/flexric/
 
 COPY --from=oai-flexric-builder \
-    /usr/local/lib/flexric/libmac_sm.so \
-    /usr/local/lib/flexric/libkpm_sm.so \
-    /usr/local/lib/flexric/librlc_sm.so \
-    /usr/local/lib/flexric/libslice_sm.so \
-    /usr/local/lib/flexric/libtc_sm.so \
-    /usr/local/lib/flexric/libgtp_sm.so \
-    /usr/local/lib/flexric/libpdcp_sm.so \
-    /usr/local/lib/flexric/librc_sm.so \
-    /usr/local/lib/flexric/
+    /usr/local/lib64/flexric/libmac_sm.so \
+    /usr/local/lib64/flexric/libkpm_sm.so \
+    /usr/local/lib64/flexric/librlc_sm.so \
+    /usr/local/lib64/flexric/libslice_sm.so \
+    /usr/local/lib64/flexric/libtc_sm.so \
+    /usr/local/lib64/flexric/libgtp_sm.so \
+    /usr/local/lib64/flexric/libpdcp_sm.so \
+    /usr/local/lib64/flexric/librc_sm.so \
+    /usr/local/lib64/flexric/
 
+WORKDIR /flexric/build/src/xApp/
 COPY --from=oai-flexric-builder \
     /flexric/build/src/xApp/libe42_xapp_shared.so \
     /flexric/build/src/xApp/
@@ -126,6 +130,7 @@ COPY --from=oai-flexric-builder \
     /flexric/build/examples/ric/nearRT-RIC /usr/local/bin/nearRT-RIC
 
 ## Copy xApps
+WORKDIR /usr/local/flexric
 COPY --from=oai-flexric-builder \
     /flexric/build/examples/xApp /usr/local/flexric/xApp
 
@@ -135,8 +140,9 @@ RUN ldconfig && \
     echo "--- Check shared objects dependencies for xApp shared library ---" && \
     ldd /flexric/build/src/xApp/libe42_xapp_shared.so && \
     echo "--- Check shared objects dependencies for flexric shared libraries ---" && \
-    ldd /usr/local/lib/flexric/*.so
+    ldd /usr/local/lib64/flexric/*.so
 
+WORKDIR /
 ## E2
 EXPOSE 36421/sctp
 ## E42
