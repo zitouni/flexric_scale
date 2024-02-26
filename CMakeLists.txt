@@ -47,10 +47,6 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
 endif()
 
-if($default_build_type STREQUAL "Release")
-   add_compile_options("-O3;-march=native;-flto")
-endif()
-
 ########
 ### SANITIZER 
 ########
@@ -197,7 +193,11 @@ endif()
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if(BUILDING_LIBRARY STREQUAL "STATIC")
-  add_compile_options("-W;-Wall;-Wextra;-g;-Wno-unused-result;-Warray-bounds;-Wempty-body;-fstack-protector-strong;-fstack-clash-protection;-D_FORTIFY_SOURCE=3;-D_GLIBCXX_ASSERTIONS") #-fopt-info -fhardened
+  if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_compile_options("-W;-Wall;-Wextra;-g;-Wno-unused-result;-Warray-bounds;-Wempty-body;-fstack-protector-strong;-fstack-clash-protection;-D_GLIBCXX_ASSERTIONS") #-fopt-info -fhardened
+  else()
+    add_compile_options("-W;-Wall;-Wextra;-g;-Wno-unused-result;-Warray-bounds;-Wempty-body;-fstack-protector-strong;-fstack-clash-protection;-D_FORTIFY_SOURCE=3;-D_GLIBCXX_ASSERTIONS") #-fopt-info -fhardened
+  endif()
 elseif(BUILDING_LIBRARY STREQUAL "DYNAMIC")
   # -fPIC flag
   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
