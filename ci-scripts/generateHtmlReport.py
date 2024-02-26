@@ -22,6 +22,7 @@ For more information about the OpenAirInterface (OAI) Software Alliance:
 """
 
 #import argparse
+import datetime
 import os
 import re
 
@@ -92,13 +93,15 @@ class HtmlReport():
         pass
 
     def generate(self, args):
+        date = datetime.date.today()
+        year = date.strftime("%Y")
         cwd = os.getcwd()
         with open(os.path.join(cwd, REPORT_NAME), 'w') as wfile:
-            wfile.write(generate_header(args))
+            wfile.write(re.sub('Core Network Test ', '', generate_header(args)))
             wfile.write(generate_git_info(args))
             wfile.write(build_summary(args, 'flexric', '22', '9'))
             wfile.write(ctest_summary(args, 'flexric_ctests.log'))
-            wfile.write(generate_footer())
+            wfile.write(re.sub('2023', year, generate_footer()))
 
 if __name__ == '__main__':
     # Parse the arguments
