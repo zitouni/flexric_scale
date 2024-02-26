@@ -79,7 +79,8 @@ RUN mkdir build && \
     cmake -GNinja -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_C_FLAGS_RELEASE="-O3" \
           -DCMAKE_CXX_FLAGS_RELEASE="-O3" \
-          -DCMAKE_C_COMPILER=gcc-12 .. && \
+          -DCMAKE_C_COMPILER=gcc-12 \
+          -DCMAKE_CXX_COMPILER=g++-12 .. && \
     ninja && \
     ninja install && \
     echo "--- Check shared objects dependencies for executable nearRT-RIC ---" && \
