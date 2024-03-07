@@ -64,6 +64,6 @@ if(${BUILDING_LIBRARY} STREQUAL "DYNAMIC" )
                        ) 
 endif()
 
-target_link_libraries(e2_agent PRIVATE -pthread -lsctp) 
+target_link_libraries(e2_agent PRIVATE -pthread -lsctp -ldl) 
 target_compile_definitions(e2_agent PRIVATE ${E2AP_ENCODING} ${E2AP_VERSION} ${KPM_VERSION})
 
