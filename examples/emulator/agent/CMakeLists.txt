@@ -19,7 +19,6 @@ add_library(test_agent_obj OBJECT
   sm_gtp.c
   sm_mac.c
   sm_pdcp.c
-  sm_rc.c
   sm_rlc.c
   sm_slice.c
   sm_tc.c
@@ -35,6 +34,7 @@ add_executable(emu_agent_gnb
   test_agent.c
   read_setup_ran.c
   sm_kpm.c
+  sm_rc.c
   $<TARGET_OBJECTS:test_agent_obj>
   )
 
@@ -64,6 +64,7 @@ add_executable(emu_agent_gnb_cu
   test_agent.c
   read_setup_ran.c
   sm_kpm.c
+  sm_rc.c
   $<TARGET_OBJECTS:test_agent_obj>
   )
 
@@ -93,6 +94,7 @@ add_executable(emu_agent_gnb_du
   test_agent.c
   read_setup_ran.c
   sm_kpm.c
+  sm_rc.c
   $<TARGET_OBJECTS:test_agent_obj>
   )
 
@@ -121,6 +123,7 @@ add_executable(emu_agent_enb
   test_agent.c
   read_setup_ran.c
   sm_kpm.c
+  sm_rc.c
   $<TARGET_OBJECTS:test_agent_obj>
   )
 
