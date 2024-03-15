@@ -33,7 +33,7 @@ rhelResource = params.RhelBuildResource
 rhelOcCredentials = params.RhelOcCredentials
 
 // Tags/Branches to use
-def flexric_tag = "dev"
+def flexric_tag = "develop"
 def flexric_branch = "dev"
 
 // Merge Request Link
@@ -103,7 +103,7 @@ pipeline {
           } else {
             shortenShaOne = sh returnStdout: true, script: 'git log -1 --pretty=format:"%h" --abbrev=8 ' + env.GIT_COMMIT
             shortenShaOne = shortenShaOne.trim()
-            flexric_tag       = 'dev-' + shortenShaOne
+            flexric_tag       = 'develop-' + shortenShaOne
             flexric_branch    = env.GIT_COMMIT
 
             echo "======== THIS IS A PUSH REQUEST ========"
@@ -253,9 +253,9 @@ pipeline {
               }
               sh "docker login -u oaicicd -p oaicicd ${PrivateRegistryURL}"
               sh "docker pull ${PrivateRegistryURL}/oai-flexric:${flexric_tag}"
-              sh "docker image tag ${PrivateRegistryURL}/oai-flexric:${flexric_tag} ${DH_Account}/oai-flexric:dev"
-              sh "docker push ${DH_Account}/oai-flexric:dev"
-              sh "docker rmi ${DH_Account}/oai-flexric:dev ${PrivateRegistryURL}/oai-flexric:${flexric_tag}"
+              sh "docker image tag ${PrivateRegistryURL}/oai-flexric:${flexric_tag} ${DH_Account}/oai-flexric:develop"
+              sh "docker push ${DH_Account}/oai-flexric:develop"
+              sh "docker rmi ${DH_Account}/oai-flexric:develop ${PrivateRegistryURL}/oai-flexric:${flexric_tag}"
               sh "docker logout ${PrivateRegistryURL}"
               sh "docker logout"
             }
