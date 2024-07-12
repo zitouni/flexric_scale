@@ -93,6 +93,8 @@ void* worker_thread(void* arg)
 {
   db_xapp_t* db = (db_xapp_t*)arg;
 
+  int counter=0;
+
   while(true){
     e2_node_ag_if_t* data = NULL; 
     size_t sz = size_tsnq(&db->q);
@@ -120,6 +122,8 @@ void* worker_thread(void* arg)
       assert(data[i].rd.type == INDICATION_MSG_AGENT_IF_ANS_V0);
       free_sm_ag_if_rd_ind(&data[i].rd.ind);
     }
+    counter++;
+    printf("Counter of data: %d\n", counter);
   }
   db->q.stopped = true;
 
