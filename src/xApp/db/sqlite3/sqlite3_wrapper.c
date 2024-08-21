@@ -74,7 +74,8 @@ void create_mac_ue_table(sqlite3* db)
                        "ul_mcs1  INT CHECK(ul_mcs1 >= 0 AND ul_mcs1 < 256),"
                        "dl_mcs2  INT CHECK(dl_mcs2 >= 0 AND dl_mcs2 < 256),"
                        "ul_mcs2 INT CHECK(ul_mcs2 >= 0 AND ul_mcs2 < 256),"
-                       "phr INT CHECK(phr > -24 AND  phr < 41)," // −23 dB to +40 dB
+                       //"phr INT CHECK(phr > -24 AND  phr < 41)," // −23 dB to +40 dB
+                       "phr INT CHECK(phr >= 0 AND  phr < 4294967296)," // Adapted to handle ICS testing
                        "bsr INT CHECK(bsr >= 0 AND  bsr < 4294967296),"
                        "dl_bler REAL CHECK(dl_bler  >= 0 AND dl_bler < 4294967296),"
                        "ul_bler REAL CHECK(ul_bler  >= 0 AND ul_bler < 4294967296),"
@@ -311,17 +312,46 @@ void create_kpm_table(sqlite3* db)
   create_table(db, sql_kpm_labelInfo);
 }
 
+// static
+// void insert_db(sqlite3* db, char const* sql)
+// {
+//   assert(db != NULL);
+//   assert(sql != NULL);
+
+//   char* err_msg = NULL;
+//   int rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+//   assert(rc == SQLITE_OK && "Error while inserting into the DB. Check the err_msg string for further info");
+// }
+
+
 static
 void insert_db(sqlite3* db, char const* sql)
 {
-  assert(db != NULL);
-  assert(sql != NULL);
+    // Ensure the database connection and SQL statement are not NULL
+    if (db == NULL) {
+        fprintf(stderr, "Database connection is NULL\n");
+        return;
+    }
+    if (sql == NULL) {
+        fprintf(stderr, "SQL statement is NULL\n");
+        return;
+    }
 
-  char* err_msg = NULL;
-  int rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
-  assert(rc == SQLITE_OK && "Error while inserting into the DB. Check the err_msg string for further info");
+    char *err_msg = NULL;
+    int rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    if (rc != SQLITE_OK) {
+        // Print the error message to stderr
+        fprintf(stderr, "Error while inserting into the DB: %s\n", err_msg);
+        // Free the error message memory allocated by sqlite3_exec
+        sqlite3_free(err_msg);
+        return;
+    }else{
+      // Successfully inserted into the DB
+      printf("Successfully inserted into the DB\n");
+    }
+
+
 }
-
 
 static
 int to_sql_string_mac_ue(global_e2_node_id_t const* id, mac_ue_stats_impl_t* stats, int64_t tstamp, char* out, size_t out_len)

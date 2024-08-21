@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC   -shared -Wl,-soname,librc_sm.so -o librc_sm.so @CMakeFiles/rc_sm.dir/objects1.rsp  -lm 

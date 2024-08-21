@@ -123,7 +123,7 @@ void* worker_thread(void* arg)
       free_sm_ag_if_rd_ind(&data[i].rd.ind);
     }
     counter++;
-    printf("Counter of data: %d\n", counter);
+    //printf("*******Counter of data: %d\n", counter);
   }
   db->q.stopped = true;
 

@@ -10,7 +10,6 @@ void func (sm_ag_if_rd_t const* src){
     printf("[ICS xApp]: Length of the UE Stats: %d\n", src->ind.mac.msg.len_ue_stats);
     printf("[ICS xApp]: MAC Timestamp: %ld, UE RNTI: %X, UE WB CQI: %d, PSCH SNR: %.1f, \n", src->ind.mac.msg.tstamp,
             src->ind.mac.msg.ue_stats->rnti, src->ind.mac.msg.ue_stats->wb_cqi, src->ind.mac.msg.ue_stats->pusch_snr );
-    exit(0);
 
 }
 

@@ -33,7 +33,7 @@
 #include <pthread.h>
 
 //static uint64_t const period_ms = 1000;
-static uint64_t const period_ms = 100;
+static uint64_t const period_ms = 1000;
 static pthread_mutex_t mtx;
 
 static bool keepRunning = true;
@@ -426,10 +426,11 @@ int main(int argc, char* argv[])
   // END KPM
   ////////////
 
-  //sleep(10);
+  sleep(10);
 
 
   while (keepRunning) {
+
   }
 
   for (int i = 0; i < nodes.len; ++i) {

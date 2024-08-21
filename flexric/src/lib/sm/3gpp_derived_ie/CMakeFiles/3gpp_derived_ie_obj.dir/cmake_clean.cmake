@@ -1,0 +1,24 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/3gpp_derived_ie_obj.dir/e2sm_gummei.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/en_gnb.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/enb.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/eutra_cgi.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/global_enb_id.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/global_gnb_id.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/global_ng_enb_id.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/global_ng_ran_node_id.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/gnb.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/gnb_cu_up.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/gnb_du.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/guami.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/ng_enb.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/ng_enb_du.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/nr_cgi.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/plmn_identity.o"
+  "CMakeFiles/3gpp_derived_ie_obj.dir/rrc_msg_id.o"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang C)
+  include(CMakeFiles/3gpp_derived_ie_obj.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

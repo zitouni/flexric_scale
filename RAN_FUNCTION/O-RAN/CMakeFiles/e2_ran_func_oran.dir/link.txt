@@ -1,0 +1,2 @@
+/usr/bin/ar qc libe2_ran_func_oran.a  CMakeFiles/e2_ran_func_oran.dir/ran_func_kpm.o CMakeFiles/e2_ran_func_oran.dir/ran_func_rc.o CMakeFiles/e2_ran_func_oran.dir/__/__/test/rnd/fill_rnd_data_kpm.o CMakeFiles/e2_ran_func_oran.dir/__/__/test/rnd/fill_rnd_data_rc.o
+/usr/bin/ranlib libe2_ran_func_oran.a

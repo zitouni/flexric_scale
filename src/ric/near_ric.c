@@ -425,10 +425,63 @@ void sctp_msg_arrived_event(void* arg)
   }
 }
 
+// static
+// void e2_event_loop_ric(near_ric_t* ric)
+// {
+//   assert(ric != NULL);
+//   while(ric->stop_token == false){ 
+
+//     async_event_arr_t arr = next_asio_event_ric(ric); 
+//     assert(arr.len > 0 && arr.len < 65);
+//     for(int i = 0; i < arr.len; ++i){
+//       async_event_t e = arr.ev[i]; 
+//       assert(e.type != UNKNOWN_EVENT && "Unknown event triggered ");
+
+//       switch(e.type)
+//       {
+//         case SCTP_MSG_ARRIVED_EVENT:
+//           {
+//             ric_sctp_msg_t* ric_sctp = calloc(1, sizeof( ric_sctp_msg_t)); 
+//             assert(ric_sctp != NULL && "Memory exhausted");
+//             ric_sctp->ric = ric;
+//             // Pass ownership
+//             ric_sctp->msg = e.msg;
+//             task_t t = {.args = ric_sctp, .func = sctp_msg_arrived_event};
+//             // Execute tasks in parallel
+//             async_task_manager(&ric->man, t);
+//             break;
+//           }
+//         case PENDING_EVENT:
+//           {
+//             printf("Pending event timeout happened. Communication with E2 Node lost?\n");
+//             consume_fd(e.fd);
+
+//             break;
+//           }
+//         case SCTP_CONNECTION_SHUTDOWN_EVENT: 
+//           {
+//             defer({free_sctp_msg(&e.msg);});
+//             notification_handle_ric(ric, &e.msg);
+//             break;
+//           }
+//         case CHECK_STOP_TOKEN_EVENT:
+//           {
+//             break;
+//           }
+
+//         default:
+//           assert(0!=0 && "Unknown event happened");
+//       }
+//     }
+//   }
+//   ric->server_stopped = true; 
+// }
+
 static
 void e2_event_loop_ric(near_ric_t* ric)
 {
   assert(ric != NULL);
+  int retry_count = 0;
   while(ric->stop_token == false){ 
 
     async_event_arr_t arr = next_asio_event_ric(ric); 
@@ -453,8 +506,16 @@ void e2_event_loop_ric(near_ric_t* ric)
           }
         case PENDING_EVENT:
           {
-            printf("Pending event timeout happened. Communication with E2 Node lost?\n");
-            consume_fd(e.fd);
+            if (retry_count < 3) {
+                retry_count++;
+                printf("Pending event timeout happened. Retrying (%d/%d)...\n", retry_count, 3);
+                // Handle retry logic here
+                consume_fd(e.fd);
+            } else {
+                printf("Pending event timeout happened. Communication with E2 Node lost after %d retries.\n", 3);
+                retry_count = 0; // Reset retry count for future events
+                // Optional: Additional handling for communication loss
+            }
 
             break;
           }

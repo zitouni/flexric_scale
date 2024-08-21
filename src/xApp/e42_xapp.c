@@ -258,10 +258,74 @@ void send_setup_request(e42_xapp_t* xapp)
   xapp->handle_msg[E42_SETUP_REQUEST](xapp, NULL);
 }
 
+// static
+// void e2_event_loop_xapp(e42_xapp_t* xapp)
+// {
+//   assert(xapp != NULL);
+//   while (xapp->stop_token == false) {
+//     int fd = event_asio_xapp(&xapp->io);
+//     if(fd == -1){ // no event happened. Just for checking the stop_token condition
+//           continue; 
+//     }
+//     async_event_xapp_t const e = find_event_type(xapp,fd);
+
+//     assert(e.type != UNKNOWN_EVENT && "Unknown event triggered ");
+
+//     if(e.type == NETWORK_EVENT){ 
+
+//       byte_array_t ba = e2ap_recv_msg_xapp(&xapp->ep);
+//       defer( {free_byte_array(ba);} );
+
+//       e2ap_msg_t msg = e2ap_msg_dec_xapp(&xapp->ap, ba);
+//       defer( { e2ap_msg_free_xapp(&xapp->ap, &msg);} );
+
+//       e2ap_msg_t ans = e2ap_msg_handle_xapp(xapp, &msg);
+//       defer( { e2ap_msg_free_xapp(&xapp->ap, &ans);} );
+
+//       if(ans.type != NONE_E2_MSG_TYPE){
+//         byte_array_t ba_ans = e2ap_msg_enc_xapp(&xapp->ap, &ans); 
+//         defer ({free_byte_array(ba_ans); } );
+
+//         e2ap_send_bytes_xapp(&xapp->ep, ba_ans);
+//       }
+//     } else if(e.type == PENDING_EVENT){
+//       assert(( *e.p_ev == E42_SETUP_REQUEST_PENDING_EVENT 
+//             || *e.p_ev == E42_RIC_SUBSCRIPTION_REQUEST_PENDING_EVENT
+//             || *e.p_ev == E42_RIC_SUBSCRIPTION_DELETE_REQUEST_PENDING_EVENT 
+//             || *e.p_ev == E42_RIC_CONTROL_REQUEST_PENDING_EVENT ) && "Unforeseen pending event happened!" );
+
+//       assert(*e.p_ev != E42_RIC_SUBSCRIPTION_REQUEST_PENDING_EVENT && "Timeout waiting for Report. Connection lost with the RIC?");
+//       assert(*e.p_ev != E42_RIC_SUBSCRIPTION_DELETE_REQUEST_PENDING_EVENT  && "Timeout waiting for Subscription Delete. Connection lost with the RIC?");
+//       assert(*e.p_ev != E42_RIC_CONTROL_REQUEST_PENDING_EVENT && "Timeout waiting for Control ACK. Connection lost with the RIC?");
+
+//       // Resend the subscription request message
+//       e42_setup_request_t sr = generate_e42_setup_request(xapp);
+//       defer({ e2ap_free_e42_setup_request(&sr);  } );
+
+//       printf("[E2AP]: Resending Setup Request after timeout\n");
+//       byte_array_t ba = e2ap_enc_e42_setup_request_xapp(&xapp->ap, &sr);
+//       defer({free_byte_array(ba); } );
+
+//       e2ap_send_bytes_xapp(&xapp->ep, ba);
+
+//       consume_fd(fd);
+//     } else {
+//       assert(0!=0 && "An interruption that it is not a network pkt, or a timer expired pending event happened!");
+//     }
+
+//   }
+//   xapp->stopped = true;
+// }
+
+
 static
 void e2_event_loop_xapp(e42_xapp_t* xapp)
 {
   assert(xapp != NULL);
+  int retry_count = 0;
+  const int max_retries = 3;
+
+
   while (xapp->stop_token == false) {
     int fd = event_asio_xapp(&xapp->io);
     if(fd == -1){ // no event happened. Just for checking the stop_token condition
@@ -289,26 +353,28 @@ void e2_event_loop_xapp(e42_xapp_t* xapp)
         e2ap_send_bytes_xapp(&xapp->ep, ba_ans);
       }
     } else if(e.type == PENDING_EVENT){
-      assert(( *e.p_ev == E42_SETUP_REQUEST_PENDING_EVENT 
-            || *e.p_ev == E42_RIC_SUBSCRIPTION_REQUEST_PENDING_EVENT
-            || *e.p_ev == E42_RIC_SUBSCRIPTION_DELETE_REQUEST_PENDING_EVENT 
-            || *e.p_ev == E42_RIC_CONTROL_REQUEST_PENDING_EVENT ) && "Unforeseen pending event happened!" );
+        if (*e.p_ev == E42_RIC_SUBSCRIPTION_REQUEST_PENDING_EVENT) {
+          if (retry_count < max_retries) {
+              retry_count++;
+              printf("[E2AP]: Timeout waiting for Report. Retrying (%d/%d)...\n", retry_count, max_retries);
+              // Resend the subscription request message
+              e42_setup_request_t sr = generate_e42_setup_request(xapp);
+              defer({ e2ap_free_e42_setup_request(&sr); });
 
-      assert(*e.p_ev != E42_RIC_SUBSCRIPTION_REQUEST_PENDING_EVENT && "Timeout waiting for Report. Connection lost with the RIC?");
-      assert(*e.p_ev != E42_RIC_SUBSCRIPTION_DELETE_REQUEST_PENDING_EVENT  && "Timeout waiting for Subscription Delete. Connection lost with the RIC?");
-      assert(*e.p_ev != E42_RIC_CONTROL_REQUEST_PENDING_EVENT && "Timeout waiting for Control ACK. Connection lost with the RIC?");
+              byte_array_t ba = e2ap_enc_e42_setup_request_xapp(&xapp->ap, &sr);
+              defer({ free_byte_array(ba); });
 
-      // Resend the subscription request message
-      e42_setup_request_t sr = generate_e42_setup_request(xapp);
-      defer({ e2ap_free_e42_setup_request(&sr);  } );
-
-      printf("[E2AP]: Resending Setup Request after timeout\n");
-      byte_array_t ba = e2ap_enc_e42_setup_request_xapp(&xapp->ap, &sr);
-      defer({free_byte_array(ba); } );
-
-      e2ap_send_bytes_xapp(&xapp->ep, ba);
-
-      consume_fd(fd);
+              e2ap_send_bytes_xapp(&xapp->ep, ba);
+              consume_fd(fd);
+          } else {
+              printf("[E2AP]: Timeout waiting for Report. Connection lost with the RIC?\n");
+              retry_count = 0; // Reset retry count for future events
+          }
+        }else if (*e.p_ev == E42_RIC_SUBSCRIPTION_DELETE_REQUEST_PENDING_EVENT) {
+              printf("[E2AP]: Timeout waiting for Subscription Delete. Connection lost with the RIC?\n");
+        } else if (*e.p_ev == E42_RIC_CONTROL_REQUEST_PENDING_EVENT) {
+              printf("[E2AP]: Timeout waiting for Control ACK. Connection lost with the RIC?\n");
+        }
     } else {
       assert(0!=0 && "An interruption that it is not a network pkt, or a timer expired pending event happened!");
     }
@@ -316,7 +382,6 @@ void e2_event_loop_xapp(e42_xapp_t* xapp)
   }
   xapp->stopped = true;
 }
-
 
 void start_e42_xapp(e42_xapp_t* xapp)
 {
