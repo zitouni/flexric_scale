@@ -37,9 +37,15 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
+# Set default install directory permissions.
+if(NOT DEFINED CMAKE_OBJDUMP)
+  set(CMAKE_OBJDUMP "/usr/bin/objdump")
+endif()
+
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/flexric/src/lib/ap/cmake_install.cmake")
+  include("/home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/flexric/src/lib/3gpp/cmake_install.cmake")
+  include("/home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/flexric/src/lib/e2ap/cmake_install.cmake")
   include("/home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/flexric/src/lib/ep/cmake_install.cmake")
   include("/home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/flexric/src/lib/msg_hand/cmake_install.cmake")
   include("/home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/flexric/src/lib/sm/cmake_install.cmake")

@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -shared -Wl,-soname,libkpm_sm.so -o libkpm_sm.so @CMakeFiles/kpm_sm.dir/objects1.rsp  -lm 

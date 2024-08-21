@@ -37,10 +37,8 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for each subdirectory.
-  include("/home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/RAN_FUNCTION/CUSTOMIZED/cmake_install.cmake")
-  include("/home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/RAN_FUNCTION/O-RAN/cmake_install.cmake")
-
+# Set default install directory permissions.
+if(NOT DEFINED CMAKE_OBJDUMP)
+  set(CMAKE_OBJDUMP "/usr/bin/objdump")
 endif()
 
