@@ -112,25 +112,50 @@ void rm_fd_asio_xapp(asio_xapp_t* io, int fd)
 
 }
 
+// int event_asio_xapp(asio_xapp_t const* io)
+// {
+//   assert(io != NULL);
+
+//   const int maxevents = 1;
+//   struct epoll_event events[maxevents];
+//   const int timeout_ms = 1000;
+
+//   const int events_ready = epoll_wait(io->efd, events, maxevents, timeout_ms); 
+//   if(events_ready == -1){
+//     printf("Error detected = %s \n", strerror(errno));
+//     fflush(stdout);
+//   }
+//   assert(events_ready == 0 || events_ready == 1);
+
+//   if(events_ready == 0) return -1;
+
+//   // Max. one event ready
+//   assert((events[0].events & EPOLLERR) == 0);
+//   return events[0].data.fd; 
+// }
+
 int event_asio_xapp(asio_xapp_t const* io)
 {
-  assert(io != NULL);
+    assert(io != NULL);
 
-  const int maxevents = 1;
-  struct epoll_event events[maxevents];
-  const int timeout_ms = 1000;
+    const int maxevents = 1;
+    struct epoll_event events[maxevents];
+    const int timeout_ms = 1000;
 
-  const int events_ready = epoll_wait(io->efd, events, maxevents, timeout_ms); 
-  if(events_ready == -1){
-    printf("Error detected = %s \n", strerror(errno));
-    fflush(stdout);
-  }
-  assert(events_ready == 0 || events_ready == 1);
+    int events_ready;
+    do {
+        events_ready = epoll_wait(io->efd, events, maxevents, timeout_ms);
+    } while (events_ready == -1 && errno == EINTR);
 
-  if(events_ready == 0) return -1;
+    if (events_ready == -1) {
+        printf("Error detected = %s \n", strerror(errno));
+        fflush(stdout);
+    }
+    assert(events_ready == 0 || events_ready == 1);
 
-  // Max. one event ready
-  assert((events[0].events & EPOLLERR) == 0);
-  return events[0].data.fd; 
+    if (events_ready == 0) return -1;
+
+    // Max. one event ready
+    assert((events[0].events & EPOLLERR) == 0);
+    return events[0].data.fd;
 }
-

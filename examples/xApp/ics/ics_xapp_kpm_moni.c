@@ -250,8 +250,10 @@ static
 kpm_act_def_format_1_t fill_act_def_frm_1(ric_report_style_item_t const* report_item)
 {
   assert(report_item != NULL);
+  //assert(report_item->act_def_format_type == FORMAT_1_ACTION_DEFINITION);
 
   kpm_act_def_format_1_t ad_frm_1 = {0};
+
 
   size_t const sz = report_item->meas_info_for_action_lst_len;
 
@@ -289,14 +291,49 @@ kpm_act_def_format_1_t fill_act_def_frm_1(ric_report_style_item_t const* report_
   return ad_frm_1;
 }
 
+// static
+// kpm_act_def_t fill_report_style_1(ric_report_style_item_t const* report_item)
+// {
+//   assert(report_item != NULL);
+//   assert(report_item->act_def_format_type == FORMAT_1_ACTION_DEFINITION);
+
+//   kpm_act_def_t act_def = {.type = FORMAT_1_ACTION_DEFINITION};
+
+//   // Fill matching condition
+//   // [1, 32768]
+//   act_def = 1;
+//   act_def.frm_1.matching_cond_lst = calloc(act_def.frm_4.matching_cond_lst_len, sizeof(matching_condition_format_4_lst_t));
+//   // assert(act_def.frm_4.matching_cond_lst != NULL && "Memory exhausted");
+//   // // Filter connected UEs by S-NSSAI criteria
+//   // test_cond_type_e const type = S_NSSAI_TEST_COND_TYPE; // CQI_TEST_COND_TYPE
+//   // test_cond_e const condition = EQUAL_TEST_COND; // GREATERTHAN_TEST_COND
+//   // int const value = 1;
+//   // act_def.frm_4.matching_cond_lst[0].test_info_lst = filter_predicate(type, condition, value);
+
+//   // // Fill Action Definition Format 1
+//   // // 8.2.1.2.1
+//   // act_def.frm_4.action_def_format_1 = fill_act_def_frm_1(report_item);
+
+//   //   kpm_sub.ad[0].frm_1 = gen_act_def_frm_1_cell(act_cell);
+
+//   return act_def;
+// }
+
 static
 kpm_act_def_t fill_report_style_4(ric_report_style_item_t const* report_item)
 {
   assert(report_item != NULL);
-  assert(report_item->act_def_format_type == FORMAT_4_ACTION_DEFINITION);
-
+  assert((report_item->act_def_format_type == FORMAT_4_ACTION_DEFINITION)||(report_item->act_def_format_type == FORMAT_1_ACTION_DEFINITION));
+  
   kpm_act_def_t act_def = {.type = FORMAT_4_ACTION_DEFINITION};
-
+  // kpm_act_def_t act_def; // = {.type = FORMAT_4_ACTION_DEFINITION};
+  // if (report_item->act_def_format_type == FORMAT_4_ACTION_DEFINITION){
+  //   act_def = (kpm_act_def_t){ .type = FORMAT_4_ACTION_DEFINITION };
+  // }else{
+  //   if(report_item->act_def_format_type == FORMAT_1_ACTION_DEFINITION){
+  //     act_def = (kpm_act_def_t){ .type = FORMAT_1_ACTION_DEFINITION };
+  //   }
+  // }
   // Fill matching condition
   // [1, 32768]
   act_def.frm_4.matching_cond_lst_len = 1;
@@ -310,21 +347,34 @@ kpm_act_def_t fill_report_style_4(ric_report_style_item_t const* report_item)
 
   // Fill Action Definition Format 1
   // 8.2.1.2.1
+  //act_def.frm_1 = fill_act_def_frm_1(report_item);
   act_def.frm_4.action_def_format_1 = fill_act_def_frm_1(report_item);
+  
 
   return act_def;
 }
 
 typedef kpm_act_def_t (*fill_kpm_act_def)(ric_report_style_item_t const* report_item);
 
+// static
+// fill_kpm_act_def get_kpm_act_def[END_RIC_SERVICE_REPORT] = {
+//     NULL,
+//     NULL,
+//     NULL,
+//     fill_report_style_4,
+//     NULL,
+// };
+
+
 static
 fill_kpm_act_def get_kpm_act_def[END_RIC_SERVICE_REPORT] = {
-    NULL,
+    fill_report_style_4, //fill_act_def_frm_1, //fill_report_style_1,
     NULL,
     NULL,
     fill_report_style_4,
     NULL,
 };
+
 
 static
 kpm_sub_data_t gen_kpm_subs(kpm_ran_function_def_t const* ran_func)
@@ -346,9 +396,28 @@ kpm_sub_data_t gen_kpm_subs(kpm_ran_function_def_t const* ran_func)
 
   // Multiple Action Definitions in one SUBSCRIPTION message is not supported in this project
   // Multiple REPORT Styles = Multiple Action Definition = Multiple SUBSCRIPTION messages
+  assert(ran_func->ric_report_style_list != NULL);
   ric_report_style_item_t* const report_item = &ran_func->ric_report_style_list[0];
+
   ric_service_report_e const report_style_type = report_item->report_style_type;
-  *kpm_sub.ad = get_kpm_act_def[report_style_type](report_item);
+  //*kpm_sub.ad = get_kpm_act_def[report_style_type](report_item);
+  if (kpm_sub.ad != NULL) {
+    if (report_style_type >= 0 && report_style_type < END_RIC_SERVICE_REPORT) {
+        if (get_kpm_act_def[report_style_type] != NULL && report_item != NULL) {
+            *kpm_sub.ad = get_kpm_act_def[report_style_type](report_item);
+        } else {
+            // Handle the case where the function pointer or report_item is NULL
+            printf("Error: Function pointer or report_item is NULL\n");
+        }
+    } else {
+        // Handle the case where report_style_type is out of bounds
+        printf("Error: report_style_type is out of bounds\n");
+    }
+} else {
+    // Handle the case where kpm_sub.ad is NULL
+    printf("Error: kpm_sub.ad is NULL\n");
+}
+
 
   return kpm_sub;
 }
@@ -359,7 +428,7 @@ bool eq_sm(sm_ran_function_t const* elem, int const id)
   if (elem->id == id)
     return true;
 
-  return false;
+  return false; 
 }
 
 static
