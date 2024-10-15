@@ -62,21 +62,27 @@ ARG CACHEBUST=1
 # Copy source code
 COPY . /flexric
 
+
+# RUN echo "Build paused for inspection" && tail -f /dev/null
+
 # Build FlexRIC (commented out)
-# RUN rm -rf build CMakeCache.txt && \
-#     mkdir -p build && \
-#     cd build && \
-#     cmake -GNinja -DCMAKE_BUILD_TYPE=Release \
-#                   -DXAPP_MULTILANGUAGE=OFF \
-#                   -DCMAKE_C_COMPILER=gcc-12 \
-#                   -DCMAKE_CXX_COMPILER=g++-12 \
-#                   -DCMAKE_C_FLAGS="-Wall -Wno-error -fno-lto" \
-#                   -DCMAKE_CXX_FLAGS="-Wall -Wno-error -fno-lto" \
-#                   -DCMAKE_SHARED_LINKER_FLAGS="-fno-lto" \
-#                   -DCMAKE_EXE_LINKER_FLAGS="-fno-lto" \
-#                   -DCMAKE_VERBOSE_MAKEFILE=ON \
-#                   .. && \
-#     ninja -v -j1
+RUN rm -rf build CMakeCache.txt && \
+    mkdir -p build && \
+    cd build && \
+    cmake -GNinja -DCMAKE_BUILD_TYPE=Release \
+                  -DXAPP_MULTILANGUAGE=OFF \
+                  -DCMAKE_C_COMPILER=gcc-12 \
+                  -DCMAKE_CXX_COMPILER=g++-12 \
+                  -DCMAKE_C_FLAGS="-Wall -Wno-error -fno-lto" \
+                  -DCMAKE_CXX_FLAGS="-Wall -Wno-error -fno-lto" \
+                  -DCMAKE_SHARED_LINKER_FLAGS="-fno-lto" \
+                  -DCMAKE_EXE_LINKER_FLAGS="-fno-lto" \
+                  -DCMAKE_VERBOSE_MAKEFILE=ON \
+                  .. 
+#     ninja clean && \
+#     ninja -v -j1 && \
+#     ninja install && \
+#     echo "FlexRIC build completed successfully"
 
 # RUN cd build && \
 #     /usr/bin/gcc-12 -DE2AP_V2 -DKPM_V2_03 -DSERVICE_MODEL_DIR_PATH=\"/\" -DSQLITE3_XAPP -I/flexric/src -Wall -Wno-error -fno-lto -O3 -DNDEBUG -fPIC -march=native -W -Wall -Wextra -g -Wno-unused-result -Warray-bounds -Wempty-body -fstack-protector-strong -fstack-clash-protection -D_GLIBCXX_ASSERTIONS -std=gnu11 -c /flexric/src/xApp/db/sqlite3/sqlite3.c -o sqlite3.o
@@ -86,7 +92,7 @@ COPY . /flexric
 # Copy required files to /usr/local (commented out)
 # COPY /flexric/build/nearRT-RIC /usr/local/bin/
 # COPY /flexric/build/libe42_xapp_shared.so /usr/local/lib/
-# COPY /flexric/build/xApp /usr/local/bin/
+# COPY /flexric/build/examples/xApp /usr/local/bin/
 # COPY /flexric/build/libflexric*.so /usr/local/lib/
 
 FROM $BASE_IMAGE AS flexric
@@ -104,10 +110,10 @@ WORKDIR /usr/local/flexric
 # Copy all files from the builder stage to the final image
 COPY --from=oai-flexric-builder /flexric /usr/local/flexric
 # Copy the necessary binaries and libraries from the builder stage (commented out)
-# COPY --from=oai-flexric-builder /usr/local/bin/nearRT-RIC /usr/local/bin/
-# COPY --from=oai-flexric-builder /usr/local/lib/libe42_xapp_shared.so /usr/local/lib/
-# COPY --from=oai-flexric-builder /usr/local/bin/xApp /usr/local/bin/
-# COPY --from=oai-flexric-builder /usr/local/lib/libflexric*.so /usr/local/lib/
+COPY --from=oai-flexric-builder /usr/local/bin/nearRT-RIC /usr/local/bin/
+COPY --from=oai-flexric-builder /usr/local/lib/libe42_xapp_shared.so /usr/local/lib/
+COPY --from=oai-flexric-builder /usr/local/bin/xApp /usr/local/bin/
+COPY --from=oai-flexric-builder /usr/local/lib/libflexric*.so /usr/local/lib/
 
 RUN ldconfig
 

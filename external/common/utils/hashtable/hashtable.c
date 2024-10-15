@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include "hashtable.h"
-#include "assertions.h"
+#include "../assertions.h"
 
 
 //-------------------------------------------------------------------------------------------------------------------------------
