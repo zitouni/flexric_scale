@@ -9,7 +9,7 @@ add_executable(ics_xapp
 add_executable(oaibox_xapp_ue_measurements_ics
         oaibox_xapp_ue_measurements_ics.c
         ../../../../src/util/alg_ds/alg/defer.c
-        ../../../../../../common/utils/hashtable/hashtable.c
+	../../../external/hashtable/hashtable.c
 )
 add_executable(ics_xapp_gtp_mac_rlc_pdcp_moni 
                 ics_xapp_gtp_mac_rlc_pdcp_moni.c

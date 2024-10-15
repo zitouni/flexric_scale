@@ -54,8 +54,10 @@ ric_indication_t generate_aindication(e2_agent_t* ag, sm_ind_data_t* data, aind_
   ind.msg.buf = data->ind_msg;
   if(data->call_process_id != NULL){
     ind.call_process_id = malloc(sizeof(data->len_cpid) );
+    //ind.call_process_id = malloc(sizeof(data->len_cpid) );
     assert(ind.call_process_id != NULL && "Memory exhausted" );
-    ind.call_process_id->buf = data->call_process_id;
+    memcpy(ind.call_process_id->buf, data->call_process_id, data->len_cpid);  // Copy the data
+    //ind.call_process_id->buf = data->call_process_id;
     ind.call_process_id->len = data->len_cpid;
   }
   return ind;

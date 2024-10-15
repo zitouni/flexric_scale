@@ -1,2 +1,0 @@
-/usr/bin/ar qc libe2_agent_arg.a CMakeFiles/e2_agent_arg.dir/e2_agent_arg.o
-/usr/bin/ranlib libe2_agent_arg.a
