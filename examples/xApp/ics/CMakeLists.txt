@@ -6,6 +6,8 @@ add_executable(ics_xapp
         ics_xapp.c
 )
 
+
+
 add_executable(oaibox_xapp_ue_measurements_ics
         oaibox_xapp_ue_measurements_ics.c
         ../../../../src/util/alg_ds/alg/defer.c
@@ -22,6 +24,7 @@ include_directories(ics_xapp
     ../../../../../../common
 )
 
+
 target_link_libraries(ics_xapp
         PUBLIC
         e42_xapp
@@ -29,6 +32,7 @@ target_link_libraries(ics_xapp
         -lsctp
         -ldl
 )
+
 
 target_link_libraries(oaibox_xapp_ue_measurements_ics
         PUBLIC
