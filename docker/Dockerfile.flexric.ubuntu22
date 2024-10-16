@@ -78,11 +78,11 @@ RUN rm -rf build CMakeCache.txt && \
                   -DCMAKE_SHARED_LINKER_FLAGS="-fno-lto" \
                   -DCMAKE_EXE_LINKER_FLAGS="-fno-lto" \
                   -DCMAKE_VERBOSE_MAKEFILE=ON \
-                  .. 
-#     ninja clean && \
-#     ninja -v -j1 && \
-#     ninja install && \
-#     echo "FlexRIC build completed successfully"
+                  ..  && \
+    ninja clean && \
+    ninja -v -j1 && \
+    ninja install && \
+    echo "FlexRIC build completed successfully"
 
 # RUN cd build && \
 #     /usr/bin/gcc-12 -DE2AP_V2 -DKPM_V2_03 -DSERVICE_MODEL_DIR_PATH=\"/\" -DSQLITE3_XAPP -I/flexric/src -Wall -Wno-error -fno-lto -O3 -DNDEBUG -fPIC -march=native -W -Wall -Wextra -g -Wno-unused-result -Warray-bounds -Wempty-body -fstack-protector-strong -fstack-clash-protection -D_GLIBCXX_ASSERTIONS -std=gnu11 -c /flexric/src/xApp/db/sqlite3/sqlite3.c -o sqlite3.o
@@ -105,18 +105,41 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-WORKDIR /usr/local/flexric
+WORKDIR /
 
-# Copy all files from the builder stage to the final image
-COPY --from=oai-flexric-builder /flexric /usr/local/flexric
-# Copy the necessary binaries and libraries from the builder stage (commented out)
-COPY --from=oai-flexric-builder /usr/local/bin/nearRT-RIC /usr/local/bin/
-COPY --from=oai-flexric-builder /usr/local/lib/libe42_xapp_shared.so /usr/local/lib/
-COPY --from=oai-flexric-builder /usr/local/bin/xApp /usr/local/bin/
-COPY --from=oai-flexric-builder /usr/local/lib/libflexric*.so /usr/local/lib/
+COPY --from=oai-flexric-builder \
+    /usr/local/lib/flexric/libmac_sm.so \
+    /usr/local/lib/flexric/libkpm_sm.so \
+    /usr/local/lib/flexric/librlc_sm.so \
+    /usr/local/lib/flexric/libslice_sm.so \
+    /usr/local/lib/flexric/libtc_sm.so \
+    /usr/local/lib/flexric/libgtp_sm.so \
+    /usr/local/lib/flexric/libpdcp_sm.so \
+    /usr/local/lib/flexric/librc_sm.so \
+    /usr/local/lib/flexric/
 
-RUN ldconfig
+COPY --from=oai-flexric-builder \
+    /flexric/build/src/xApp/libe42_xapp_shared.so \
+    /flexric/build/src/xApp/
 
-EXPOSE 36421/sctp 36422/sctp
+COPY --from=oai-flexric-builder \
+    /flexric/build/examples/ric/nearRT-RIC /usr/local/bin/nearRT-RIC
+
+## Copy xApps
+COPY --from=oai-flexric-builder \
+    /flexric/build/examples/xApp /usr/local/flexric/xApp
+
+RUN ldconfig && \
+    echo "--- Check shared objects dependencies for executable nearRT-RIC ---" && \
+    ldd /usr/local/bin/nearRT-RIC && \
+    echo "--- Check shared objects dependencies for xApp shared library ---" && \
+    ldd /flexric/build/src/xApp/libe42_xapp_shared.so && \
+    echo "--- Check shared objects dependencies for flexric shared libraries ---" && \
+    ldd /usr/local/lib/flexric/*.so
+
+## E2
+EXPOSE 36421/sctp
+## E42
+EXPOSE 36422/sctp
 
 CMD ["stdbuf", "-o0", "nearRT-RIC"]
