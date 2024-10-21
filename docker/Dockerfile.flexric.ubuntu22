@@ -84,24 +84,14 @@ RUN rm -rf build CMakeCache.txt && \
     ninja install && \
     echo "FlexRIC build completed successfully"
 
-# RUN cd build && \
-#     /usr/bin/gcc-12 -DE2AP_V2 -DKPM_V2_03 -DSERVICE_MODEL_DIR_PATH=\"/\" -DSQLITE3_XAPP -I/flexric/src -Wall -Wno-error -fno-lto -O3 -DNDEBUG -fPIC -march=native -W -Wall -Wextra -g -Wno-unused-result -Warray-bounds -Wempty-body -fstack-protector-strong -fstack-clash-protection -D_GLIBCXX_ASSERTIONS -std=gnu11 -c /flexric/src/xApp/db/sqlite3/sqlite3.c -o sqlite3.o
-
-# RUN echo "Build stopped for debugging"
-
-# Copy required files to /usr/local (commented out)
-# COPY /flexric/build/nearRT-RIC /usr/local/bin/
-# COPY /flexric/build/libe42_xapp_shared.so /usr/local/lib/
-# COPY /flexric/build/examples/xApp /usr/local/bin/
-# COPY /flexric/build/libflexric*.so /usr/local/lib/
-
 FROM $BASE_IMAGE AS flexric
 ENV TZ=Europe/London
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         libsctp1 \
-        libsqlite3-0 && \
+        libsqlite3-0 \
+        netcat-openbsd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -123,15 +113,17 @@ COPY --from=oai-flexric-builder \
     /flexric/build/src/xApp/
 
 COPY --from=oai-flexric-builder \
-    /flexric/build/examples/ric/nearRT-RIC /usr/local/bin/nearRT-RIC
+    /flexric/build/examples/ric/nearRT-RIC /usr/local/flexric/nearRT-RIC
 
 ## Copy xApps
 COPY --from=oai-flexric-builder \
     /flexric/build/examples/xApp /usr/local/flexric/xApp
 
+
+
 RUN ldconfig && \
     echo "--- Check shared objects dependencies for executable nearRT-RIC ---" && \
-    ldd /usr/local/bin/nearRT-RIC && \
+    ldd /usr/local/flexric/nearRT-RIC && \
     echo "--- Check shared objects dependencies for xApp shared library ---" && \
     ldd /flexric/build/src/xApp/libe42_xapp_shared.so && \
     echo "--- Check shared objects dependencies for flexric shared libraries ---" && \

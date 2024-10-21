@@ -5,11 +5,13 @@ metadata:
   labels:
     {{- include "k8s-flex.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.service.type }}      # Service type (ClusterIP, NodePort, LoadBalancer)
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+    {{- range .Values.service.ports }}
+    - name: {{ .name }}                 # Name of the service port (e.g., e2, e42)
+      port: {{ .port }}                 # Port exposed by the service (e.g., 36421, 36422)
+      targetPort: {{ .targetPort }}      # Container port (matching the container spec)
+      protocol: {{ .protocol | default "TCP" }}  # Protocol, defaulting to TCP if not specified
+    {{- end }}
   selector:
-    {{- include "k8s-flex.selectorLabels" . | nindent 4 }}
+    {{- include "k8s-flex.selectorLabels" . | nindent 4 }}  # Match pod labels

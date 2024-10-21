@@ -1,3 +1,25 @@
+{{- if .Values.multus.e2Interface.create }}
+---
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: {{ .Values.multus.e2Interface.name }}
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "type": "macvlan",
+      "mode": "bridge",
+      "master": "{{ .Values.multus.e2Interface.master }}",
+      "ipam": {
+        "type": "host-local",
+        "subnet": "10.5.25.0/24",
+        "rangeStart": "10.5.25.171",
+        "rangeEnd": "10.5.25.171"
+      }
+    }
+{{- end }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,23 +27,28 @@ metadata:
   labels:
     {{- include "k8s-flex.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
+  hostNetwork: true
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "k8s-flex.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "k8s-flex.labels" . | nindent 8 }}
+        {{- include "k8s-flex.selectorLabels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+      {{- if .Values.multus.e2Interface.create }}
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+          [{
+            "name": "{{ .Values.multus.e2Interface.name }}",
+            "ips": ["{{ .Values.multus.e2Interface.ipAdd }}/{{ .Values.multus.e2Interface.netmask }}"]
+          }]
+      {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -37,23 +64,38 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
+            {{- range .Values.service.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .targetPort }}
+              protocol: {{ .protocol }}
+            {{- end }}
+          command: 
+          - /bin/sh
+          - -c
+          args:
+          - |
+            mkdir -p /var/lib/grafana
+            exec {{ .Values.execPath }} {{ .Values.args }} {{ .Values.configFile }}
+          resources:
+            {{- if .Values.resources.define }}
+            {{- toYaml .Values.resources.limits.nf | nindent 12 }}
+            {{- end }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /flexric/flexric.conf
+              subPath: flexric.conf
+          {{- if .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe }}
           readinessProbe:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
-          volumeMounts:
-            {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- with .Values.volumes }}
       volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        - name: config-volume
+          configMap:
+            name: {{ .Chart.Name }}-configmap
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -66,3 +108,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      terminationGracePeriodSeconds: 10  # or any other value, including 0

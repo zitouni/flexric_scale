@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}-configmap
+data:
+  flexric.conf: |-
+    [NEAR-RIC]
+    NEAR_RIC_IP = 10.5.25.171
+
+    [XAPP]
+    DB_DIR = /var/lib/grafana/
+    DB_NAME = xapp_grafana
