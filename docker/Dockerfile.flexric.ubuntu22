@@ -91,6 +91,8 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         libsctp1 \
         libsqlite3-0 \
+        iproute2 \
+        iputils-ping \
         netcat-openbsd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -115,6 +117,10 @@ COPY --from=oai-flexric-builder \
 COPY --from=oai-flexric-builder \
     /flexric/build/examples/ric/nearRT-RIC /usr/local/flexric/nearRT-RIC
 
+COPY --from=oai-flexric-builder \
+    /flexric/flexric.conf /usr/local/etc/flexric/flexric.conf
+
+
 ## Copy xApps
 COPY --from=oai-flexric-builder \
     /flexric/build/examples/xApp /usr/local/flexric/xApp
@@ -129,9 +135,22 @@ RUN ldconfig && \
     echo "--- Check shared objects dependencies for flexric shared libraries ---" && \
     ldd /usr/local/lib/flexric/*.so
 
-## E2
-EXPOSE 36421/sctp
-## E42
-EXPOSE 36422/sctp
 
-CMD ["stdbuf", "-o0", "nearRT-RIC"]
+# Create adummy interface for testing
+# check the flexric.conf to match th ip addresses
+# RUN echo '#!/bin/bash\n\
+# ip link add dummy0 type dummy\n\
+# ip addr add 192.168.130.61/24 dev dummy0\n\
+# ip link set dummy0 up' > /usr/local/bin/create_dummy.sh && \
+#     chmod +x /usr/local/bin/create_dummy.sh
+# # Run the create_dummy.sh script
+# CMD ["/usr/local/bin/create_dummy.sh"]
+
+# ## E2
+# EXPOSE 36421/sctp
+# ## E42
+# EXPOSE 36422/sctp
+
+# No need to specify the application to run now
+# Running the app will be ensured using Hlem and Kubernetes
+# CMD ["stdbuf", "-o0", "nearRT-RIC"]

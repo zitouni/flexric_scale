@@ -72,10 +72,11 @@ spec:
           command: 
           - /bin/sh
           - -c
-          args:
           - |
+            echo "Starting nearRT-RIC application..." >> /tmp/app.log
             mkdir -p /var/lib/grafana
-            exec {{ .Values.execPath }} {{ .Values.args }} {{ .Values.configFile }}
+            echo "Launching application..." >> /tmp/app.log
+            exec {{ .Values.execPath }} {{ .Values.args }} {{ .Values.configFile }} >> /tmp/app.log 2>&1
           resources:
             {{- if .Values.resources.define }}
             {{- toYaml .Values.resources.limits.nf | nindent 12 }}
