@@ -53,9 +53,14 @@ ric_indication_t generate_aindication(e2_agent_t* ag, sm_ind_data_t* data, aind_
   ind.msg.len = data->len_msg;
   ind.msg.buf = data->ind_msg;
   if(data->call_process_id != NULL){
-    ind.call_process_id = malloc(sizeof(data->len_cpid) );
     //ind.call_process_id = malloc(sizeof(data->len_cpid) );
+    ind.call_process_id = malloc(sizeof(byte_array_t) );
     assert(ind.call_process_id != NULL && "Memory exhausted" );
+
+    // Allocate memory for the buffer
+    ind.call_process_id->buf = malloc(data->len_cpid);
+    assert(ind.call_process_id->buf != NULL && "Memory exhausted");
+    //copy the data
     memcpy(ind.call_process_id->buf, data->call_process_id, data->len_cpid);  // Copy the data
     //ind.call_process_id->buf = data->call_process_id;
     ind.call_process_id->len = data->len_cpid;
@@ -314,6 +319,14 @@ async_event_t next_async_event_agent(e2_agent_t* ag)
   return e;
 }
 
+void free_ric_indication(ric_indication_t *ind) {
+  if (ind->call_process_id != NULL) {
+    free(ind->call_process_id->buf);
+    free(ind->call_process_id);
+  }
+  // Free other dynamically allocated members if any
+}
+
 static
 void e2_event_loop_agent(e2_agent_t* ag)
 {
@@ -370,6 +383,7 @@ void e2_event_loop_agent(e2_agent_t* ag)
 
             int rc = consume_fd_async(ag->io.pipe.r); 
             assert(rc != 1 && "No bytes in the pipe but message in the queue! ");
+            free_ric_indication(&ind);
           }
           break;
         }

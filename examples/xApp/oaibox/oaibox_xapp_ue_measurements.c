@@ -1,10 +1,8 @@
 #include "../../../src/xApp/e42_xapp_api.h"
 #include "../../../src/util/alg_ds/alg/defer.h"
 #include "../../../src/util/time_now_us.h"
+//#include "../../../src/util/hashtable/hashtable.h"
 #include "../../../external/common/utils/hashtable/hashtable.h"
-
-
-
 
 #include <arpa/inet.h>
 #include <pthread.h>
@@ -30,9 +28,6 @@ struct timeval  localized_timestamp;
 int sockfd;
 int sockfd_ret = 0;
 #define ADDRESS "127.0.0.1"
-//#define ADDRESS "192.168.130.61"
-//#define ADDRESS "10.45.0.2"
-
 #define PORT 6969
 
 static bool keepRunning = true;
@@ -44,9 +39,9 @@ static pthread_mutex_t mac_stats_mutex;
 hash_table_t *ue_mac_stats_by_rnti_ht;
 
 void write_mac_stats(char * buffer, mac_ue_stats_impl_t ue_mac_stats) {
-    sprintf(&buffer[strlen(buffer)], "\"cellid\": %lu,\"rnti\": \"%04x\",\"dlBytes\": %lu,\"dlMcs\": %d,\"dlBler\": %f,\"ulBytes\": %lu,"
+    sprintf(&buffer[strlen(buffer)], "\"cellid\": %lu,\"in_sync\": %b, \"rnti\": \"%04x\",\"dlBytes\": %lu,\"dlMcs\": %d,\"dlBler\": %f,\"ulBytes\": %lu,"
                                      "\"ulMcs\": %d,\"ulBler\": %f,\"ri\": %d,\"pmi\": \"(%d,%d)\",\"phr\": %d,\"pcmax\": %d,",
-            ue_mac_stats.nr_cellid, ue_mac_stats.rnti, ue_mac_stats.dl_aggr_tbs,ue_mac_stats.dl_mcs1,ue_mac_stats.dl_bler,ue_mac_stats.ul_aggr_tbs,
+            ue_mac_stats.nr_cellid,ue_mac_stats.in_sync,  ue_mac_stats.rnti, ue_mac_stats.dl_aggr_tbs,ue_mac_stats.dl_mcs1,ue_mac_stats.dl_bler,ue_mac_stats.ul_aggr_tbs,
             ue_mac_stats.ul_mcs1,ue_mac_stats.ul_bler,ue_mac_stats.pmi_cqi_ri,ue_mac_stats.pmi_cqi_X1,ue_mac_stats.pmi_cqi_X2,
             ue_mac_stats.phr,ue_mac_stats.pcmax);
 }
@@ -85,7 +80,12 @@ static void sm_cb_gtp(sm_ag_if_rd_t const* rd)
             if ( ret == HASH_TABLE_OK ) {
                 int64_t now = time_now_us();
                 mac_ue_stats_impl_t ue_mac_stats = *(mac_ue_stats_impl_t *)data;
-
+                if(!ue_mac_stats.in_sync)
+                {
+                    printf("UE: %04x is out of sync, removing stats hashtable entry\n", ue_mac_stats.rnti);
+                    hashtable_remove(ue_mac_stats_by_rnti_ht, ue_mac_stats.rnti);
+                    continue;
+                }
                 char buffer[8191] = {0};
                 sprintf(buffer, "{\"ue_id\": %u,\"timestamp\": %ju,", rd->ind.gtp.msg.ngut[ue_idx].ue_context_rrc_ue_id, now / 1000);
 
@@ -100,7 +100,7 @@ static void sm_cb_gtp(sm_ag_if_rd_t const* rd)
                 float pusch_snr = ue_mac_stats.pusch_snr;
 
                 if (rd->ind.gtp.msg.ngut[ue_idx].ue_context_has_mqr) {
-                    rsrq = rd->ind.gtp.msg.ngut[ue_idx].ue_context_mqr_rsrp;
+                    rsrp = rd->ind.gtp.msg.ngut[ue_idx].ue_context_mqr_rsrp;
                     rsrq = rd->ind.gtp.msg.ngut[ue_idx].ue_context_mqr_rsrq;
                     sinr = rd->ind.gtp.msg.ngut[ue_idx].ue_context_mqr_sinr;
                 }
@@ -118,7 +118,7 @@ static void sm_cb_gtp(sm_ag_if_rd_t const* rd)
 
                 sprintf(&buffer[strlen(buffer)], "}\n");
 
-                //printf("%s\n", buffer);
+                printf("%s\n", buffer);
                 sockfd_ret = write(sockfd, buffer, strlen(buffer));
             }
         }
@@ -177,11 +177,10 @@ int main(int argc, char* argv[])
         }
     }
 
- while (keepRunning) {
+    while (keepRunning) {
         sockfd = socket(AF_INET, SOCK_STREAM, 0);
         if (sockfd < 0) {
           printf("OAIBOX: socket creation failed...\n");
-          exit(0);
         } else {
           printf("OAIBOX: socket successfully created\n");
           sockfd_ret = 0;
@@ -206,7 +205,7 @@ int main(int argc, char* argv[])
           }
           usleep(500);
         }
-   }
+    }
 
     for (int i = 0; i < nodes.len; ++i) {
         if(mac_handle[i].u.handle != 0 )
