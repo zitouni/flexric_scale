@@ -312,13 +312,6 @@ async_event_t next_async_event_agent(e2_agent_t* ag)
   return e;
 }
 
-void free_ric_indication(ric_indication_t *ind) {
-  if (ind->call_process_id != NULL) {
-    free(ind->call_process_id->buf);
-    free(ind->call_process_id);
-  }
-  // Free other dynamically allocated members if any
-}
 
 static
 void e2_event_loop_agent(e2_agent_t* ag)
@@ -376,7 +369,6 @@ void e2_event_loop_agent(e2_agent_t* ag)
 
             int rc = consume_fd_async(ag->io.pipe.r); 
             assert(rc != 1 && "No bytes in the pipe but message in the queue! ");
-            free_ric_indication(&ind);
           }
           break;
         }
