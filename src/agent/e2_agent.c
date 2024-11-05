@@ -53,16 +53,9 @@ ric_indication_t generate_aindication(e2_agent_t* ag, sm_ind_data_t* data, aind_
   ind.msg.len = data->len_msg;
   ind.msg.buf = data->ind_msg;
   if(data->call_process_id != NULL){
-    //ind.call_process_id = malloc(sizeof(data->len_cpid) );
-    ind.call_process_id = malloc(sizeof(byte_array_t) );
+    ind.call_process_id = malloc(sizeof(*ind.call_process_id));
     assert(ind.call_process_id != NULL && "Memory exhausted" );
-
-    // Allocate memory for the buffer
-    ind.call_process_id->buf = malloc(data->len_cpid);
-    assert(ind.call_process_id->buf != NULL && "Memory exhausted");
-    //copy the data
-    memcpy(ind.call_process_id->buf, data->call_process_id, data->len_cpid);  // Copy the data
-    //ind.call_process_id->buf = data->call_process_id;
+    ind.call_process_id->buf = data->call_process_id;
     ind.call_process_id->len = data->len_cpid;
   }
   return ind;
@@ -88,7 +81,7 @@ ric_indication_t generate_indication(e2_agent_t* ag, sm_ind_data_t* data, ind_ev
   ind.msg.len = data->len_msg;
   ind.msg.buf = data->ind_msg;
   if(data->call_process_id != NULL){
-    ind.call_process_id = malloc(sizeof(data->len_cpid) );
+    ind.call_process_id = malloc(sizeof(*ind.call_process_id) );
     assert(ind.call_process_id != NULL && "Memory exhausted" );
     ind.call_process_id->buf = data->call_process_id;
     ind.call_process_id->len = data->len_cpid;
