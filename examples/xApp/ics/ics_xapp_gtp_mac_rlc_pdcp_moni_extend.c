@@ -38,8 +38,9 @@
 
 #define TICK_INTERVAL 10
 #define UPDATE_INTERVAL 1000
+#define MAX_MOBILES_PER_GNB 40
 
-static uint64_t cnt_mac;
+//static uint64_t cnt_mac;
 static pthread_mutex_t mac_stats_mutex;
 hash_table_t *ue_mac_stats_by_rnti_ht;
 int16_t ticker = 0;
@@ -59,27 +60,17 @@ int16_t ticker = 0;
 // }
 
 void write_mac_stats(char * buffer, mac_ue_stats_impl_t ue_mac_stats) {
-    printf("cellid=%lu in_sync=%s rnti=%04x dlBytes=%lu dlMcs=%d dlBler=%.6f ulBytes=%lu ulMcs=%d ulBler=%.6f ri=%d pmi=(%d,%d) phr=%d pcmax=%d\n",
-           ue_mac_stats.nr_cellid,
-           ue_mac_stats.in_sync ? "true" : "false",
-           ue_mac_stats.rnti,
-           ue_mac_stats.dl_aggr_tbs,
-           ue_mac_stats.dl_mcs1,
-           ue_mac_stats.dl_bler,
-           ue_mac_stats.ul_aggr_tbs,
-           ue_mac_stats.ul_mcs1,
-           ue_mac_stats.ul_bler,
-           ue_mac_stats.pmi_cqi_ri,
-           ue_mac_stats.pmi_cqi_X1,
-           ue_mac_stats.pmi_cqi_X2,
-           ue_mac_stats.phr,
-           ue_mac_stats.pcmax);
+
     
     sprintf(&buffer[strlen(buffer)], "\"cellid\": %lu,\"in_sync\": %b, \"rnti\": \"%04x\",\"dlBytes\": %lu,\"dlMcs\": %d,\"dlBler\": %f,\"ulBytes\": %lu,"
                                      "\"ulMcs\": %d,\"ulBler\": %f,\"ri\": %d,\"pmi\": \"(%d,%d)\",\"phr\": %d,\"pcmax\": %d,",
             ue_mac_stats.nr_cellid,ue_mac_stats.in_sync,  ue_mac_stats.rnti, ue_mac_stats.dl_aggr_tbs,ue_mac_stats.dl_mcs1,ue_mac_stats.dl_bler,ue_mac_stats.ul_aggr_tbs,
             ue_mac_stats.ul_mcs1,ue_mac_stats.ul_bler,ue_mac_stats.pmi_cqi_ri,ue_mac_stats.pmi_cqi_X1,ue_mac_stats.pmi_cqi_X2,
             ue_mac_stats.phr,ue_mac_stats.pcmax);
+
+
+    // Print the contents of the buffer
+    printf("Buffer contents:\n%s\n", buffer);
 }
 
 static
@@ -110,7 +101,6 @@ void sm_cb_rlc(sm_ag_if_rd_t const* rd)
 {
   assert(rd != NULL);
   assert(rd->type ==INDICATION_MSG_AGENT_IF_ANS_V0);
-
   assert(rd->ind.type == RLC_STATS_V0);
 
   int64_t now = time_now_us();
@@ -139,8 +129,7 @@ void sm_cb_pdcp(sm_ag_if_rd_t const* rd)
   cnt_pdcp++;
 }
 
-static
-uint64_t cnt_gtp;
+//static uint64_t cnt_gtp;
 
 static
 void sm_cb_gtp(sm_ag_if_rd_t const* rd)
@@ -165,7 +154,8 @@ void sm_cb_gtp(sm_ag_if_rd_t const* rd)
           hashtable_rc_t ret = hashtable_get(ue_mac_stats_by_rnti_ht, rd->ind.gtp.msg.ngut[ue_idx].ue_context_rnti_t, &data);
           pthread_mutex_unlock(&mac_stats_mutex);
 
-          if ( ret == HASH_TABLE_OK ) {
+          //if ( ret == HASH_TABLE_OK ) {
+          if ( ret == 0 ) {
               int64_t now = time_now_us();
               mac_ue_stats_impl_t ue_mac_stats = *(mac_ue_stats_impl_t *)data;
               if(!ue_mac_stats.in_sync)
@@ -220,7 +210,9 @@ int main(int argc, char *argv[])
   // struct sigaction act;
   // act.sa_handler = intHandler;
   // sigaction(SIGINT, &act, NULL);
-  
+  pthread_mutexattr_t attr = {0};
+  pthread_mutex_init(&mac_stats_mutex, &attr);
+  ue_mac_stats_by_rnti_ht = hashtable_create(MAX_MOBILES_PER_GNB, NULL, free);  
   //Init the xApp
   init_xapp_api(&args);
   sleep(1);
@@ -267,18 +259,17 @@ int main(int argc, char *argv[])
       // mac_ctrl_req_data_t wr = {.hdr.dummy = 1, .msg.action = 42 };
       // sm_ans_xapp_t const a = control_sm_xapp_api(&nodes.n[i].id, 142, &wr);
       // assert(a.success == true);
-
       mac_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 142, (void*)i_0, sm_cb_mac);
       assert(mac_handle[i].success == true);
 
-      rlc_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 143, (void*)i_1, sm_cb_rlc);
-      assert(rlc_handle[i].success == true);
-
-      pdcp_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 144, (void*)i_2, sm_cb_pdcp);
-      assert(pdcp_handle[i].success == true);
-
       gtp_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 148, (void*)i_3, sm_cb_gtp);
       assert(gtp_handle[i].success == true);
+
+      // rlc_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 143, (void*)i_1, sm_cb_rlc);
+      // assert(rlc_handle[i].success == true);
+
+      // pdcp_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 144, (void*)i_2, sm_cb_pdcp);
+      // assert(pdcp_handle[i].success == true);
 
     } else if(n->id.type ==  ngran_gNB_CU || n->id.type ==  ngran_gNB_CUUP){
       pdcp_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 144, (void*)i_2, sm_cb_pdcp);
@@ -306,12 +297,12 @@ int main(int argc, char *argv[])
     // Remove the handle previously returned
     if(mac_handle[i].u.handle != 0 )
       rm_report_sm_xapp_api(mac_handle[i].u.handle);
+    if(gtp_handle[i].u.handle != 0)
+      rm_report_sm_xapp_api(gtp_handle[i].u.handle);
     if(rlc_handle[i].u.handle != 0) 
       rm_report_sm_xapp_api(rlc_handle[i].u.handle);
     if(pdcp_handle[i].u.handle != 0)
       rm_report_sm_xapp_api(pdcp_handle[i].u.handle);
-    if(gtp_handle[i].u.handle != 0)
-      rm_report_sm_xapp_api(gtp_handle[i].u.handle);
   }
 
   if(nodes.len > 0){
@@ -322,10 +313,12 @@ int main(int argc, char *argv[])
   }
 
   //Stop the xApp
+
+  hashtable_destroy(&ue_mac_stats_by_rnti_ht);
   while(try_stop_xapp_api() == false)
     usleep(1000);
 
-
+  pthread_mutex_destroy(&mac_stats_mutex);
   printf("Test xApp run SUCCESSFULLY\n");
 }
 

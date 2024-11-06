@@ -47,6 +47,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <dirent.h>
+#include <sys/syscall.h>
+#include <signal.h>
+
+
+#define THREAD_TERMINATION_TIMEOUT 15 // seconds
+#define RIC_THREAD_NAME "nearRT-RIC"
+
 static inline
 void free_fd(void* key, void* value)
 {
@@ -553,37 +561,113 @@ void static_free_e2_node(void* it )
   free_e2_node(n);
 }
 
+static void terminate_thread(pthread_t thread) {
+    int rc = pthread_cancel(thread);
+    if (rc != 0) {
+        fprintf(stderr, "Error cancelling thread: %s\n", strerror(rc));
+    }
+}
+
+static void force_kill_thread(pid_t tid) {
+    if (syscall(SYS_tgkill, getpid(), tid, SIGKILL) == -1) {
+        perror("Error killing thread");
+    }
+}
+
+
+static void terminate_all_ric_threads() {
+    DIR *dir;
+    struct dirent *ent;
+    char path[256];
+    char comm[256];
+    FILE *fp;
+    pid_t main_pid = getpid();
+
+    snprintf(path, sizeof(path), "/proc/%d/task", main_pid);
+    dir = opendir(path);
+    if (dir == NULL) {
+        perror("Failed to open /proc/[pid]/task");
+        return;
+    }
+
+    while ((ent = readdir(dir)) != NULL) {
+        pid_t tid = atoi(ent->d_name);
+        if (tid == 0) continue;  // Skip . and ..
+
+        snprintf(path, sizeof(path), "/proc/%d/task/%d/comm", main_pid, tid);
+        fp = fopen(path, "r");
+        if (fp == NULL) continue;
+
+        if (fgets(comm, sizeof(comm), fp) != NULL) {
+            comm[strcspn(comm, "\n")] = 0;
+            if (strcmp(comm, RIC_THREAD_NAME) == 0) {
+                printf("Forcefully terminating RIC thread with TID: %d\n", tid);
+                force_kill_thread(tid);
+            }
+        }
+        fclose(fp);
+    }
+    closedir(dir);
+}
+
 void free_near_ric(near_ric_t* ric)
 {
   assert(ric != NULL);
 
+  // Signal all threads to stop
   ric->stop_token = true;
-  while(ric->server_stopped == false){
-    sleep(1);
+
+  // Wait for server to stop with timeout
+  int timeout = THREAD_TERMINATION_TIMEOUT;
+  while(ric->server_stopped == false && timeout > 0){
+      sleep(1);
+      timeout--;
   }
 
-  void (*clean)(void*) = NULL;
+  if (timeout == 0) {
+    fprintf(stderr, "Warning: Server did not stop within the timeout period. Forcing termination.\n");
+    
+    // Force termination of task manager threads
+    for(uint32_t i = 0; i < ric->man.len_thr; ++i){
+        terminate_thread(ric->man.t_arr[i]);
+    }
+  }
+
+  // Free task manager resources
+  void (*clean)(void*) = NULL;  // You might want to provide a proper cleanup function if needed
   free_task_manager(&ric->man, clean);
 
+  // At this point, all task manager threads should be joined
+
+  // Free other resources
   e2ap_free_ep_ric(&ric->ep);
-
   free_plugin_ric(&ric->plugin); 
-
   assoc_free(&ric->pub_sub); 
+  seq_free(&ric->conn_e2_nodes, static_free_e2_node);
 
-  seq_free(&ric->conn_e2_nodes, static_free_e2_node );
-
+  // Destroy mutexes
   int rc = pthread_mutex_destroy(&ric->conn_e2_nodes_mtx);
-  assert(rc == 0);
+  if (rc != 0) {
+      fprintf(stderr, "Error destroying conn_e2_nodes_mtx: %s\n", strerror(rc));
+  }
 
   rc = pthread_mutex_destroy(&ric->pend_mtx);
-  assert(rc == 0);
+  if (rc != 0) {
+      fprintf(stderr, "Error destroying pend_mtx: %s\n", strerror(rc));
+  }
 
   bi_map_free(&ric->pending);
 
   stop_iapp_api();
 
   free(ric);
+
+  // If there are still threads running, force kill them
+  terminate_all_ric_threads();
+
+  printf("RIC resources freed. Checking for any remaining threads...\n");
+  system("ps -ejH | grep nearRT-RIC");
+
 }
 
 static
