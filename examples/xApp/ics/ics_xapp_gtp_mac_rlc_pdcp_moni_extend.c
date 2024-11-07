@@ -36,6 +36,13 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <unistd.h>
+
+
 #define TICK_INTERVAL 10
 #define UPDATE_INTERVAL 1000
 #define MAX_MOBILES_PER_GNB 40
@@ -59,6 +66,8 @@ int16_t ticker = 0;
 //             ue_mac_stats.phr,ue_mac_stats.pcmax);
 // }
 
+
+
 void write_mac_stats(char * buffer, mac_ue_stats_impl_t ue_mac_stats) {
 
     
@@ -80,12 +89,13 @@ void sm_cb_mac(sm_ag_if_rd_t const* rd)
   assert(rd->type ==INDICATION_MSG_AGENT_IF_ANS_V0);
   assert(rd->ind.type == MAC_STATS_V0);
  
-  // int64_t now = time_now_us();
+  int64_t now = time_now_us();
   // if(cnt_mac % 1024 == 0)
   //   printf("MAC ind_msg latency = %ld μs\n", now - rd->ind.mac.msg.tstamp);
   // cnt_mac++;
     for (u_int32_t i = 0; i < rd->ind.mac.msg.len_ue_stats; i++) {
       pthread_mutex_lock(&mac_stats_mutex);
+      printf("MAC ind_msg latency = %ld μs\n", now - rd->ind.mac.msg.tstamp);
       mac_ue_stats_impl_t *ue_mac_stats = malloc(sizeof(*ue_mac_stats));
       *ue_mac_stats = rd->ind.mac.msg.ue_stats[i];
       hashtable_insert(ue_mac_stats_by_rnti_ht, rd->ind.mac.msg.ue_stats[i].rnti, ue_mac_stats);
@@ -147,13 +157,17 @@ void sm_cb_gtp(sm_ag_if_rd_t const* rd)
   ticker += TICK_INTERVAL;
   if(ticker >= UPDATE_INTERVAL) {
       ticker = 0;
+      printf("Entering before for loop of write_mac_stats function\n");
       for (uint32_t ue_idx = 0; ue_idx < rd->ind.gtp.msg.len; ue_idx++) {
           // Get updated mac stats of UE by RNTI
+          printf("Start the for loop of write_mac_stats function\n");
           pthread_mutex_lock(&mac_stats_mutex);
           void *data = NULL;
           hashtable_rc_t ret = hashtable_get(ue_mac_stats_by_rnti_ht, rd->ind.gtp.msg.ngut[ue_idx].ue_context_rnti_t, &data);
+          printf("rd->ind.gtp.msg.ngut[ue_idx].ue_context_rnti_t = %d\n", rd->ind.gtp.msg.ngut[ue_idx].ue_context_rnti_t);
+          //hashtable_rc_t ret = hashtable_get(ue_mac_stats_by_rnti_ht, rd->ind.mac.msg.ue_stats[ue_idx].rnti, &data);
           pthread_mutex_unlock(&mac_stats_mutex);
-
+          printf("ret: %d\n", ret);
           //if ( ret == HASH_TABLE_OK ) {
           if ( ret == 0 ) {
               int64_t now = time_now_us();
@@ -261,6 +275,8 @@ int main(int argc, char *argv[])
       // assert(a.success == true);
       mac_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 142, (void*)i_0, sm_cb_mac);
       assert(mac_handle[i].success == true);
+
+      sleep(2);
 
       gtp_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 148, (void*)i_3, sm_cb_gtp);
       assert(gtp_handle[i].success == true);
