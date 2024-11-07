@@ -6,7 +6,8 @@
 
 typedef struct {
   // Option 1: directly pass IP argument 
-  const char *ip;
+  const char *server_ip;
+  const char *client_ip;
 
   // Option 2: read from file
   char conf_file[FR_CONF_FILE_LEN];
