@@ -27,7 +27,9 @@ extern "C" {
 #endif
 
 /*
- * 9 Information Elements (IE) , RIC Event Trigger Definition, RIC Action Definition, RIC Indication Header, RIC Indication Message, RIC Call Process ID, RIC Control Header, RIC Control Message, RIC Control Outcome and RAN Function Definition defined by ORAN-WG3.E2SM-v01.00.00 at Section 5
+ * 9 Information Elements (IE) , RIC Event Trigger Definition, RIC Action Definition, RIC Indication Header, RIC Indication Message,
+ * RIC Call Process ID, RIC Control Header, RIC Control Message, RIC Control Outcome and RAN Function Definition defined by
+ * ORAN-WG3.E2SM-v01.00.00 at Section 5
  */
 
 #include <stdbool.h>
@@ -42,47 +44,42 @@ typedef struct {
   uint32_t ms;
 } gtp_event_trigger_t;
 
-void free_gtp_event_trigger(gtp_event_trigger_t* src); 
+void free_gtp_event_trigger(gtp_event_trigger_t* src);
 
-gtp_event_trigger_t cp_gtp_event_trigger( gtp_event_trigger_t* src);
+gtp_event_trigger_t cp_gtp_event_trigger(gtp_event_trigger_t* src);
 
 bool eq_gtp_event_trigger(gtp_event_trigger_t* m0, gtp_event_trigger_t* m1);
 
-
-
 //////////////////////////////////////
-// RIC Action Definition 
+// RIC Action Definition
 /////////////////////////////////////
 
 typedef struct {
-  uint32_t dummy;  
+  uint32_t dummy;
 } gtp_action_def_t;
 
-void free_gtp_action_def(gtp_action_def_t* src); 
+void free_gtp_action_def(gtp_action_def_t* src);
 
 gtp_action_def_t cp_gtp_action_def(gtp_action_def_t* src);
 
-bool eq_gtp_action_def(gtp_event_trigger_t* m0,  gtp_event_trigger_t* m1);
-
-
+bool eq_gtp_action_def(gtp_event_trigger_t* m0, gtp_event_trigger_t* m1);
 
 //////////////////////////////////////
-// RIC Indication Header 
+// RIC Indication Header
 /////////////////////////////////////
 
-typedef struct{
-  uint32_t dummy;  
+typedef struct {
+  uint32_t dummy;
 } gtp_ind_hdr_t;
 
-void free_gtp_ind_hdr(gtp_ind_hdr_t* src); 
+void free_gtp_ind_hdr(gtp_ind_hdr_t* src);
 
 gtp_ind_hdr_t cp_gtp_ind_hdr(gtp_ind_hdr_t const* src);
 
 bool eq_gtp_ind_hdr(gtp_ind_hdr_t* m0, gtp_ind_hdr_t* m1);
 
-
 //////////////////////////////////////
-// RIC Indication Message 
+// RIC Indication Message
 /////////////////////////////////////
 
 typedef struct {
@@ -92,103 +89,92 @@ typedef struct {
   uint8_t qfi; // QoS flow indicator
   uint8_t teidupf; // tunnel id from upf
 
-  //ue context stats
+  // ue context stats
   bool ue_context_has_mqr;
   uint32_t ue_context_rrc_ue_id;
   uint32_t ue_context_rnti_t;
   long ue_context_mqr_rsrp;
   double ue_context_mqr_rsrq;
   double ue_context_mqr_sinr;
-} gtp_ngu_t_stats_t; 
+} gtp_ngu_t_stats_t;
 
 typedef struct {
-  gtp_ngu_t_stats_t* ngut; 
+  gtp_ngu_t_stats_t* ngut;
   uint32_t len;
 
   int64_t tstamp;
 } gtp_ind_msg_t;
 
-void free_gtp_ind_msg(gtp_ind_msg_t* src); 
+void free_gtp_ind_msg(gtp_ind_msg_t* src);
 
 gtp_ind_msg_t cp_gtp_ind_msg(gtp_ind_msg_t const* src);
 
 bool eq_gtp_ind_msg(gtp_ind_msg_t* m0, gtp_ind_msg_t* m1);
 
-
 //////////////////////////////////////
-// RIC Call Process ID 
+// RIC Call Process ID
 /////////////////////////////////////
 
 typedef struct {
   uint32_t dummy;
 } gtp_call_proc_id_t;
 
-void free_gtp_call_proc_id( gtp_call_proc_id_t* src); 
+void free_gtp_call_proc_id(gtp_call_proc_id_t* src);
 
-gtp_call_proc_id_t cp_gtp_call_proc_id( gtp_call_proc_id_t* src);
+gtp_call_proc_id_t cp_gtp_call_proc_id(gtp_call_proc_id_t* src);
 
 bool eq_gtp_call_proc_id(gtp_call_proc_id_t* m0, gtp_call_proc_id_t* m1);
 
-
-
 //////////////////////////////////////
-// RIC Control Header 
+// RIC Control Header
 /////////////////////////////////////
-
 
 typedef struct {
   uint32_t dummy;
 } gtp_ctrl_hdr_t;
 
-void free_gtp_ctrl_hdr( gtp_ctrl_hdr_t* src); 
+void free_gtp_ctrl_hdr(gtp_ctrl_hdr_t* src);
 
 gtp_ctrl_hdr_t cp_gtp_ctrl_hdr(gtp_ctrl_hdr_t* src);
 
 bool eq_gtp_ctrl_hdr(gtp_ctrl_hdr_t* m0, gtp_ctrl_hdr_t* m1);
 
-
-
 //////////////////////////////////////
-// RIC Control Message 
+// RIC Control Message
 /////////////////////////////////////
-
 
 typedef struct {
   uint32_t action;
 } gtp_ctrl_msg_t;
 
-void free_gtp_ctrl_msg( gtp_ctrl_msg_t* src); 
+void free_gtp_ctrl_msg(gtp_ctrl_msg_t* src);
 
 gtp_ctrl_msg_t cp_gtp_ctrl_msg(gtp_ctrl_msg_t* src);
 
 bool eq_gtp_ctrl_msg(gtp_ctrl_msg_t* m0, gtp_ctrl_msg_t* m1);
 
-
-
 //////////////////////////////////////
-// RIC Control Outcome 
+// RIC Control Outcome
 /////////////////////////////////////
 
-typedef enum{
+typedef enum {
   GTP_CTRL_OUT_OK,
 
   GTP_CTRL_OUT_END
 } gtp_ctrl_out_e;
 
-
 typedef struct {
   gtp_ctrl_out_e ans;
 } gtp_ctrl_out_t;
 
-void free_gtp_ctrl_out(gtp_ctrl_out_t* src); 
+void free_gtp_ctrl_out(gtp_ctrl_out_t* src);
 
 gtp_ctrl_out_t cp_gtp_ctrl_out(gtp_ctrl_out_t* src);
 
 bool eq_gtp_ctrl_out(gtp_ctrl_out_t* m0, gtp_ctrl_out_t* m1);
 
-
 //////////////////////////////////////
-// RAN Function Definition 
+// RAN Function Definition
 /////////////////////////////////////
 
 typedef struct {
@@ -196,7 +182,7 @@ typedef struct {
   size_t len;
 } gtp_func_def_t;
 
-void free_gtp_func_def(gtp_func_def_t* src); 
+void free_gtp_func_def(gtp_func_def_t* src);
 
 gtp_func_def_t cp_gtp_func_def(gtp_func_def_t const* src);
 
@@ -206,18 +192,16 @@ bool eq_gtp_func_def(gtp_func_def_t const* m0, gtp_func_def_t const* m1);
 //////////////////////////////////////////////////
 /////////////////////////////////////////////////
 
-
 /*
- * O-RAN defined 5 Procedures: RIC Subscription, RIC Indication, RIC Control, E2 Setup and RIC Service Update 
+ * O-RAN defined 5 Procedures: RIC Subscription, RIC Indication, RIC Control, E2 Setup and RIC Service Update
  * */
-
 
 ///////////////
 /// RIC Subscription
 ///////////////
 
-typedef struct{
-  gtp_event_trigger_t et; 
+typedef struct {
+  gtp_event_trigger_t et;
   gtp_action_def_t* ad;
 } gtp_sub_data_t;
 
@@ -225,7 +209,7 @@ typedef struct{
 // RIC Indication
 ///////////////
 
-typedef struct{
+typedef struct {
   gtp_ind_hdr_t hdr;
   gtp_ind_msg_t msg;
   gtp_call_proc_id_t* proc_id;
@@ -239,12 +223,12 @@ gtp_ind_data_t cp_gtp_ind_data(gtp_ind_data_t const* src);
 // RIC Control
 ///////////////
 
-typedef struct{
+typedef struct {
   gtp_ctrl_hdr_t hdr;
   gtp_ctrl_msg_t msg;
 } gtp_ctrl_req_data_t;
 
-typedef struct{
+typedef struct {
   gtp_ctrl_out_t* out;
 } gtp_ctrl_out_data_t;
 
@@ -252,7 +236,7 @@ typedef struct{
 // E2 Setup
 ///////////////
 
-typedef struct{
+typedef struct {
   gtp_func_def_t func_def;
 } gtp_e2_setup_data_t;
 
@@ -260,14 +244,12 @@ typedef struct{
 // RIC Service Update
 ///////////////
 
-typedef struct{
+typedef struct {
   gtp_func_def_t func_def;
 } gtp_ric_service_update_t;
-
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif
-
