@@ -64,7 +64,7 @@ void write_mac_stats(char* buffer, mac_ue_stats_impl_t* ue_mac_stats)
 {
   sprintf(
       &buffer[strlen(buffer)],
-      "\"MAC:\",\"cellid\": %lu,\"in_sync\": %b, \"rnti\": \"%04x\",\"dlBytes\": %lu,\"dlMcs\": %d,\"dlBler\": %f,\"ulBytes\": %lu,"
+      "\"MAC:\",\"cellid\": %lu,\"in_sync\": %d, \"rnti\": \"%04x\",\"dlBytes\": %lu,\"dlMcs\": %d,\"dlBler\": %f,\"ulBytes\": %ld,"
       "\"ulMcs\": %d,\"ulBler\": %f,\"ri\": %d,\"pmi\": \"(%d,%d)\",\"phr\": %d,\"pcmax\": %d,",
       ue_mac_stats->nr_cellid,
       ue_mac_stats->in_sync,
@@ -373,7 +373,7 @@ int main(int argc, char* argv[])
 
   // sleep(100000000);
   while (keepRunning) {
-    usleep(2000000); // Sleep for 100ms or adjust as needed
+    usleep(100000); // Sleep for 100ms or adjust as needed
   }
 
   // Cleanup when loop exits
