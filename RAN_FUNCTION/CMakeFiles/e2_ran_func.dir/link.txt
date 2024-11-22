@@ -1,2 +1,0 @@
-/usr/bin/ar qc libe2_ran_func.a  CMakeFiles/e2_ran_func.dir/init_ran_func.o
-/usr/bin/ranlib libe2_ran_func.a
