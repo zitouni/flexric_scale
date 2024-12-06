@@ -1,6 +1,7 @@
 *.out 
 *.swp
 *.json
+*.png
 build/
 tags
 archives/

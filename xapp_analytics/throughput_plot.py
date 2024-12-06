@@ -250,7 +250,12 @@ def create_and_save_plot(data_dict: Dict, time_unit: str, title: str, output_dir
     for label, (times, values) in data_dict.items():
         if times and values:
             # Clip values to 5 Mbps
-            clipped_values = np.clip(values, 0, 5)
+            # clipped_values = np.clip(values, 0, 5)
+
+            max_val = np.max(values)
+            # # Add 10% margin to the maximum value
+            # clip_threshold = max_val * 1.1
+            # clipped_values = np.clip(values, 0, clip_threshold)
             
             # Split the label into table name and field name
             parts = label.split()
@@ -273,10 +278,10 @@ def create_and_save_plot(data_dict: Dict, time_unit: str, title: str, output_dir
                 display_label = label  # Keep original label if it can't be split
             
             if time_unit == 'minutes':
-                plt.plot(times, clipped_values, label=display_label, alpha=0.7, 
+                plt.plot(times, values, label=display_label, alpha=0.7, 
                         marker='o', markersize=4, linestyle='-', linewidth=1)
             else:
-                plt.plot(times, clipped_values, label=display_label, alpha=0.7)
+                plt.plot(times, values, label=display_label, alpha=0.7)
             plot_created = True
 
     if not plot_created:
@@ -300,10 +305,10 @@ def create_and_save_plot(data_dict: Dict, time_unit: str, title: str, output_dir
         plt.xticks(np.arange(0, max_minutes + 1, 1))
     
     # Set fixed y-axis limits (0-5 Mbps)
-    plt.ylim(0, 5)
+    plt.ylim(0, max_val+1)
     
     # Create custom y-ticks (0 to 5 Mbps)
-    yticks = np.linspace(0, 5, 11)  # 11 ticks for 0 to 5 with 0.5 step
+    yticks = np.linspace(0, max_val, 11)  # 11 ticks for 0 to 5 with 0.5 step
     plt.yticks(yticks)
     
     # Format y-axis ticks to show values with one decimal place
@@ -318,11 +323,13 @@ def create_and_save_plot(data_dict: Dict, time_unit: str, title: str, output_dir
     
     # Place legend inside the plot in the upper right corner
     # bbox_to_anchor can be adjusted to fine-tune position
-    plt.legend(loc='upper right', 
-              bbox_to_anchor=(0.99, 0.99),
+    plt.legend(loc='best', 
+              #bbox_to_anchor=(0.99, 0.99),
               fancybox=True, 
               framealpha=0.8,  # Semi-transparent background
               edgecolor='gray')  # Gray edge for better visibility
+    
+    #plt.legend.set_draggable(True) # Makes the legend draggable with mouse
     
     plt.tight_layout()
     
@@ -339,9 +346,6 @@ def create_and_save_plot(data_dict: Dict, time_unit: str, title: str, output_dir
     
     # Display plot
     plt.show()
-
-
-
 
 def get_table_list(conn: sqlite3.Connection) -> List[str]:
     """Get list of tables from database"""
@@ -477,8 +481,6 @@ def main():
         print(f"\nAn error occurred: {e}")
     finally:
         print("\nExiting program.")
-
-
 
 
 if __name__ == "__main__":
