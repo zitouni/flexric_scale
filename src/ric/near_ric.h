@@ -37,25 +37,22 @@ e* For more information about the OpenAirInterface (OAI) Software Alliance:
 
 #include <stdatomic.h>
 
-
 #ifdef E2AP_V1
 #define NUM_HANDLE_MSG 31
-#elif E2AP_V2 
+#elif E2AP_V2
 #define NUM_HANDLE_MSG 34
-#elif E2AP_V3 
+#elif E2AP_V3
 #define NUM_HANDLE_MSG 43
 #else
-static_assert(0!=0, "Unknown E2AP version");
+static_assert(0 != 0, "Unknown E2AP version");
 #endif
-
 
 struct near_ric_s;
 typedef struct e2ap_msg_s (*e2ap_handle_msg_fp_ric)(struct near_ric_s* ric, const struct e2ap_msg_s* msg);
 
-typedef struct near_ric_s
-{
+typedef struct near_ric_s {
   e2ap_ep_ric_t ep;
-  e2ap_ric_t ap; 
+  e2ap_ric_t ap;
   asio_ric_t io;
   size_t sz_handle_msg;
   e2ap_handle_msg_fp_ric handle_msg[NUM_HANDLE_MSG]; // 26 E2AP + 4 E42AP note that not all the slots will be occupied
@@ -63,18 +60,19 @@ typedef struct near_ric_s
   // Registered SMs
   plugin_ric_t plugin;
 
-  // Publish/Subscribed update function pointers per sm 
-  assoc_rb_tree_t pub_sub; // seq_arr_t per SM 
- 
+  // Publish/Subscribed update function pointers per sm
+  assoc_rb_tree_t pub_sub; // seq_arr_t per SM
+
   // Connected E2 Nodes
-  seq_arr_t conn_e2_nodes; // e2_node_t 
+  seq_arr_t conn_e2_nodes; // e2_node_t
   pthread_mutex_t conn_e2_nodes_mtx;
 
   // Monotonically increasing RIC request ID
+  // Current request ID
   atomic_int req_id;
 
   // Pending events
-  bi_map_t pending; // left: fd, right: pending_event_ric_t   
+  bi_map_t pending; // left: fd, right: pending_event_ric_t
   pthread_mutex_t pend_mtx;
 
   // Task manager/Thread pool
@@ -83,6 +81,9 @@ typedef struct near_ric_s
 
   atomic_bool server_stopped;
   atomic_bool stop_token;
+
+  uint16_t last_req_id; // Last used request ID
+  pthread_mutex_t req_id_mutex; // Mutex for thread-safe ID management
 } near_ric_t;
 
 near_ric_t* init_near_ric(fr_args_t const* args);
@@ -94,10 +95,9 @@ void free_near_ric(near_ric_t* ric);
 
 //////
 
-seq_arr_t conn_e2_nodes(near_ric_t* ric); 
+seq_arr_t conn_e2_nodes(near_ric_t* ric);
 
-//size_t num_conn_e2_nodes(near_ric_t* ric);
-
+// size_t num_conn_e2_nodes(near_ric_t* ric);
 
 uint16_t report_service_near_ric(near_ric_t* ric, global_e2_node_id_t const* id, uint16_t ran_func_id, void* cmd);
 
@@ -107,22 +107,29 @@ void control_service_near_ric(near_ric_t* ric, global_e2_node_id_t const* id, ui
 
 // Plug-ins functions
 
-void load_sm_near_ric(near_ric_t* ric, const char* file_path); 
-
+void load_sm_near_ric(near_ric_t* ric, const char* file_path);
 
 // iApp interface used by the xApps
 
-
-void start_near_ric_iapp(near_ric_t* ric); 
+void start_near_ric_iapp(near_ric_t* ric);
 
 void stop_near_ric_iapp();
 
-uint16_t fwd_ric_subscription_request(near_ric_t* ric,  global_e2_node_id_t const* id, ric_subscription_request_t const* sr, void (*f)(e2ap_msg_t const* msg));
+uint16_t fwd_ric_subscription_request(near_ric_t* ric,
+                                      global_e2_node_id_t const* id,
+                                      ric_subscription_request_t const* sr,
+                                      void (*f)(e2ap_msg_t const* msg));
 
-void fwd_ric_subscription_request_delete(near_ric_t* ric, global_e2_node_id_t const* id,  ric_subscription_delete_request_t const* sdr, void (*f)(e2ap_msg_t const* msg));
+void fwd_ric_subscription_request_delete(near_ric_t* ric,
+                                         global_e2_node_id_t const* id,
+                                         ric_subscription_delete_request_t const* sdr,
+                                         void (*f)(e2ap_msg_t const* msg));
 
-uint16_t fwd_ric_control_request(near_ric_t* ric, global_e2_node_id_t const* id, ric_control_request_t const* cr,  void (*f)(e2ap_msg_t const* msg));
+uint16_t fwd_ric_control_request(near_ric_t* ric,
+                                 global_e2_node_id_t const* id,
+                                 ric_control_request_t const* cr,
+                                 void (*f)(e2ap_msg_t const* msg));
 
-#undef NUM_HANDLE_MSG  
+#undef NUM_HANDLE_MSG
 
 #endif

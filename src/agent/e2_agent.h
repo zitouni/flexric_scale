@@ -40,22 +40,20 @@
 
 #ifdef E2AP_V1
 #define NUM_HANDLE_MSG 31
-#elif E2AP_V2 
+#elif E2AP_V2
 #define NUM_HANDLE_MSG 34
-#elif E2AP_V3 
+#elif E2AP_V3
 #define NUM_HANDLE_MSG 43
 #else
-static_assert(0!=0, "Unknown E2AP version");
+static_assert(0 != 0, "Unknown E2AP version");
 #endif
-
 
 typedef struct e2_agent_s e2_agent_t;
 
-typedef e2ap_msg_t (*handle_msg_fp_agent)(struct e2_agent_s*, const e2ap_msg_t* msg) ;
+typedef e2ap_msg_t (*handle_msg_fp_agent)(struct e2_agent_s*, const e2ap_msg_t* msg);
 
-typedef struct e2_agent_s 
-{
-  e2ap_ep_ag_t ep; 
+typedef struct e2_agent_s {
+  e2ap_ep_ag_t ep;
   e2ap_agent_t ap;
   asio_agent_t io;
 
@@ -67,18 +65,18 @@ typedef struct e2_agent_s
 
   // Registered Periodic Indication events
   pthread_mutex_t mtx_ind_event;
-  bi_map_t ind_event; // key1:int fd, key2:ind_event_t 
+  bi_map_t ind_event; // key1:int fd, key2:ind_event_t
 
   // Pending events
-  bi_map_t pending;  // left: fd, right: pending_event_t 
+  bi_map_t pending; // left: fd, right: pending_event_t
 
   global_e2_node_id_t global_e2_node_id;
 
   // Aperiodic Indication events
-  tsq_t aind; // aind_event_t Events that occurred 
+  tsq_t aind; // aind_event_t Events that occurred
 
-#if defined(E2AP_V2) || defined (E2AP_V3)
-  // Read RAN 
+#if defined(E2AP_V2) || defined(E2AP_V3)
+  // Read RAN
   void (*read_setup_ran)(void* data, const ngran_node_t node_type);
   _Atomic uint32_t trans_id_setup_req;
 #endif
@@ -87,13 +85,13 @@ typedef struct e2_agent_s
   atomic_bool agent_stopped;
 } e2_agent_t;
 
-e2_agent_t* e2_init_agent(const char* addr, int port, global_e2_node_id_t ge2nid, sm_io_ag_ran_t io, char const*  libs_dir);
+e2_agent_t* e2_init_agent(const char* addr, int port, global_e2_node_id_t ge2nid, sm_io_ag_ran_t io, char const* libs_dir);
 
 // Blocking call
 void e2_start_agent(e2_agent_t* ag);
 
 void e2_free_agent(e2_agent_t* ag);
-     
+
 void e2_async_event_agent(e2_agent_t* ag, uint32_t ric_req_id, void* ind_data);
 
 ///////////////////////////////////////////////
@@ -116,7 +114,6 @@ void e2_send_control_failure(e2_agent_t* ag, const ric_control_failure_t* cf);
 
 ////////////////////////////////////////////////
 
-#undef NUM_HANDLE_MSG 
+#undef NUM_HANDLE_MSG
 
 #endif
-

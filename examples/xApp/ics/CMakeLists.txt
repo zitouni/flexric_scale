@@ -10,21 +10,23 @@ add_executable(ics_xapp
         ics_xapp.c
 )
 
-# add_executable(latency_xapp
-#       latency_xapp.c
-#       db_metrics.c
-# )
-
-
 add_executable(oaibox_xapp_ue_measurements_ics
         oaibox_xapp_ue_measurements_ics.c
         ../../../../src/util/alg_ds/alg/defer.c
 	../../../external/common/utils/hashtable/hashtable.c
 )
+# hiper_ran_xapp
+add_executable(hiper_ran_xapp 
+                hiper_ran_xapp.c
+                ../../../../src/util/alg_ds/alg/defer.c
+                ../../../../external/common/utils/hashtable/hashtable.c
+              )
+
 add_executable(ics_xapp_gtp_mac_rlc_pdcp_moni 
                 ics_xapp_gtp_mac_rlc_pdcp_moni.c
                 ../../../../src/util/alg_ds/alg/defer.c
               )
+
 add_executable(ics_xapp_gtp_mac_rlc_pdcp_moni_extend 
               ics_xapp_gtp_mac_rlc_pdcp_moni_extend.c
               ../../../../src/util/alg_ds/alg/defer.c
@@ -89,6 +91,14 @@ target_link_libraries(ics_xapp_gtp_mac_rlc_pdcp_moni_extend
 )
 
 target_link_libraries(ics_xapp_gtp_mac_rlc_pdcp_moni
+        PUBLIC
+        e42_xapp
+        -pthread
+        -lsctp
+        -ldl
+)
+
+target_link_libraries(hiper_ran_xapp
         PUBLIC
         e42_xapp
         -pthread

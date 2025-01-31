@@ -30,13 +30,11 @@
 #include <math.h>
 #include <netdb.h>
 #include <sys/socket.h>
-#include <unistd.h>
 
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <sys/socket.h>
 #include <sys/time.h>
-#include <unistd.h>
 #include <inttypes.h> // For PRIx32 macro
 
 #define TICK_INTERVAL 10

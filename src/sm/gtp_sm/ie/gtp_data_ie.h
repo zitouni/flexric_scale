@@ -98,12 +98,25 @@ typedef struct {
   double ue_context_mqr_sinr;
 } gtp_ngu_t_stats_t;
 
+// Add handover info structure
+#pragma pack(push, 1)
+typedef struct {
+  uint32_t ue_id;
+  uint32_t source_du;
+  uint32_t target_du;
+  bool ho_complete;
+} gtp_ho_info_t;
+
 typedef struct {
   gtp_ngu_t_stats_t* ngut;
   uint32_t len;
 
   int64_t tstamp;
+
+  // Add handover information
+  gtp_ho_info_t ho_info;
 } gtp_ind_msg_t;
+#pragma pack(pop)
 
 void free_gtp_ind_msg(gtp_ind_msg_t* src);
 

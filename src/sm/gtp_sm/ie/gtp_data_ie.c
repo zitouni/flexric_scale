@@ -130,7 +130,9 @@ gtp_ind_msg_t cp_gtp_ind_msg(gtp_ind_msg_t const* src)
 {
   assert(src != NULL);
 
-  gtp_ind_msg_t cp = {.len = src->len, .tstamp = src->tstamp};
+  gtp_ind_msg_t cp = {.len = src->len,
+                      .tstamp = src->tstamp,
+                      .ho_info = src->ho_info}; // This is a simple structure copy - no dynamic allocation needed
 
   if (cp.len > 0) {
     cp.ngut = calloc(cp.len, sizeof(gtp_ngu_t_stats_t));

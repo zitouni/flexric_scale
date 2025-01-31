@@ -19,7 +19,6 @@
  *      contact@openairinterface.org
  */
 
-
 #include "../../src/ric/near_ric_api.h"
 
 #include <arpa/inet.h>
@@ -39,8 +38,7 @@ const uint16_t RLC_ran_func_id = 143;
 const uint16_t PDCP_ran_func_id = 144;
 const uint16_t SLICE_ran_func_id = 145; // Not implemented yet
 const uint16_t KPM_ran_func_id = 147;
-const char* cmd = "5_ms";
-
+const char *cmd = "5_ms";
 
 volatile sig_atomic_t keep_running = 1;
 
@@ -52,31 +50,31 @@ volatile sig_atomic_t keep_running = 1;
 //   exit(EXIT_SUCCESS);
 // }
 
-//static  pthread_once_t once = PTHREAD_ONCE_INIT;
+// static  pthread_once_t once = PTHREAD_ONCE_INIT;
 
-//pthread_t cleanup_thread;
+// pthread_t cleanup_thread;
 volatile sig_atomic_t stop_signal_received = false;
 
 void sig_handler(int signum)
 {
-    if (signum == SIGINT) {
-        printf("\nCtrl+C pressed. Preparing to exit...\n");
-        keep_running = 0;
-    }
+  if (signum == SIGINT) {
+    printf("\nCtrl+C pressed. Preparing to exit...\n");
+    keep_running = 0;
+  }
 }
 
 void force_exit(int signum)
 {
-    printf("Force exit triggered. The program will now terminate.\n");
-    exit(signum);
+  printf("Force exit triggered. The program will now terminate.\n");
+  exit(signum);
 }
 
 void cleanup()
 {
-    printf("Cleaning up resources...\n");
-    stop_near_ric_api();
-    force_exit(0);
-    // Add any other cleanup code here
+  printf("Cleaning up resources...\n");
+  stop_near_ric_api();
+  force_exit(0);
+  // Add any other cleanup code here
 }
 
 // void* cleanup_function(void*)
@@ -84,9 +82,9 @@ void cleanup()
 //     printf("Cleanup thread started...\n");
 //     stop_near_ric_api();
 //     printf("near_ric_api stopped.\n");
-    
+
 //     // Add any other cleanup code here
-    
+
 //     printf("Cleanup complete.\n");
 //     return NULL;
 // }
@@ -107,34 +105,32 @@ void cleanup()
 //     printf("Cleanup thread joined.\n");
 // }
 
-
 int main(int argc, char *argv[])
 {
   struct sigaction sa;
   sa.sa_handler = sig_handler;
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
-  
+
   if (sigaction(SIGINT, &sa, NULL) == -1) {
-      perror("Error setting up signal handler");
-      return EXIT_FAILURE;
+    perror("Error setting up signal handler");
+    return EXIT_FAILURE;
   }
 
   fr_args_t args = init_fr_args(argc, argv);
- 
+
   // Init the RIC
   init_near_ric_api(&args);
 
-  while(keep_running){
+  while (keep_running) {
     poll(NULL, 0, 1000);
   }
-  
 
   // start_cleanup();
   // wait_for_cleanup();
 
   // printf("Program exited. Verifying all threads have stopped...\n");
-  
+
   // // Print the current process's threads
   // char cmd[100];
   // snprintf(cmd, sizeof(cmd), "ps -T -p %d", getpid());
@@ -142,13 +138,9 @@ int main(int argc, char *argv[])
 
   // printf("If you see only one thread above, all threads have been successfully cleaned up.\n");
 
-
-
-
   // Perform cleanup
   cleanup();
-  
-  //printf("Program exited gracefully.\n");
+
+  // printf("Program exited gracefully.\n");
   return EXIT_SUCCESS;
 }
-

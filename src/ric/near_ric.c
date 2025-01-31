@@ -233,7 +233,13 @@ near_ric_t* init_near_ric(fr_args_t const* args)
   printf("[NEAR-RIC]: Initializing Task Manager with %u threads \n", num_threads);
   init_task_manager(&ric->man, num_threads);
 
-  ric->req_id = 1021; // 0 could be a sign of a bug
+  // Initialize subscription tracking
+  ric->req_id = 0; // Start from 0, increment when needed
+  ric->last_req_id = 0; // Add this field to track last used ID
+
+  // Add mutex for thread-safe ID management
+  pthread_mutex_init(&ric->req_id_mutex, NULL);
+
   ric->stop_token = false;
   ric->server_stopped = false;
 
@@ -639,6 +645,9 @@ void free_near_ric(near_ric_t* ric)
 
   stop_iapp_api();
 
+  // Cleanup request ID mutex
+  pthread_mutex_destroy(&ric->req_id_mutex);
+
   free(ric);
 
   // If there are still threads running, force kill them
@@ -917,9 +926,27 @@ uint16_t fwd_ric_subscription_request(near_ric_t* ric,
   assert(ric != NULL);
   assert(sr != NULL);
   assert(f != NULL);
-  uint16_t const ric_req_id = ric->req_id++;
+  // uint16_t const ric_req_id = ric->req_id++;
 
-  *(uint16_t*)&sr->ric_id.ric_req_id = ric_req_id;
+  // *(uint16_t*)&sr->ric_id.ric_req_id = ric_req_id;
+
+  // Use mutex for thread-safe ID management
+  pthread_mutex_lock(&ric->req_id_mutex);
+
+  // Use the original RIC Request ID from subscription request
+  uint16_t const original_ric_req_id = sr->ric_id.ric_req_id;
+
+  // Update last_req_id if needed
+  if (original_ric_req_id > ric->last_req_id) {
+    ric->last_req_id = original_ric_req_id;
+  }
+
+  // Update current req_id
+  ric->req_id = original_ric_req_id;
+
+  pthread_mutex_unlock(&ric->req_id_mutex);
+
+  printf("[NEAR-RIC]: Processing subscription request with RIC_REQ_ID: %d\n", original_ric_req_id);
 
   // A pending event is created along with a timer of 3000 ms,
   // after which an event will be generated
@@ -928,6 +955,7 @@ uint16_t fwd_ric_subscription_request(near_ric_t* ric,
   long const wait_ms = 3000;
   int fd_timer = create_timer_ms_asio_ric(&ric->io, wait_ms, wait_ms);
 
+  // Store pending event
   {
     lock_guard(&ric->pend_mtx);
     bi_map_insert(&ric->pending, &fd_timer, sizeof(fd_timer), &ev, sizeof(ev));
@@ -937,8 +965,9 @@ uint16_t fwd_ric_subscription_request(near_ric_t* ric,
   defer({ free_byte_array(ba_msg); });
 
   e2ap_send_bytes_ric(&ric->ep, id, ba_msg);
+  printf("[NEAR-RIC]: Forwarded subscription request with RIC_REQ_ID: %d\n", original_ric_req_id);
 
-  return ric_req_id;
+  return original_ric_req_id;
 }
 
 void fwd_ric_subscription_request_delete(near_ric_t* ric,
