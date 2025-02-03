@@ -342,27 +342,28 @@ void print_ric_indication_content(const ric_indication_t* src)
     // Get raw bytes
     uint8_t* raw_bytes = (uint8_t*)src->msg.buf;
 
-    // Print raw bytes
-    // LOG_SURREY_RIC("Raw bytes:\n");
-    // for (size_t i = 0; i < src->msg.len; i++) {
-    //   printf("%02x ", raw_bytes[i]);
-    //   if ((i + 1) % 16 == 0)
-    //     printf("\n");
-    // }
-    // printf("\n");
-
     // Extract handover info
     gtp_ho_info_t ho_info = extract_handover_info_ric(raw_bytes, src->msg.len);
 
-    // Print the results
-    LOG_SURREY_RIC("Extracted Handover Info:\n");
-    LOG_SURREY_RIC("UE %u (Source DU: %u, Target DU: %u, HO Complete: %s)\n",
-                   ho_info.ue_id,
-                   ho_info.source_du,
-                   ho_info.target_du,
-                   ho_info.ho_complete ? "true" : "false");
+    if (ho_info.ho_complete == true) {
+      // Print raw bytes LOG_SURREY_RIC("Raw bytes:\n");
+      for (size_t i = 0; i < src->msg.len; i++) {
+        printf("%02x ", raw_bytes[i]);
+        if ((i + 1) % 16 == 0)
+          printf("\n");
+      }
+      printf("\n");
+
+      // Print the results
+      LOG_SURREY_RIC("Extracted Handover Info:\n");
+      LOG_SURREY_RIC("UE %u (Source DU: %u, Target DU: %u, HO Complete: %s)\n",
+                     ho_info.ue_id,
+                     ho_info.source_du,
+                     ho_info.target_du,
+                     ho_info.ho_complete ? "true" : "false");
+    }
+    printf("\n===End indication Message Content===\n");
   }
-  printf("\n=============End indication Message Content====================\n");
 }
 
 void decode_gtp_indication_message(ric_indication_t const* src)
