@@ -42,11 +42,24 @@
 #include "sm/sm_proc_data.h"
 #include "../../../src/util/alg_ds/alg/defer.h"
 
+// Add these includes at the top
+#include "hiper_ran_tcp_client.h"
+
 #define MAX_MOBILES_PER_GNB 40
 
 // Keep the necessary global variables
 static pthread_mutex_t gtp_stats_mutex;
-static hash_table_t* ue_gtp_stats_by_rnti_ht;
+static pthread_mutex_t mac_stats_mutex;
+// tcp client thread
+static pthread_t tcp_client_thread_id;
+
+hash_table_t* ue_gtp_stats_by_rnti_ht;
+hash_table_t* ue_mac_stats_by_rnti_ht;
+
+static sm_ans_xapp_t* gtp_handle = NULL;
+// MAC indication
+static sm_ans_xapp_t* mac_handle = NULL;
+static e2_node_arr_xapp_t nodes;
 
 static volatile sig_atomic_t keepRunning = 1;
 
@@ -57,144 +70,105 @@ void intHandler()
   keepRunning = false;
 }
 
-void setup_signal_handler()
+// Function to safely remove service model handlers
+static void remove_service_handlers(void)
 {
-  struct sigaction act;
-  memset(&act, 0, sizeof(act));
-  act.sa_handler = intHandler;
-  sigaction(SIGINT, &act, NULL);
-  sigaction(SIGTERM, &act, NULL);
+  // Lock both mutexes to ensure safe cleanup
+  pthread_mutex_lock(&gtp_stats_mutex);
+  pthread_mutex_lock(&mac_stats_mutex);
+
+  for (int i = 0; i < nodes.len; i++) {
+    if (gtp_handle && gtp_handle[i].u.handle != 0) {
+      printf("Removing GTP handler for node %d\n", i);
+      rm_report_sm_xapp_api(gtp_handle[i].u.handle);
+      gtp_handle[i].u.handle = 0;
+    }
+    if (mac_handle && mac_handle[i].u.handle != 0) {
+      printf("Removing MAC handler for node %d\n", i);
+      rm_report_sm_xapp_api(mac_handle[i].u.handle);
+      mac_handle[i].u.handle = 0;
+    }
+  }
+  // Give some time for handlers to complete
+  usleep(100000); // 100ms
+  pthread_mutex_unlock(&mac_stats_mutex);
+  pthread_mutex_unlock(&gtp_stats_mutex);
 }
 
 // Cleanup function simplified for GTP only
-void cleanup_resources(sm_ans_xapp_t* gtp_handle, int num_nodes)
+void cleanup_all_resources()
 {
-  // Remove report handlers
-  for (int i = 0; i < num_nodes; i++) {
-    if (gtp_handle[i].u.handle != 0)
-      rm_report_sm_xapp_api(gtp_handle[i].u.handle);
+  printf("Starting comprehensive cleanup...\n");
+
+  // 1. Stop TCP client
+  if (tcp_client_thread_id != 0) {
+    printf("Cleaning up TCP client...\n");
+    cleanup_tcp_client();
+    pthread_join(tcp_client_thread_id, NULL);
+    tcp_client_thread_id = 0;
   }
 
-  // Free allocated memory
-  if (num_nodes > 0) {
-    free(gtp_handle);
+  // 2. Remove service handlers
+  printf("Removing service handlers...\n");
+  remove_service_handlers();
+
+  // 3. Free service handles
+  if (nodes.len > 0) {
+    if (gtp_handle) {
+      free(gtp_handle);
+      gtp_handle = NULL;
+    }
+    if (mac_handle) {
+      free(mac_handle);
+      mac_handle = NULL;
+    }
   }
 
-  // Destroy hashtable
-  if (ue_gtp_stats_by_rnti_ht)
+  // 4. Clean up hash tables
+  printf("Cleaning up hash tables...\n");
+  if (ue_gtp_stats_by_rnti_ht) {
     hashtable_destroy(&ue_gtp_stats_by_rnti_ht);
+    ue_gtp_stats_by_rnti_ht = NULL;
+  }
+  if (ue_mac_stats_by_rnti_ht) {
+    hashtable_destroy(&ue_mac_stats_by_rnti_ht);
+    ue_mac_stats_by_rnti_ht = NULL;
+  }
 
-  // Destroy mutex
+  // 5. Destroy service model mutexes
+  printf("Destroying mutexes...\n");
   pthread_mutex_destroy(&gtp_stats_mutex);
+  pthread_mutex_destroy(&mac_stats_mutex);
 
-  // Stop xApp
-  while (try_stop_xapp_api() == false)
-    usleep(1000);
-
-  printf("\nApplication cleaned up and terminated gracefully\n");
+  // 6. Free E2 nodes array
+  if (nodes.len > 0) {
+    printf("Freeing E2 nodes array...\n");
+    free_e2_node_arr_xapp(&nodes);
+  }
 }
 
-// static void sm_cb_gtp(sm_ag_if_rd_t const* rd)
-// {
-//   assert(rd != NULL);
-//   // assert(rd->type == INDICATION_MSG_AGENT_IF_ANS_V0);
-//   assert(rd->ind.type == GTP_STATS_V0);
+// Signal handler function
+static void signal_handler(int signum)
+{
+  if (signum == SIGINT || signum == SIGTERM) {
+    printf("\nReceived signal %d. Initiating graceful shutdown...\n", signum);
+    keepRunning = 0;
 
-//   // int64_t now = time_now_us();
+    // Remove service handlers
+    printf("Removing service handlers...\n");
+    remove_service_handlers();
 
-//   for (u_int32_t i = 0; i < rd->ind.gtp.msg.len; i++) {
-//     pthread_mutex_lock(&gtp_stats_mutex);
-//     // printf("GTP ind_msg latency = %ld μs\n", now - rd->ind.mac.msg.tstamp);
-//     gtp_ngu_t_stats_t* ue_gtp_stats = malloc(sizeof(*ue_gtp_stats));
-//     *ue_gtp_stats = rd->ind.gtp.msg.ngut[i];
-//     hashtable_insert(ue_gtp_stats_by_rnti_ht, rd->ind.gtp.msg.ngut[i].rnti, ue_gtp_stats);
-//     if (ue_gtp_stats_by_rnti_ht != NULL) {
-//       char buffer[8191] = {0};
-//       int64_t now = time_now_us();
-//       sprintf(buffer,
-//               "{\"timestamp\": %ju, \"rnti_gtp\": %04x,\"teid_gnb\": %04x,\"teid_upf\": %d,\"qfi\": %d,\"ue_has_mqr\": %s, "
-//               "\"rrc_ue_id\": %d,\"ue_rnti_t\": %d,\"mqr_rsrp\": %ld,\"mqr_rsrq\": %.1f,\"mqr_sinr\": %.1f,"
-//               "\"ho_ue_id\": %d, \"ho_complete\": %d, \"ho_source_du\": %d, \"ho_target_du\": %d",
-//               now / 1000,
-//               rd->ind.gtp.msg.ngut[i].rnti,
-//               rd->ind.gtp.msg.ngut[i].teidgnb,
-//               rd->ind.gtp.msg.ngut[i].teidupf,
-//               rd->ind.gtp.msg.ngut[i].qfi,
-//               (rd->ind.gtp.msg.ngut[i].ue_context_has_mqr == 1) ? "true" : "false",
-//               rd->ind.gtp.msg.ngut[i].ue_context_rrc_ue_id,
-//               rd->ind.gtp.msg.ngut[i].ue_context_rnti_t,
-//               rd->ind.gtp.msg.ngut[i].ue_context_mqr_rsrp,
-//               rd->ind.gtp.msg.ngut[i].ue_context_mqr_rsrq,
-//               rd->ind.gtp.msg.ngut[i].ue_context_mqr_sinr,
-//               rd->ind.gtp.msg.ho_info.ue_id,
-//               (rd->ind.gtp.msg.ho_info.ho_complete) ? 1 : 0,
-//               rd->ind.gtp.msg.ho_info.source_du,
-//               rd->ind.gtp.msg.ho_info.target_du);
-//       if (rd->ind.gtp.msg.ho_info.target_du != 0)
-//         exit(0);
-//       long mqr_rsrp = 0; // UE MQR (Multi-Connectivity Quality Requirement)
-//       double mqr_sinr = NAN;
-//       double mqr_rsrq = NAN; // MQR Reference Signal Received Quality
-//       if (rd->ind.gtp.msg.ngut[i].ue_context_has_mqr) {
-//         mqr_rsrp = rd->ind.gtp.msg.ngut[i].ue_context_mqr_rsrp;
-//         mqr_rsrq = rd->ind.gtp.msg.ngut[i].ue_context_mqr_rsrq;
-//         mqr_sinr = rd->ind.gtp.msg.ngut[i].ue_context_mqr_sinr;
-//         sprintf(&buffer[strlen(buffer)], "\"mqr_rsrp\": %ld,\"mqr_rsrq\": %.1f,\"mqr_sinr\": %.1f", mqr_rsrp, mqr_rsrq,
-//         mqr_sinr);
-//       }
-//       sprintf(&buffer[strlen(buffer)], "}\n");
+    // Set client running flag to false and close socket
+    force_close_socket(); // Using the function from tcp client
 
-//       // Print the contents of the buffer
-//       printf("Measured GTP KPI:\n%s\n", buffer);
-//     } else {
-//       printf("GTP Hashtable is empty\n");
-//     }
-//     pthread_mutex_unlock(&gtp_stats_mutex);
-//   }
+    // Clean up resources
+    cleanup_all_resources();
 
-//   cnt_gtp++;
-// }
+    // Let the core API handle the final exit
+    printf("Local cleanup complete, proceeding to core shutdown...\n");
+  }
+}
 
-// static void print_indication_message(ric_indication_t const* ind)
-// {
-//   assert(ind != NULL);
-
-//   printf("\n=== Received GTP Indication at xApp ===\n");
-//   printf("RIC Request ID: %d\n", ind->ric_id.ric_req_id);
-//   printf("RIC Instance ID: %d\n", ind->ric_id.ric_inst_id);
-//   printf("RAN Function ID: %d\n", ind->ric_id.ran_func_id);
-//   printf("Action ID: %ld\n", ind->action_id);
-
-//   if (ind->msg.buf != NULL) {
-//     printf("\nIndication Message (%zu bytes):\n", ind->msg.len);
-
-//     // Hex dump with ASCII
-//     for (size_t i = 0; i < ind->msg.len; i++) {
-//       if (i % 16 == 0) {
-//         printf("\n%04zX: ", i);
-//       }
-//       printf("%02X ", ind->msg.buf[i]);
-
-//       // Print ASCII after every 16 bytes or at the end
-//       if ((i + 1) % 16 == 0 || i == ind->msg.len - 1) {
-//         // Pad with spaces if needed
-//         for (size_t j = i % 16; j < 15; j++) {
-//           printf("   ");
-//         }
-//         printf(" |");
-//         // Print ASCII characters
-//         size_t start = i - (i % 16);
-//         size_t end = i;
-//         for (size_t j = start; j <= end; j++) {
-//           char c = ind->msg.buf[j];
-//           printf("%c", (c >= 32 && c <= 126) ? c : '.');
-//         }
-//         printf("|");
-//       }
-//     }
-//     printf("\n");
-//   }
-// }
 static void sm_cb_gtp(sm_ag_if_rd_t const* rd)
 {
   assert(rd != NULL);
@@ -204,16 +178,9 @@ static void sm_cb_gtp(sm_ag_if_rd_t const* rd)
 
   pthread_mutex_lock(&gtp_stats_mutex);
 
-  // Print the raw indication message
-  // print_indication_message(&rd->ind.gtp);
-
-  // Your existing GTP stats processing
-  // gtp_ind_data_t const* ind = &rd->gtp_stats;
-  // gtp_ind_data_t const* ind = &rd->ind.gtp;
-
   int64_t now = time_now_us();
 
-  printf("\n=== Decoded GTP Stats ===\n");
+  // printf("\n=== Decoded GTP Stats ===\n");
 
   for (u_int32_t i = 0; i < rd->ind.gtp.msg.len; i++) {
     sprintf(buffer,
@@ -237,44 +204,164 @@ static void sm_cb_gtp(sm_ag_if_rd_t const* rd)
             rd->ind.gtp.msg.ho_info.target_du);
 
     printf("GTP INFO:\n%s\n", buffer);
-    exit(0);
+    fflush(stdout);
+    //   exit(0);
+  }
+  if (rd->ind.gtp.msg.ho_info.ho_complete == 0) {
+    // Send message to the RU controler that DU Handover OK
+    send_ho_ok();
   }
   pthread_mutex_unlock(&gtp_stats_mutex);
 }
 
+void write_mac_stats(char* buffer, mac_ue_stats_impl_t* ue_mac_stats)
+{
+  sprintf(&buffer[strlen(buffer)],
+          "\"MAC:\",\"cellid\": %lu,\"in_sync\": %d, \"rnti\": \"%04x\",\"dlBytes\": %lu,\"dlMcs\": %d,\"dlBler\": "
+          "%f,\"ulBytes\": %ld,"
+          "\"ulMcs\": %d,\"ulBler\": %f,\"ri\": %d,\"pmi\": \"(%d,%d)\",\"phr\": %d,\"pcmax\": %d,",
+          ue_mac_stats->nr_cellid,
+          ue_mac_stats->in_sync,
+          ue_mac_stats->rnti,
+          ue_mac_stats->dl_aggr_tbs,
+          ue_mac_stats->dl_mcs1,
+          ue_mac_stats->dl_bler,
+          ue_mac_stats->ul_aggr_tbs,
+          ue_mac_stats->ul_mcs1,
+          ue_mac_stats->ul_bler,
+          ue_mac_stats->pmi_cqi_ri,
+          ue_mac_stats->pmi_cqi_X1,
+          ue_mac_stats->pmi_cqi_X2,
+          ue_mac_stats->phr,
+          ue_mac_stats->pcmax);
+  printf("MAC INFO:\n%s\n", buffer);
+  fflush(stdout);
+}
+
+static void sm_cb_mac(sm_ag_if_rd_t const* rd)
+{
+  assert(rd != NULL);
+  assert(rd->type == INDICATION_MSG_AGENT_IF_ANS_V0);
+  assert(rd->ind.type == MAC_STATS_V0);
+
+  // int64_t now = time_now_us();
+  //  if (cnt_mac % 1024 == 0)
+  //    printf("MAC ind_msg latency = %ld μs\n", now - rd->ind.mac.msg.tstamp);
+  //  // cnt_mac++;
+  for (u_int32_t i = 0; i < rd->ind.mac.msg.len_ue_stats; i++) {
+    pthread_mutex_lock(&mac_stats_mutex);
+    // printf("MAC ind_msg latency = %ld μs\n", now - rd->ind.mac.msg.tstamp);
+    mac_ue_stats_impl_t* ue_mac_stats = malloc(sizeof(*ue_mac_stats));
+    *ue_mac_stats = rd->ind.mac.msg.ue_stats[i];
+    hashtable_insert(ue_mac_stats_by_rnti_ht, rd->ind.mac.msg.ue_stats[i].rnti, ue_mac_stats);
+
+    // Check if the insertion was successful
+    if (ue_mac_stats_by_rnti_ht != NULL) {
+      // Hashtable is not empty
+      // printf("Hash not empty at least one\n");
+      int64_t now = time_now_us();
+
+      if (!ue_mac_stats->in_sync) {
+        printf("UE: %04x is out of sync, removing stats hashtable entry\n", ue_mac_stats->rnti);
+        hashtable_remove(ue_mac_stats_by_rnti_ht, ue_mac_stats->rnti);
+        continue;
+      }
+      char buffer[8191] = {0};
+      sprintf(buffer, "{\"timestamp\": %ju,", now / 1000);
+
+      write_mac_stats(buffer, ue_mac_stats);
+
+      double rsrq = NAN;
+      double sinr = NAN;
+      long rsrp = ue_mac_stats->rsrp;
+      uint8_t cqi = ue_mac_stats->cqi;
+      float rssi = -1 * ue_mac_stats->raw_rssi;
+      float pucch_snr = ue_mac_stats->pucch_snr;
+      float pusch_snr = ue_mac_stats->pusch_snr;
+
+      if (!isnan(rsrq)) {
+        sprintf(&buffer[strlen(buffer)], "\"rsrq\": %.1f, ", rsrq);
+      }
+
+      if (!isnan(sinr)) {
+        sprintf(&buffer[strlen(buffer)], "\"sinr\": %.1f, ", sinr);
+      }
+
+      sprintf(&buffer[strlen(buffer)],
+              "\"rsrp\": %ld,\"rssi\": %.1f,\"cqi\": %d,\"pucchSnr\": %.1f,\"puschSnr\": %.1f",
+              rsrp,
+              rssi,
+              cqi,
+              pucch_snr,
+              pusch_snr);
+
+      sprintf(&buffer[strlen(buffer)], "}\n");
+      // Print the contents of the buffer
+      // printf("Measured MAC KPI:\n%s\n", buffer);
+    } else {
+      printf("Hash is empty\n");
+      // Hashtable is empty, insertion might have failed
+    }
+    pthread_mutex_unlock(&mac_stats_mutex);
+  }
+}
+
 int main(int argc, char* argv[])
 {
+  // Set up signal handling
+  struct sigaction sa = {0};
+  sa.sa_handler = signal_handler;
+  sigemptyset(&sa.sa_mask);
+  sigfillset(&sa.sa_mask);
+  sa.sa_flags = SA_RESTART;
+
+  if (sigaction(SIGINT, &sa, NULL) == -1 || sigaction(SIGTERM, &sa, NULL) == -1) {
+    perror("Failed to set up signal handlers");
+    return 1;
+  }
   // Initialize flexRIC arguments from command line
   fr_args_t args = init_fr_args(argc, argv);
 
   // Initialize mutex attributes and mutex for GTP only
   pthread_mutexattr_t attr = {0};
   pthread_mutex_init(&gtp_stats_mutex, &attr);
+  pthread_mutex_init(&mac_stats_mutex, &attr);
 
   // Initialize hash table for GTP statistics tracking
   ue_gtp_stats_by_rnti_ht = hashtable_create(MAX_MOBILES_PER_GNB, NULL, free);
+  ue_mac_stats_by_rnti_ht = hashtable_create(MAX_MOBILES_PER_GNB, NULL, free);
 
   // Init the xApp
   init_xapp_api(&args);
   sleep(1);
 
+  // Start the TCP client thread
+  tcp_client_thread_id = start_tcp_client();
+  if (tcp_client_thread_id == 0) {
+    printf("Failed to start TCP client thread\n");
+    // Handle error
+    goto cleanup;
+  }
+
   // Get connected E2 nodes
-  e2_node_arr_xapp_t nodes = e2_nodes_xapp_api();
+  // Global variable
+  nodes = e2_nodes_xapp_api();
 
   // Verify at least one node is connected
   assert(nodes.len > 0);
   printf("Connected E2 nodes = %d\n", nodes.len);
 
   // Define reporting interval for GTP
-  const char* i_3 = "1_ms";
-  sm_ans_xapp_t* gtp_handle = NULL;
+  const char* i_ms = "1_ms";
 
   if (nodes.len > 0) {
     gtp_handle = calloc(nodes.len, sizeof(sm_ans_xapp_t));
     assert(gtp_handle != NULL);
+    mac_handle = calloc(nodes.len, sizeof(sm_ans_xapp_t));
+    assert(mac_handle != NULL);
   }
 
-  // Setup GTP reporting for each node
+  // Setup GTP and MAC reporting for each node
   for (int i = 0; i < nodes.len; i++) {
     e2_node_connected_xapp_t* n = &nodes.n[i];
 
@@ -282,9 +369,21 @@ int main(int argc, char* argv[])
       printf("Registered node %d ran func id = %d \n ", i, n->rf[j].id);
 
     // Setup GTP for appropriate node types
-    if (n->id.type == ngran_gNB || n->id.type == ngran_eNB || n->id.type == ngran_gNB_CU || n->id.type == ngran_gNB_CUUP) {
-      gtp_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 148, (void*)i_3, sm_cb_gtp);
+    if (n->id.type == ngran_gNB || n->id.type == ngran_eNB) {
+      gtp_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 148, (void*)i_ms, sm_cb_gtp);
       assert(gtp_handle[i].success == true);
+      mac_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 142, (void*)i_ms, sm_cb_mac);
+      assert(mac_handle[i].success == true);
+    } else {
+      if (n->id.type == ngran_gNB_CU || n->id.type == ngran_gNB_CUUP) {
+        gtp_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 148, (void*)i_ms, sm_cb_gtp);
+        assert(gtp_handle[i].success == true);
+      } else {
+        if (n->id.type == ngran_eNB_DU) {
+          mac_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 142, (void*)i_ms, sm_cb_mac);
+          assert(mac_handle[i].success == true);
+        }
+      }
     }
   }
 
@@ -292,13 +391,12 @@ int main(int argc, char* argv[])
   while (keepRunning) {
     usleep(100000); // Sleep for 100ms
   }
+cleanup:
+  // Before the program exits (before cleanup_all_resources call)
+  // Cleanup TCP client before other resources
 
-  // Cleanup when loop exits
-  cleanup_resources(gtp_handle, nodes.len);
-
-  // Free the E2 nodes array
-  free_e2_node_arr_xapp(&nodes);
-
+  printf("\nInitiating shutdown sequence...\n");
+  cleanup_all_resources();
   printf("Application terminated successfully\n");
   return 0;
 }

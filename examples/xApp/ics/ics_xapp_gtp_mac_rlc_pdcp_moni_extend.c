@@ -95,7 +95,7 @@ static void sm_cb_gtp(sm_ag_if_rd_t const* rd)
     gtp_ngu_t_stats_t* ue_gtp_stats = malloc(sizeof(*ue_gtp_stats));
     *ue_gtp_stats = rd->ind.gtp.msg.ngut[i];
     hashtable_insert(ue_gtp_stats_by_rnti_ht, rd->ind.gtp.msg.ngut[i].rnti, ue_gtp_stats);
-    if (ue_mac_stats_by_rnti_ht != NULL) {
+    if (ue_gtp_stats_by_rnti_ht != NULL) {
       char buffer[8191] = {0};
       int64_t now = time_now_us();
       sprintf(buffer,

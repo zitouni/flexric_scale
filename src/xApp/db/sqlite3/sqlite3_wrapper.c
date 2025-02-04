@@ -334,7 +334,7 @@ void create_kpm_table(sqlite3* db)
 //   assert(rc == SQLITE_OK && "Error while inserting into the DB. Check the err_msg string for further info");
 // }
 
-static void insert_db(sqlite3* db, char const* sql)
+static int insert_db(sqlite3* db, char const* sql)
 {
   // Ensure the database connection and SQL statement are not NULL
   if (db == NULL) {
@@ -356,6 +356,7 @@ static void insert_db(sqlite3* db, char const* sql)
     return;
   }
   // Successfully inserted into the DB
+  return SQLITE_OK;
 }
 
 static int to_sql_string_mac_ue(global_e2_node_id_t const* id,
@@ -1202,8 +1203,15 @@ static void write_mac_stats(sqlite3* db, global_e2_node_id_t const* id, mac_ind_
     pos += to_sql_string_mac_ue(id, &ind_msg_mac->ue_stats[i], ind_msg_mac->tstamp, buffer + pos, 2048 - pos);
   }
 
-  insert_db(db, buffer);
-  printf("Successfully insert DB entries into MAC_UE table\n");
+  // insert_db(db, buffer);
+  // printf("Successfully insert DB entries into MAC_UE table\n");
+
+  int rc = insert_db(db, buffer);
+  if (rc != SQLITE_OK) {
+    // Handle error - error message already printed in the function
+    // Additional error handling if needed
+    printf("Failled to insert into the MAC_UE DB\n");
+  }
 }
 
 static void write_rlc_stats(sqlite3* db, global_e2_node_id_t const* id, rlc_ind_data_t const* ind)
@@ -1220,8 +1228,15 @@ static void write_rlc_stats(sqlite3* db, global_e2_node_id_t const* id, rlc_ind_
     pos += to_sql_string_rlc_rb(id, &ind_msg_rlc->rb[i], ind_msg_rlc->tstamp, buffer + pos, 2048 - pos);
   }
 
-  insert_db(db, buffer);
-  printf("Successfully insert DB entry into RLC_bearer table\n");
+  // insert_db(db, buffer);
+  // printf("Successfully insert DB entry into RLC_bearer table\n");
+
+  int rc = insert_db(db, buffer);
+  if (rc != SQLITE_OK) {
+    // Handle error - error message already printed in the function
+    // Additional error handling if needed
+    printf("Failled to insert into the RLC_bearer DB\n");
+  }
 }
 
 static void write_pdcp_stats(sqlite3* db, global_e2_node_id_t const* id, pdcp_ind_data_t const* ind)
@@ -1238,8 +1253,14 @@ static void write_pdcp_stats(sqlite3* db, global_e2_node_id_t const* id, pdcp_in
     pos += to_sql_string_pdcp_rb(id, &ind_msg_pdcp->rb[i], ind_msg_pdcp->tstamp, buffer + pos, 2048 - pos);
   }
 
-  insert_db(db, buffer);
-  printf("Successfully insert DB entry into PDCP_bearer table\n");
+  // insert_db(db, buffer);
+  // printf("Successfully insert DB entry into PDCP_bearer table\n");
+  int rc = insert_db(db, buffer);
+  if (rc != SQLITE_OK) {
+    // Handle error - error message already printed in the function
+    // Additional error handling if needed
+    printf("Failled to insert into the PDCP_bearer DB\n");
+  }
 }
 
 static void write_slice_conf_stats(sqlite3* db, global_e2_node_id_t const* id, int64_t tstamp, slice_conf_t const* slice_conf)
@@ -1259,8 +1280,15 @@ static void write_slice_conf_stats(sqlite3* db, global_e2_node_id_t const* id, i
 
   // TODO: Process uplink slice stats
 
-  insert_db(db, buffer);
-  printf("Successfully insert DB entry into SLICE table\n");
+  // insert_db(db, buffer);
+  // printf("Successfully insert DB entry into SLICE table\n");
+
+  int rc = insert_db(db, buffer);
+  if (rc != SQLITE_OK) {
+    // Handle error - error message already printed in the function
+    // Additional error handling if needed
+    printf("Failled to insert into the SLICE CONF table DB\n");
+  }
 }
 
 static void write_ue_slice_conf_stats(sqlite3* db,
@@ -1280,8 +1308,15 @@ static void write_ue_slice_conf_stats(sqlite3* db,
     pos += to_sql_string_ue_slice_rb(id, ue_slice_conf, NULL, tstamp, buffer + pos, 2048 - pos);
   }
 
-  insert_db(db, buffer);
-  printf("Successfully insert DB entry into UE_SLICE table\n");
+  // insert_db(db, buffer);
+  // printf("Successfully insert DB entry into UE_SLICE table\n");
+
+  int rc = insert_db(db, buffer);
+  if (rc != SQLITE_OK) {
+    // Handle error - error message already printed in the function
+    // Additional error handling if needed
+    printf("Failled to insert into the UE_SLICE table DB\n");
+  }
 }
 
 static void write_slice_stats(sqlite3* db, global_e2_node_id_t const* id, slice_ind_data_t const* ind)
@@ -1311,8 +1346,15 @@ static void write_gtp_stats(sqlite3* db, global_e2_node_id_t const* id, gtp_ind_
     pos += to_sql_string_gtp_NGUT(id, &ind_msg_gtp->ngut[i], ind_msg_gtp->tstamp, buffer + pos, 2048 - pos);
   }
 
-  insert_db(db, buffer);
-  printf("Successfully insert DB entry into GTP_NGUT table\n");
+  // insert_db(db, buffer);
+  // printf("Successfully insert DB entry into GTP_NGUT table\n");
+
+  int rc = insert_db(db, buffer);
+  if (rc != SQLITE_OK) {
+    // Handle error - error message already printed in the function
+    // Additional error handling if needed
+    printf("Failled to insert into the GTP_NGUT DB\n");
+  }
 }
 
 // void write_kpm_stats(sqlite3* db, global_e2_node_id_t const* id, kpm_ric_indication_t const* ind)

@@ -41,12 +41,43 @@ static pthread_t thrd_xapp;
 
 static void sig_handler(int sig_num)
 {
-  printf("\n[xApp]:Abruptly ending with signal number = %d\n", sig_num);
+  printf("\n[xApp]: Initiating graceful shutdown with signal number = %d\n", sig_num);
 
-  while (try_stop_xapp_api() == false)
-    usleep(1000);
+  const int MAX_RETRIES = 5;
+  const useconds_t RETRY_DELAY = 1000; // 1ms delay as before
+  int retry_count = 0;
+  bool stopped = false;
 
-  exit(EXIT_FAILURE);
+  // First ensure all pending messages are processed
+  while (not_dispatch_msg(xapp) > 0 && retry_count < MAX_RETRIES) {
+    usleep(RETRY_DELAY);
+    retry_count++;
+  }
+
+  // Reset retry count for xApp stopping
+  retry_count = 0;
+
+  // Try to stop xApp with a maximum number of retries
+  while (!stopped && retry_count < MAX_RETRIES) {
+    stopped = try_stop_xapp_api();
+    if (!stopped) {
+      usleep(RETRY_DELAY);
+      retry_count++;
+    }
+  }
+
+  if (!stopped) {
+    printf("[xApp]: Failed to stop cleanly after %d attempts\n", MAX_RETRIES);
+    // Force cleanup
+    if (xapp != NULL) {
+      free_e42_xapp(xapp);
+      xapp = NULL;
+    }
+    exit(EXIT_FAILURE);
+  } else {
+    printf("[xApp]: Stopped successfully after %d attempts\n", retry_count + 1);
+    exit(EXIT_SUCCESS);
+  }
 }
 
 static inline void* static_start_xapp(void* a)
@@ -80,10 +111,13 @@ bool try_stop_xapp_api(void)
   assert(xapp != NULL);
 
   size_t sz = not_dispatch_msg(xapp);
-  if (sz > 0)
+  if (sz > 0) {
+    printf("[xApp]: Still has %zu pending messages\n", sz);
     return false;
+  }
 
   free_e42_xapp(xapp);
+  xapp = NULL;
 
   int const rc = pthread_join(thrd_xapp, NULL);
   assert(rc == 0);

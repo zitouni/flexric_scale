@@ -18,6 +18,7 @@ add_executable(oaibox_xapp_ue_measurements_ics
 # hiper_ran_xapp
 add_executable(hiper_ran_xapp 
                 hiper_ran_xapp.c
+                hiper_ran_tcp_client.c
                 ../../../../src/util/alg_ds/alg/defer.c
                 ../../../../external/common/utils/hashtable/hashtable.c
               )
@@ -38,13 +39,6 @@ include_directories(ics_xapp
     ../../../../../../common/utils
     ../../../../../../common
 )
-# target_include_directories(latency_xapp 
-#     PRIVATE
-#     ${CMAKE_CURRENT_SOURCE_DIR}/../../src
-#     ${CMAKE_CURRENT_SOURCE_DIR}/../../src/xApp
-#     ${CMAKE_CURRENT_SOURCE_DIR}/../../src/sm/kpm_sm/kpm_sm_v02.03
-#     ${SQLITE3_INCLUDE_DIRS}
-# )
 
 
 target_link_libraries(ics_xapp
