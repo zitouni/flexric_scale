@@ -30,7 +30,7 @@
 #include <stdbool.h>
 
 // Forward declaration of the opaque type
-typedef struct agent_instance_s agent_instance_t;
+typedef struct ric_instance_s agent_instance_t;
 
 // Structure definitions needed by clients
 // struct plugin_ag_s {

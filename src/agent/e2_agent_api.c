@@ -43,14 +43,14 @@
 
 #include "../../../RAN_FUNCTION/surrey_log.h"
 
-#define MAX_AGENTS 20
+#define MAC_NEAR_RT_RICS 20
 
 e2_agent_t* agent = NULL;
 
 // static pthread_t thrd_agent;
 // Structure to maintain information about each E2 agent instance
 // The actual structure definition
-struct agent_instance_s {
+struct ric_instance_s {
   e2_agent_t* agent;
   pthread_t thread;
   bool active;
@@ -59,7 +59,7 @@ struct agent_instance_s {
 
 // Global variables to manage multiple agents
 // not static accessible from other c files as extern
-static struct agent_instance_s agents[MAX_AGENTS] = {0};
+static struct ric_instance_s agents[MAC_NEAR_RT_RICS] = {0};
 static int num_active_agents = 0;
 static pthread_mutex_t agents_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -83,7 +83,7 @@ static inline void* static_start_agent(void* arg)
 // Add getter functions
 agent_instance_t* get_agent_instance(int index)
 {
-  if (index >= 0 && index < MAX_AGENTS) {
+  if (index >= 0 && index < MAC_NEAR_RT_RICS) {
     return &agents[index];
   }
   return NULL;
@@ -147,40 +147,6 @@ const char* get_instance_ric_ip(agent_instance_t* instance)
 {
   return instance ? instance->ric_ip : NULL;
 }
-
-// Implementation of get_agent_plugin
-// plugin_wrapper_t* get_agent_plugin(void* e2_agent)
-// {
-//   if (!e2_agent)
-//     return NULL;
-
-//   plugin_wrapper_t* wrapper = calloc(1, sizeof(plugin_wrapper_t));
-//   if (!wrapper)
-//     return NULL;
-
-//   e2_agent_t* agent = (e2_agent_t*)e2_agent;
-//   wrapper->data = &agent->plugin;
-
-//   if (!init_plugin_mutex(wrapper)) {
-//     free(wrapper);
-//     return NULL;
-//   }
-
-//   return wrapper;
-// }
-
-// Implementation of get_sm_from_tree
-// void* get_sm_from_tree(plugin_wrapper_t* wrapper, int model_id)
-// {
-//   if (wrapper == NULL || wrapper->data == NULL)
-//     return NULL;
-//   return sm_plugin_ag((plugin_ag_t*)wrapper->data, model_id);
-// }
-
-// pthread_mutex_t* get_plugin_mutex(plugin_wrapper_t* wrapper)
-// {
-//   return wrapper ? &wrapper->mtx : NULL;
-// }
 
 // Get plugin without wrapping - internal use only
 void* get_agent_plugin(void* e2_agent)
@@ -366,8 +332,8 @@ void init_agent_api(int mcc,
   pthread_mutex_lock(&agents_mutex);
 
   // Check if maximum agents limit reached
-  if (num_active_agents >= MAX_AGENTS) {
-    printf("[E2 AGENT]: Maximum number of agents (%d) reached\n", MAX_AGENTS);
+  if (num_active_agents >= MAC_NEAR_RT_RICS) {
+    printf("[E2 AGENT]: Maximum number of agents (%d) reached\n", MAC_NEAR_RT_RICS);
     pthread_mutex_unlock(&agents_mutex);
     return;
   }
