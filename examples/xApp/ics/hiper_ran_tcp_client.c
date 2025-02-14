@@ -51,8 +51,8 @@ typedef struct {
 // Modify the global client initialization
 static tcp_client_t g_client = {.sock_fd = -1, .is_running = 0, .send_mutex = PTHREAD_MUTEX_INITIALIZER};
 
-// #define SERVER_IP "10.5.25.63" // Change this to your server IP
-#define SERVER_IP "127.0.0.1" // Change this to your server IP
+#define SERVER_IP "10.5.25.63" // Change this to your server IP
+// #define SERVER_IP "127.0.0.1" // Change this to your server IP
 #define SERVER_PORT 12346
 // #define SERVER_PORT 12345
 #define BUFFER_SIZE 4096
