@@ -24,6 +24,8 @@
 #include "map_ric_id.h"
 #include "xapp_ric_id.h"
 
+#include "../../../../RAN_FUNCTION/surrey_log.h"
+
 #include <assert.h>
 
 static inline int cmp_uint32(const void* m0_v, const void* m1_v)
@@ -141,12 +143,50 @@ void add_map_ric_id(map_ric_id_t* map, e2_node_ric_id_t* node, xapp_ric_id_t* x)
 
   assoc_rb_tree_t* left = &map->bimap.left;
 
+  // Keep assertions for data structure integrity
+  assert(left != NULL);
+
   void* it = assoc_front(left);
   void* end = assoc_end(left);
-  it = find_if(left, it, end, node, eq_e2_node_ric_req);
-  assert(it == end && "ric_req_id already in the map");
+  assert(end != NULL);
 
+  // Check if RIC request ID already exists
+  it = find_if(left, it, end, node, eq_e2_node_ric_req);
+  if (it != end) {
+    // Get the existing xApp ID for this RIC request ID
+    xapp_ric_id_t* existing_xapp = (xapp_ric_id_t*)assoc_value(left, it);
+    assert(existing_xapp != NULL); // Keep assertion for data integrity
+
+    // If it's the same xApp, just return success
+    if (existing_xapp->xapp_id == x->xapp_id) {
+      LOG_SURREY("[NEAR-RIC] Info: RIC Request ID %u already mapped to xApp ID %u\n", node->ric_id.ric_req_id, x->xapp_id);
+    }
+
+    // Different xApp - remove old mapping and add new one
+    LOG_SURREY("[NEAR-RIC] Info: Updating RIC Request ID %u mapping from xApp ID %u to xApp ID %u\n",
+               node->ric_id.ric_req_id,
+               existing_xapp->xapp_id,
+               x->xapp_id);
+
+    // Remove old mapping
+    // Extract the existing mapping
+
+    void* extracted_xapp = bi_map_extract_left(&map->bimap, node, sizeof(e2_node_ric_id_t), NULL);
+    // xtracts (removes) a mapping from a bi-directional map using the left key (key1)
+    // and returns the corresponding right key (key2
+
+    if (extracted_xapp != NULL) {
+      // The old mapping was successfully removed
+      free(extracted_xapp); // Free the returned xapp_ric_id_t
+      LOG_SURREY("[NEAR-RIC] Info: Old mapping was successfully removed\n");
+    }
+  }
+
+  // Insert new mapping
   bi_map_insert(&map->bimap, node, sizeof(e2_node_ric_id_t), x, sizeof(xapp_ric_id_t));
+  // assert(insert_status == 0 && "Failed to insert new mapping");
+
+  LOG_SURREY("[NEAR-RIC] Success: Mapped RIC Request ID %u to xApp ID %u\n", node->ric_id.ric_req_id, x->xapp_id);
 }
 
 void rm_map_ric_id(map_ric_id_t* map, xapp_ric_id_t const* ric_id)

@@ -42,6 +42,8 @@
 #include "sm/sm_proc_data.h"
 #include "../../../src/util/alg_ds/alg/defer.h"
 
+#include "../../../../RAN_FUNCTION/surrey_log.h"
+
 // Add these includes at the top
 #include "hiper_ran_tcp_client.h"
 
@@ -173,6 +175,7 @@ static void sm_cb_gtp(sm_ag_if_rd_t const* rd)
 {
   assert(rd != NULL);
   assert(rd->ind.type == GTP_STATS_V0);
+  // bool cond_send_ho_ok = false;
 
   char buffer[8191] = {0};
 
@@ -207,9 +210,13 @@ static void sm_cb_gtp(sm_ag_if_rd_t const* rd)
     fflush(stdout);
     //   exit(0);
   }
-  if (rd->ind.gtp.msg.ho_info.ho_complete == 0) {
+  if (rd->ind.gtp.msg.ho_info.ho_complete == 1) {
     // Send message to the RU controler that DU Handover OK
     send_ho_ok();
+    LOG_SURREY("Handover OK sent to switch off the RU controller/ Source DU: %d and Target DU: %d \n",
+               rd->ind.gtp.msg.ho_info.source_du,
+               rd->ind.gtp.msg.ho_info.target_du);
+    // cond_send_ho_ok = true;
   }
   pthread_mutex_unlock(&gtp_stats_mutex);
 }
