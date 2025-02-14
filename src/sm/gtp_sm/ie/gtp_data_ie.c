@@ -335,11 +335,15 @@ bool eq_gtp_func_def(gtp_func_def_t const* m0, gtp_func_def_t const* m1)
 
 void free_gtp_ind_data(gtp_ind_data_t* ind)
 {
+  fprintf(stderr, "Entering free_gtp_ind_data\n");
   assert(ind != NULL);
-
+  fprintf(stderr, "Freeing header\n");
   free_gtp_ind_hdr(&ind->hdr);
+  fprintf(stderr, "About to free message with len=%zu, ngut=%p\n", ind->msg.len, (void*)ind->msg.ngut);
   free_gtp_ind_msg(&ind->msg);
+  fprintf(stderr, "About to free message with len=%zu, ngut=%p\n", ind->msg.len, (void*)ind->msg.ngut);
   free_gtp_call_proc_id(ind->proc_id);
+  fprintf(stderr, "Completed free_gtp_ind_data\n");
 }
 
 gtp_ind_data_t cp_gtp_ind_data(gtp_ind_data_t const* src)
