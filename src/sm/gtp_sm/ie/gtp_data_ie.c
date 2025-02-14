@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <stdio.h>
+
 //////////////////////////////////////
 // RIC Event Trigger Definition
 /////////////////////////////////////
@@ -339,9 +341,9 @@ void free_gtp_ind_data(gtp_ind_data_t* ind)
   assert(ind != NULL);
   fprintf(stderr, "Freeing header\n");
   free_gtp_ind_hdr(&ind->hdr);
-  fprintf(stderr, "About to free message with len=%zu, ngut=%p\n", ind->msg.len, (void*)ind->msg.ngut);
+  fprintf(stderr, "About to free message with len=%u, ngut=%p\n", ind->msg.len, (void*)ind->msg.ngut);
   free_gtp_ind_msg(&ind->msg);
-  fprintf(stderr, "About to free message with len=%zu, ngut=%p\n", ind->msg.len, (void*)ind->msg.ngut);
+  fprintf(stderr, "About to free message with len=%u, ngut=%p\n", ind->msg.len, (void*)ind->msg.ngut);
   free_gtp_call_proc_id(ind->proc_id);
   fprintf(stderr, "Completed free_gtp_ind_data\n");
 }
