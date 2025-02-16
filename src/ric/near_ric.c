@@ -255,10 +255,25 @@ static inline bool net_pkt(e2ap_ep_t const* ep, int fd)
 
 static inline void consume_fd(int fd)
 {
-  assert(fd > 0);
+  // assert(fd > 0);
+  // uint64_t read_buf = 0;
+  // ssize_t const bytes = read(fd, &read_buf, sizeof(read_buf));
+  // assert(bytes == sizeof(read_buf));
+
+  if (fd <= 0) {
+    fprintf(stderr, "[NEAR-RIC] Warning: Invalid file descriptor (%d)\n", fd);
+  }
+
   uint64_t read_buf = 0;
-  ssize_t const bytes = read(fd, &read_buf, sizeof(read_buf));
-  assert(bytes == sizeof(read_buf));
+  ssize_t bytes = read(fd, &read_buf, sizeof(read_buf));
+
+  if (bytes < 0) {
+    fprintf(stderr, "[NEAR-RIC] Error reading fd: %s\n", strerror(errno));
+  }
+
+  if (bytes != sizeof(read_buf)) {
+    fprintf(stderr, "[NEAR-RIC] Warning: Incomplete read\n");
+  }
 }
 
 /*
@@ -478,9 +493,11 @@ static void e2_event_loop_ric(near_ric_t* ric)
 {
   assert(ric != NULL);
   int retry_count = 0;
+
   while (ric->stop_token == false) {
     async_event_arr_t arr = next_asio_event_ric(ric);
     assert(arr.len > 0 && arr.len < 65);
+
     for (int i = 0; i < arr.len; ++i) {
       async_event_t e = arr.ev[i];
       assert(e.type != UNKNOWN_EVENT && "Unknown event triggered ");

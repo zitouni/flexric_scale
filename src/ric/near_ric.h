@@ -84,6 +84,8 @@ typedef struct near_ric_s {
 
   uint16_t last_req_id; // Last used request ID
   pthread_mutex_t req_id_mutex; // Mutex for thread-safe ID management
+
+  bool initialized; // Add this flag
 } near_ric_t;
 
 near_ric_t* init_near_ric(fr_args_t const* args);
