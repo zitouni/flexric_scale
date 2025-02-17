@@ -2,6 +2,7 @@
 *.swp
 *.json
 *.png
+*.code-workspace
 build/
 tags
 archives/
