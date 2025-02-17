@@ -26,8 +26,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-__attribute__ ((visibility ("default"))) 
-sm_agent_t* make_gtp_sm_agent(sm_io_ag_ran_t io);
+__attribute__((visibility("default"))) sm_agent_t* make_gtp_sm_agent(sm_io_ag_ran_t io);
 
 #endif
-

@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <stdio.h>
+
 //////////////////////////////////////
 // RIC Event Trigger Definition
 /////////////////////////////////////
@@ -130,12 +132,30 @@ gtp_ind_msg_t cp_gtp_ind_msg(gtp_ind_msg_t const* src)
 {
   assert(src != NULL);
 
-  gtp_ind_msg_t cp = {.len = src->len, .tstamp = src->tstamp};
+  // Initialize with zero to ensure clean state
+  gtp_ind_msg_t cp = {0};
 
+  // Validate source structure
+  if (src->len > 0 && src->ngut == NULL) {
+    fprintf(stderr, "Error: Invalid source structure - len > 0 but ngut is NULL\n");
+    return cp; // Return empty structure
+  }
+
+  // Copy basic members
+  cp.len = src->len;
+  cp.tstamp = src->tstamp;
+  cp.ho_info = src->ho_info;
+
+  // Handle dynamic memory allocation
   if (cp.len > 0) {
     cp.ngut = calloc(cp.len, sizeof(gtp_ngu_t_stats_t));
-    assert(cp.ngut != NULL && "memory exhausted");
+    if (cp.ngut == NULL) {
+      fprintf(stderr, "Error: Memory allocation failed\n");
+      cp.len = 0; // Reset length if allocation fails
+      return cp;
+    }
 
+    // Safe to copy now
     memcpy(cp.ngut, src->ngut, sizeof(gtp_ngu_t_stats_t) * cp.len);
   }
 
@@ -320,7 +340,9 @@ void free_gtp_ind_data(gtp_ind_data_t* ind)
   assert(ind != NULL);
 
   free_gtp_ind_hdr(&ind->hdr);
+
   free_gtp_ind_msg(&ind->msg);
+
   free_gtp_call_proc_id(ind->proc_id);
 }
 

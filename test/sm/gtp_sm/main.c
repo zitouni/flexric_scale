@@ -30,15 +30,13 @@
 #include <time.h>
 #include <pthread.h>
 
-static
-gtp_ind_data_t cp;
+static gtp_ind_data_t cp;
 
 /////
 // AGENT
 ////
 
-static
-bool read_gtp_RAN(void* read)
+static bool read_gtp_RAN(void* read)
 {
   assert(read != NULL);
 
@@ -54,8 +52,7 @@ bool read_gtp_RAN(void* read)
 // Check Functions
 // //////////////////////////
 
-static
-void check_eq_ran_function(sm_agent_t const* ag, sm_ric_t const* ric)
+static void check_eq_ran_function(sm_agent_t const* ag, sm_ric_t const* ric)
 {
   assert(ag != NULL);
   assert(ric != NULL);
@@ -63,16 +60,15 @@ void check_eq_ran_function(sm_agent_t const* ag, sm_ric_t const* ric)
 }
 
 // RIC -> E2
-static
-void check_subscription(sm_agent_t* ag, sm_ric_t* ric)
+static void check_subscription(sm_agent_t* ag, sm_ric_t* ric)
 {
   assert(ag != NULL);
   assert(ric != NULL);
 
   char sub[] = "2_ms";
   sm_subs_data_t data = ric->proc.on_subscription(ric, &sub);
-  
-  sm_ag_if_ans_subs_t const subs = ag->proc.on_subscription(ag, &data); 
+
+  sm_ag_if_ans_subs_t const subs = ag->proc.on_subscription(ag, &data);
   assert(subs.type == PERIODIC_SUBSCRIPTION_FLRC);
   assert(subs.per.t.ms == 2);
 
@@ -80,21 +76,20 @@ void check_subscription(sm_agent_t* ag, sm_ric_t* ric)
 }
 
 // E2 -> RIC
-static
-void check_indication(sm_agent_t* ag, sm_ric_t* ric)
+static void check_indication(sm_agent_t* ag, sm_ric_t* ric)
 {
   assert(ag != NULL);
   assert(ric != NULL);
 
   exp_ind_data_t exp = ag->proc.on_indication(ag, NULL);
   assert(exp.has_value == true);
-  if(exp.data.call_process_id != NULL){
+  if (exp.data.call_process_id != NULL) {
     assert(exp.data.len_cpid != 0);
   }
-  if(exp.data.ind_hdr != NULL){
+  if (exp.data.ind_hdr != NULL) {
     assert(exp.data.len_hdr != 0);
   }
-  if(exp.data.ind_msg != NULL){
+  if (exp.data.ind_msg != NULL) {
     assert(exp.data.len_msg != 0);
   }
 
@@ -104,9 +99,12 @@ void check_indication(sm_agent_t* ag, sm_ric_t* ric)
 
   gtp_ind_data_t* data = &msg.gtp;
 
-  if(msg.gtp.msg.ngut != NULL){
+  if (msg.gtp.msg.ngut != NULL) {
     assert(msg.gtp.msg.len != 0);
-  } 
+  }
+  // Check handover information
+  // Simple NULL check for ho_info data
+  assert(&data->msg.ho_info != NULL);
 
   assert(eq_gtp_ind_hdr(&data->hdr, &cp.hdr) == true);
   assert(eq_gtp_ind_msg(&data->msg, &cp.msg) == true);
@@ -115,7 +113,7 @@ void check_indication(sm_agent_t* ag, sm_ric_t* ric)
   free_gtp_ind_hdr(&data->hdr);
   free_gtp_ind_msg(&data->msg);
 
-  free_exp_ind_data(&exp); 
+  free_exp_ind_data(&exp);
 }
 
 int main()
@@ -137,4 +135,3 @@ int main()
   printf("Success\n");
   return EXIT_SUCCESS;
 }
-

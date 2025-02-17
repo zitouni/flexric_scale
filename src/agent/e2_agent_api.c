@@ -26,26 +26,40 @@
 #include <stdlib.h>
 #include <stdio.h> // for NULL
 #include "e2_agent.h" // for e2_free_agent
+#include "plugin_agent.h"
 #include "lib/e2ap/e2ap_global_node_id_wrapper.h" // for global_e2_...
 #include "lib/e2ap/e2ap_plmn_wrapper.h" // for plmn_t
 #include "util/ngran_types.h" // for ngran_gNB
 #include "util/conf_file.h"
 
-#define MAX_AGENTS 20
+#include "sm/gtp_sm/gtp_sm_id.h" // SM_GTP_ID = 148
+#include "util/alg_ds/ds/tsq/tsq.h" // tsq_
+#include "util/time_now_us.h"
+#include "lib/aind_event.h"
+#include "lib/async_event.h"
 
-// static e2_agent_t* agent = NULL;
+#include <fcntl.h>
+#include <errno.h>
+
+#include "../../../RAN_FUNCTION/surrey_log.h"
+
+#define MAC_NEAR_RT_RICS 20
+
+e2_agent_t* agent = NULL;
 
 // static pthread_t thrd_agent;
 // Structure to maintain information about each E2 agent instance
-typedef struct {
+// The actual structure definition
+struct ric_instance_s {
   e2_agent_t* agent;
   pthread_t thread;
   bool active;
   char* ric_ip;
-} agent_instance_t;
+};
 
 // Global variables to manage multiple agents
-static agent_instance_t agents[MAX_AGENTS] = {0};
+// not static accessible from other c files as extern
+static struct ric_instance_s agents[MAC_NEAR_RT_RICS] = {0};
 static int num_active_agents = 0;
 static pthread_mutex_t agents_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -65,6 +79,217 @@ static inline void* static_start_agent(void* arg)
 //   e2_start_agent(agent);
 //   return NULL;
 // }
+
+// Add getter functions
+agent_instance_t* get_agent_instance(int index)
+{
+  if (index >= 0 && index < MAC_NEAR_RT_RICS) {
+    return &agents[index];
+  }
+  return NULL;
+}
+// Implementation of plugin wrapper functions
+// bool init_plugin_mutex(plugin_wrapper_t* plugin)
+// {
+//   if (!plugin || plugin->mutex_initialized)
+//     return false;
+
+//   pthread_mutexattr_t attr;
+//   pthread_mutexattr_init(&attr);
+//   pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE_NP);
+
+//   int result = pthread_mutex_init(&plugin->mtx, &attr);
+//   pthread_mutexattr_destroy(&attr);
+
+//   if (result == 0) {
+//     plugin->mutex_initialized = true;
+//     return true;
+//   }
+//   return false;
+// }
+// void cleanup_plugin_wrapper(plugin_wrapper_t* plugin)
+// {
+//   if (plugin) {
+//     if (plugin->mutex_initialized) {
+//       pthread_mutex_destroy(&plugin->mtx);
+//     }
+//     free(plugin);
+//   }
+// }
+
+// void* get_plugin_data(plugin_wrapper_t* plugin)
+// {
+//   return plugin ? plugin->data : NULL;
+// }
+
+void lock_agents_mutex(void)
+{
+  pthread_mutex_lock(&agents_mutex);
+}
+
+void unlock_agents_mutex(void)
+{
+  pthread_mutex_unlock(&agents_mutex);
+}
+
+// Implementation of accessor functions
+bool is_agent_active(agent_instance_t* instance)
+{
+  return instance ? instance->active : false;
+}
+
+void* get_instance_agent(agent_instance_t* instance)
+{
+  return instance ? instance->agent : NULL;
+}
+
+const char* get_instance_ric_ip(agent_instance_t* instance)
+{
+  return instance ? instance->ric_ip : NULL;
+}
+
+// Get plugin without wrapping - internal use only
+void* get_agent_plugin(void* e2_agent)
+{
+  if (!e2_agent)
+    return NULL;
+  e2_agent_t* agent = (e2_agent_t*)e2_agent;
+  return &agent->plugin;
+}
+uint32_t get_subscription_action_id(e2_agent_t* ag, uint16_t ran_function_id)
+{
+  uint32_t action_id = 0;
+
+  // Lock for thread safety
+  pthread_mutex_lock(&ag->mtx_ind_event);
+
+  // Get subscription tree
+  assoc_rb_tree_t* tree = &ag->ind_event.right;
+
+  void* f = assoc_rb_tree_front(tree);
+  void* l = assoc_rb_tree_end(tree);
+
+  // Iterate through all subscriptions to find matching RAN function
+  void* it = f;
+  while (it != l) {
+    ind_event_t* ind_ev = assoc_rb_tree_key(tree, it);
+    if (ind_ev && ind_ev->sm && ind_ev->sm->info.id() == ran_function_id) {
+      action_id = ind_ev->action_id;
+      printf("Found subscription - RAN Function ID: %u, Action ID: %u\n", ran_function_id, action_id);
+      break;
+    }
+    it = assoc_rb_tree_next(tree, it);
+  }
+
+  pthread_mutex_unlock(&ag->mtx_ind_event);
+
+  if (action_id == 0) {
+    printf("No subscription found for RAN Function ID: %u\n", ran_function_id);
+  }
+
+  return action_id;
+}
+
+void send_ho_completion_indication()
+{
+  // Get the active agent instance using the getter function
+  lock_agents_mutex();
+  agent_instance_t* instance = get_agent_instance(0);
+  if (instance == NULL) {
+    LOG_SURREY("Failed to get agent instance\n");
+    unlock_agents_mutex();
+    return;
+  }
+
+  void* e2_agent = get_instance_agent(instance);
+  bool is_active = is_agent_active(instance);
+  if (!is_active || e2_agent == NULL) {
+    LOG_SURREY("E2 Agent instance not initialized or not active\n");
+    unlock_agents_mutex();
+    return;
+  }
+
+  plugin_ag_t* plugin = get_agent_plugin(e2_agent);
+  if (!plugin) {
+    unlock_agents_mutex();
+    return;
+  }
+
+  // Get the service model directly using sm_plugin_ag
+  sm_agent_t* sm = sm_plugin_ag(plugin, SM_GTP_ID);
+  if (!sm) {
+    unlock_agents_mutex();
+    return;
+  }
+
+  e2_agent_t* agent = (e2_agent_t*)e2_agent;
+  if (agent == NULL) {
+    LOG_SURREY("Error: Invalid agent pointer\n");
+    unlock_agents_mutex();
+    return;
+  }
+
+  // Prepare indication data
+  sm_ind_data_t* ind_data = calloc(1, sizeof(sm_ind_data_t));
+  if (ind_data == NULL) {
+    LOG_SURREY("Failed to allocate indication data\n");
+    unlock_agents_mutex();
+    return;
+  }
+
+  // Prepare GTP indication message
+  gtp_ind_msg_t* ind_msg = calloc(1, sizeof(gtp_ind_msg_t));
+  if (ind_msg == NULL) {
+    LOG_SURREY("Failed to allocate indication message\n");
+    free(ind_data);
+    unlock_agents_mutex();
+    return;
+  }
+  // Print SM and ind_data address for debugging
+  // LOG_SURREY("send_ho_completion_indication: SM address: %p\n", (void*)sm);
+  // LOG_SURREY("send_ho_completion_indication: SM RAN function ID: %d\n", sm->info.id());
+  // LOG_SURREY("send_ho_completion_indication: ind_data pointer @: %p\n", (void*)ind_data);
+
+  // Fill indication data
+  ind_data->ind_msg = (uint8_t*)ind_msg;
+  ind_data->len_msg = sizeof(gtp_ind_msg_t);
+
+  aind_event_t event = {0};
+  // Fill the event
+  event.sm = sm;
+  event.ind_data = ind_data;
+  event.ric_id.ran_func_id = SM_GTP_ID;
+  // event.ric_id.ric_req_id = 1;
+
+  // Get action_id from subscription
+  // uint32_t valid_action_id = get_subscription_action_id(agent, SM_GTP_ID);
+
+  // Set the valid action ID
+  // event.action_id = valid_action_id;
+
+  // Push the aperiodic indication event to the thread-safe queue
+  push_tsq(&agent->aind, &event, sizeof(aind_event_t));
+
+  // Verify queue size after push
+  // size_t queue_size = size_tsq(&agent->aind);
+  // LOG_SURREY_E2AGENT("Queue size after push: %zu\n", queue_size);
+
+  // Only write to pipe if queue push was successful
+  // uint8_t event_type = APERIODIC_INDICATION_EVENT;
+
+  async_event_t evt = {.type = APERIODIC_INDICATION_EVENT};
+
+  if (agent->io.pipe.w >= 0) {
+    ssize_t bytes_written = write(agent->io.pipe.w, &evt, sizeof(async_event_t));
+    if (bytes_written < 0) {
+      LOG_SURREY_E2AGENT("Write failed: %s (errno=%d)\n", strerror(errno), errno);
+    } else {
+      LOG_SURREY_E2AGENT("Successfully wrote %zd bytes to pipe after queue push\n", bytes_written);
+    }
+  }
+
+  unlock_agents_mutex();
+}
 
 static global_e2_node_id_t init_ge2ni(ngran_node_t ran_type, e2ap_plmn_t plmn, int nb_id, int cu_du_id)
 {
@@ -107,8 +332,8 @@ void init_agent_api(int mcc,
   pthread_mutex_lock(&agents_mutex);
 
   // Check if maximum agents limit reached
-  if (num_active_agents >= MAX_AGENTS) {
-    printf("[E2 AGENT]: Maximum number of agents (%d) reached\n", MAX_AGENTS);
+  if (num_active_agents >= MAC_NEAR_RT_RICS) {
+    printf("[E2 AGENT]: Maximum number of agents (%d) reached\n", MAC_NEAR_RT_RICS);
     pthread_mutex_unlock(&agents_mutex);
     return;
   }
