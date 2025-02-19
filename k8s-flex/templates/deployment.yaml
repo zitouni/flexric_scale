@@ -1,25 +1,37 @@
-{{- if .Values.multus.e2Interface.create }}
----
-apiVersion: "k8s.cni.cncf.io/v1"
-kind: NetworkAttachmentDefinition
-metadata:
-  name: {{ .Values.multus.e2Interface.name }}
-spec:
-  config: |
-    {
-      "cniVersion": "0.3.1",
-      "type": "macvlan",
-      "mode": "bridge",
-      "master": "{{ .Values.multus.e2Interface.master }}",
-      "ipam": {
-        "type": "host-local",
-        "subnet": "10.5.25.0/24",
-        "rangeStart": "10.5.25.171",
-        "rangeEnd": "10.5.25.171"
-      }
-    }
-{{- end }}
----
+# {{- if .Values.network.enabled }}
+# ---
+# apiVersion: "k8s.cni.cncf.io/v1"
+# kind: NetworkAttachmentDefinition
+# metadata:
+#   name: {{ .Values.network.name | default "surrey-exp-near-rt-ric-net" }}
+#   namespace: {{ .Release.Namespace }} 
+# spec:
+#   config: |
+#     {
+#       "cniVersion": "0.3.1",
+#       "type": "macvlan",
+#       "mode": "bridge",
+#       "master": "{{ .Values.network.interface.master }}",
+#       "ipam": {
+#         "type": "host-local",
+#         "subnet": "{{ .Values.network.ipam.subnet }}",
+#         "rangeStart": "{{ .Values.network.ipam.rangeStart }}",
+#         "rangeEnd": "{{ .Values.network.ipam.rangeEnd }}",
+#         "routes": [
+#           {
+#             "dst": "0.0.0.0/0",
+#             "gw": "{{ .Values.network.ipam.gateway }}"
+#           }
+#         ]
+#       },
+#       "capabilities": {
+#         "mac": true,
+#         "ips": true
+#       }
+#     }
+# {{- end }}
+# ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,7 +39,6 @@ metadata:
   labels:
     {{- include "k8s-flex.labels" . | nindent 4 }}
 spec:
-  hostNetwork: true
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
@@ -41,28 +52,23 @@ spec:
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- if .Values.multus.e2Interface.create }}
       annotations:
-        k8s.v1.cni.cncf.io/networks: |
-          [{
-            "name": "{{ .Values.multus.e2Interface.name }}",
-            "ips": ["{{ .Values.multus.e2Interface.ipAdd }}/{{ .Values.multus.e2Interface.netmask }}"]
-          }]
-      {{- end }}
+        k8s.v1.cni.cncf.io/networks: 'none'  # Explicitly disable Multus
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      hostNetwork: true  # Add this line to use host network
+      dnsPolicy: ClusterFirstWithHostNet  # Add this line for DNS resolution
       serviceAccountName: {{ include "k8s-flex.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP # Changed from status.podIP to status.hostIP
           ports:
             {{- range .Values.service.ports }}
             - name: {{ .name }}
@@ -73,39 +79,44 @@ spec:
           - /bin/sh
           - -c
           - |
-            echo "Starting nearRT-RIC application..."
-            echo "Launching application..." 
-            exec stdbuf -o0 {{ .Values.execPath }} {{ .Values.args }} {{ .Values.configFile }} 2>&1
-          resources:
-            {{- if .Values.resources.define }}
-            {{- toYaml .Values.resources.limits.nf | nindent 12 }}
-            {{- end }}
+              # Create log directory and file
+              mkdir -p /var/log
+              touch /var/log/nearrtric.log
+              
+              # Function to log with timestamp
+              log() {
+                echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a /var/log/nearrtric.log
+              }
+              
+              log "Using Host IP: $POD_IP"
+              
+              # Create a writable config file
+              cp /flexric/flexric.conf /tmp/flexric.conf
+              sed -i "s/\${POD_IP}/$POD_IP/g" /tmp/flexric.conf
+              
+              log "Modified configuration file content:"
+              cat /tmp/flexric.conf 
+              echo '\n'
+              cat /var/log/nearrtric.log
+              
+              # Run nearRT-RIC with stdbuf to disable buffering
+              exec stdbuf -oL -eL /usr/local/flexric/nearRT-RIC -c /tmp/flexric.conf 2>&1 | while IFS= read -r line; do
+                echo "[$(date '+%Y-%m-%d %H:%M:%S')] $line"
+              done
           volumeMounts:
             - name: config-volume
               mountPath: /flexric/flexric.conf
               subPath: flexric.conf
-          {{- if .Values.livenessProbe }}
-          livenessProbe:
-            {{- toYaml .Values.livenessProbe | nindent 12 }}
-          {{- end }}
-          {{- if .Values.readinessProbe }}
-          readinessProbe:
-            {{- toYaml .Values.readinessProbe | nindent 12 }}
-          {{- end }}
+            - name: log-volume
+              mountPath: /var/logg
       volumes:
         - name: config-volume
           configMap:
             name: {{ .Chart.Name }}-configmap
+        - name: log-volume
+          emptyDir: {}  # This creates a temporary volume that lives as long as the pod
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      terminationGracePeriodSeconds: 10  # or any other value, including 0
+      terminationGracePeriodSeconds: 10

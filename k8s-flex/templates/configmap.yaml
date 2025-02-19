@@ -5,7 +5,10 @@ metadata:
 data:
   flexric.conf: |-
     [NEAR-RIC]
-    NEAR_RIC_IP = 10.5.25.171
+    NEAR_RIC_IP = ${POD_IP}
+
+    [E2-AGENT]
+    RIC_CLIENT_IP = "10.5.25.36"
 
     [XAPP]
     DB_DIR = /var/lib/grafana/
