@@ -386,7 +386,7 @@ int main(int argc, char* argv[])
         gtp_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 148, (void*)i_ms, sm_cb_gtp);
         assert(gtp_handle[i].success == true);
       } else {
-        if (n->id.type == ngran_eNB_DU) {
+        if (n->id.type == ngran_gNB_DU) {
           mac_handle[i] = report_sm_xapp_api(&nodes.n[i].id, 142, (void*)i_ms, sm_cb_mac);
           assert(mac_handle[i].success == true);
         }
