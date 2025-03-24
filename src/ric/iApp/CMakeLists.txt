@@ -10,6 +10,7 @@ endif()
 set(E2_IAPP_SRC 
             asio_iapp.c
             e2ap_iapp.c
+            subscription_registry.c
             e2_node_ric_id.c
             e42_iapp.c
             e42_iapp_api.c

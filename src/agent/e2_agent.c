@@ -216,14 +216,28 @@ static inline bool pend_event(e2_agent_t* ag, int fd, pending_event_t** p_ev)
   assert(fd > 0);
   assert(*p_ev == NULL);
 
-  assert(bi_map_size(&ag->pending) == 1);
+  // Remove assertion that requires exactly one pending event
+  // assert(bi_map_size(&ag->pending) == 1);
+
+  // Check if there are any pending events
+  if (bi_map_size(&ag->pending) == 0) {
+    return false;
+  }
 
   void* start_it = assoc_front(&ag->pending.left);
   void* end_it = assoc_end(&ag->pending.left);
 
+  if (!start_it || !end_it) {
+    printf("[E2-AGENT]: Invalid pending event iterators\n");
+    return false;
+  }
+
   void* it = find_if(&ag->pending.left, start_it, end_it, &fd, eq_fd);
 
-  assert(it != end_it);
+  if (it == end_it) {
+    printf("[E2-AGENT]: No matching pending event found for fd %d\n", fd);
+    return false;
+  }
   *p_ev = assoc_value(&ag->pending.left, it);
   return *p_ev != NULL;
 }
@@ -262,6 +276,7 @@ static async_event_t next_async_event_agent(e2_agent_t* ag)
     e.msg = e2ap_recv_msg_agent(&ag->ep);
     if (e.msg.type == SCTP_MSG_NOTIFICATION) {
       e.type = SCTP_CONNECTION_SHUTDOWN_EVENT;
+      printf("[E2-AGENT]: SCTP Connection shutdown detected\n");
 
     } else if (e.msg.type == SCTP_MSG_PAYLOAD) {
       e.type = SCTP_MSG_ARRIVED_EVENT;
@@ -444,6 +459,115 @@ void print_sm_ind_data(sm_ind_data_t* ind_data, const char* prefix)
   }
   printf("===============================\n\n");
 }
+
+static void handle_pending_event(e2_agent_t* ag)
+{
+  assert(ag != NULL);
+
+  // Find current RIC connection
+  ric_connection_t* current_ric = NULL;
+  // int current_ric_index = -1;
+
+  for (int i = 0; i < ag->num_rics; i++) {
+    if (strcmp(ag->init_ric_addr, ag->ric_connections[i].ric_addr) == 0) {
+      current_ric = &ag->ric_connections[i];
+      // current_ric_index = i;
+      break;
+    }
+  }
+
+  if (!current_ric) {
+    printf("[E2-AGENT]: No RIC connection found for %s\n", ag->init_ric_addr);
+    return;
+  }
+
+  // Lock current RIC's mutex
+  pthread_mutex_lock(&current_ric->mtx);
+
+  // Clear any existing pending events and timers
+  void* start_it = assoc_front(&ag->pending.left);
+  void* end_it = assoc_end(&ag->pending.left);
+  while (start_it != end_it) {
+    int* fd_ptr = (int*)assoc_key(&ag->pending.left, start_it);
+    if (fd_ptr) {
+      close(*fd_ptr);
+    }
+    start_it = assoc_next(&ag->pending.left, start_it);
+  }
+  bi_map_free(&ag->pending);
+  init_pending_events(ag);
+
+  current_ric->retry_count++;
+  printf("[E2-AGENT]: E2 SETUP REQUEST attempt for RIC %s (attempt %d)\n", current_ric->ric_addr, current_ric->retry_count);
+
+  // Create single new timer with 1 second interval
+  int new_timer = create_timer_ms_asio_agent(&ag->io, 1000, 0); // One-shot timer
+  if (new_timer < 0) {
+    printf("[E2-AGENT]: Failed to create timer. Waiting before retry...\n");
+    pthread_mutex_unlock(&current_ric->mtx);
+    usleep(1000000); // Wait 1 second before retry
+    return;
+  }
+
+  // Set up pending event for next attempt
+  pending_event_t new_ev = SETUP_REQUEST_PENDING_EVENT;
+  bi_map_insert(&ag->pending, &new_timer, sizeof(new_timer), &new_ev, sizeof(new_ev));
+
+  // Send setup request
+  e2_setup_request_t sr = gen_setup_request(&ag->ap.version.type, ag);
+  byte_array_t ba = e2ap_enc_setup_request_ag(&ag->ap, &sr);
+
+  if (ba.buf && ba.len > 0) {
+    e2ap_send_bytes_agent(&ag->ep, ba);
+    printf("[E2-AGENT]: Sent setup request to RIC %s\n", ag->init_ric_addr);
+  } else {
+    printf("[E2-AGENT]: Failed to encode setup request\n");
+    close(new_timer);
+    bi_map_free(&ag->pending);
+    init_pending_events(ag);
+  }
+
+  free_byte_array(ba);
+  e2ap_free_setup_request(&sr);
+  pthread_mutex_unlock(&current_ric->mtx);
+  // Ensure we consume any pending timer events
+  consume_fd_sync(new_timer);
+}
+
+static void handle_connection_shutdown(e2_agent_t* ag)
+{
+  assert(ag != NULL);
+  printf("[E2-AGENT]: Handling RIC disconnection...\n");
+
+  // Set connection state
+  ag->connection_state = DISCONNECTED;
+
+  // Wait briefly before attempting reconnection
+  usleep(100000); // 100ms
+
+  // This part to resume pending after disconnection of a near-RT RIC instance
+  pthread_mutex_lock(&ag->mtx_pending);
+
+  // Clear existing pending events
+  if (bi_map_size(&ag->pending) > 0) {
+    bi_map_free(&ag->pending);
+  }
+  init_pending_events(ag);
+
+  // Create new timer with same timing as initial startup (3 seconds)
+  int fd_timer = create_timer_ms_asio_agent(&ag->io, 3000, 3000);
+  if (fd_timer >= 0) {
+    // Set up new pending event
+    pending_event_t ev = SETUP_REQUEST_PENDING_EVENT;
+    bi_map_insert(&ag->pending, &fd_timer, sizeof(fd_timer), &ev, sizeof(ev));
+    printf("[E2-AGENT]: Scheduled new setup request after disconnection (timer fd: %d)\n", fd_timer);
+  } else {
+    printf("[E2-AGENT]: Failed to create timer after disconnection\n");
+  }
+
+  pthread_mutex_unlock(&ag->mtx_pending);
+}
+
 static void e2_event_loop_agent(e2_agent_t* ag)
 {
   assert(ag != NULL);
@@ -539,7 +663,8 @@ static void e2_event_loop_agent(e2_agent_t* ag)
         // Condition not matched e.g., No UE matches condition
         if (exp.has_value == false) {
           printf(
-              "[E2 AGENT]: Condition not matched e.g., No UE matches condition. Emulator triggers this condition for testing, but "
+              "[E2 AGENT]: Condition not matched e.g., No UE matches condition. Emulator triggers this condition for testing, "
+              "but "
               "not the RAN \n");
           consume_fd_sync(e.fd);
           break;
@@ -557,25 +682,32 @@ static void e2_event_loop_agent(e2_agent_t* ag)
         break;
       }
       case PENDING_EVENT: {
-        assert(*e.p_ev == SETUP_REQUEST_PENDING_EVENT && "Unforeseen pending event happened!");
-
-        // Resend the setup request message
-        e2_setup_request_t sr = gen_setup_request(&ag->ap.version.type, ag);
-        defer({ e2ap_free_setup_request(&sr); });
-
-        printf("[E2 AGENT]: E2 SETUP REQUEST timeout. Resending again (tx) \n");
-        byte_array_t ba = e2ap_enc_setup_request_ag(&ag->ap, &sr);
-        defer({ free_byte_array(ba); });
-
-        e2ap_send_bytes_agent(&ag->ep, ba);
-
-        consume_fd_sync(e.fd);
-
+        if (!ag || !e.p_ev || e.fd <= 0) {
+          if (e.fd > 0)
+            close(e.fd);
+          // consume_fd_sync(e.fd);
+          break;
+        }
+        // Clean up the current timer
+        close(e.fd);
+        handle_pending_event(ag);
         break;
       }
       case SCTP_CONNECTION_SHUTDOWN_EVENT: {
-        notification_handle_ag(ag, &e.msg);
-        free_sctp_msg(&e.msg);
+        // First check if agent is valid
+        if (!ag) {
+          printf("[E2-AGENT]: Warning - Invalid agent during shutdown\n");
+          break;
+        }
+
+        printf("[E2-AGENT]: Communication with the nearRT-RIC lost\n");
+        handle_connection_shutdown(ag);
+        // Handle notification and free message
+        if (&e.msg) {
+          // notification_handle_ag(ag, &e.msg);
+          free_sctp_msg(&e.msg);
+        }
+
         break;
       }
       case CHECK_STOP_TOKEN_EVENT: {
@@ -583,6 +715,10 @@ static void e2_event_loop_agent(e2_agent_t* ag)
       }
       default: {
         assert(0 != 0 && "Unknown event happened");
+        if (ag->connection_state == DISCONNECTED) {
+          // If disconnected, create new pending event
+          handle_connection_shutdown(ag);
+        }
         break;
       }
     }
@@ -592,15 +728,42 @@ static void e2_event_loop_agent(e2_agent_t* ag)
   ag->agent_stopped = true;
 }
 
-e2_agent_t* e2_init_agent(const char* addr, int port, global_e2_node_id_t ge2nid, sm_io_ag_ran_t io, char const* libs_dir)
+e2_agent_t* e2_init_agent(const char* addr,
+                          int port,
+                          global_e2_node_id_t ge2nid,
+                          sm_io_ag_ran_t io,
+                          char const* libs_dir,
+                          e2_agent_args_t* args)
 {
   assert(addr != NULL);
   assert(port > 0 && port < 65535);
+  assert(args != NULL);
 
   printf("[E2 AGENT]: Initializing ... \n");
 
   e2_agent_t* ag = calloc(1, sizeof(*ag));
   assert(ag != NULL && "Memory exhausted");
+
+  // Store the args
+
+  // Initialize RIC connections
+  ag->num_rics = args->ric_ip_list.num_ric_addresses;
+  ag->ric_connections = calloc(ag->num_rics, sizeof(ric_connection_t));
+
+  for (int i = 0; i < ag->num_rics; i++) {
+    ag->ric_connections[i].ric_addr = strdup(args->ric_ip_list.ric_ip_addresses[i]);
+    pthread_mutex_init(&ag->ric_connections[i].mtx, NULL);
+    ag->ric_connections[i].retry_count = 0;
+    ag->ric_connections[i].active = true;
+  }
+  ag->args = args;
+  ag->connection_state = DISCONNECTED;
+  // Initialize mutex
+  pthread_mutex_init(&ag->mtx_pending, NULL);
+
+  ag->init_ric_addr = strdup(addr);
+
+  // Initialize endpoint address using memcpy
 
   e2ap_init_ep_agent(&ag->ep, addr, port);
 
@@ -640,35 +803,126 @@ void e2_start_agent(e2_agent_t* ag)
 {
   assert(ag != NULL);
 
-  // Resend the subscription request message
-  e2_setup_request_t sr = gen_setup_request(&ag->ap.version.type, ag);
-  defer({ e2ap_free_setup_request(&sr); });
+  // Validate initial state
+  if (!ag->ep.base.addr) {
+    printf("[E2-AGENT]: Invalid RIC address\n");
+    return;
+  }
 
-  printf("[E2-AGENT]: E2 SETUP-REQUEST tx \n");
-  byte_array_t ba = e2ap_enc_setup_request_ag(&ag->ap, &sr);
-  defer({ free_byte_array(ba); });
+  // Store initial RIC address
+  ag->init_ric_addr = strdup(ag->ep.base.addr);
+  if (!ag->init_ric_addr) {
+    printf("[E2-AGENT]: Memory allocation failed\n");
+    return;
+  }
 
-  // A pending event is created along with a timer of 3000 ms,
-  // after which an event will be generated
+  // Set initial connection state
+  ag->connection_state = DISCONNECTED;
+
+  // Initialize mutex
+  if (pthread_mutex_init(&ag->mtx_pending, NULL) != 0) {
+    printf("[E2-AGENT]: Mutex initialization failed\n");
+    free((void*)ag->init_ric_addr);
+    ag->init_ric_addr = NULL;
+    return;
+  }
+
+  pthread_mutex_lock(&ag->mtx_pending);
+
+  // Initialize pending events
+  if (bi_map_size(&ag->pending) > 0) {
+    bi_map_free(&ag->pending);
+  }
+  init_pending_events(ag);
+
+  // Create initial timer
+  int fd_timer = create_timer_ms_asio_agent(&ag->io, 3000, 3000);
+  if (fd_timer < 0) {
+    printf("[E2-AGENT]: Timer creation failed\n");
+    pthread_mutex_unlock(&ag->mtx_pending);
+    pthread_mutex_destroy(&ag->mtx_pending);
+    free((void*)ag->init_ric_addr);
+    ag->init_ric_addr = NULL;
+    return;
+  }
+
+  // Set up initial pending event
   pending_event_t ev = SETUP_REQUEST_PENDING_EVENT;
-  long const wait_ms = 3000;
-  int fd_timer = create_timer_ms_asio_agent(&ag->io, wait_ms, wait_ms);
-  // printf("fd_timer with value created == %d\n", fd_timer);
-
   bi_map_insert(&ag->pending, &fd_timer, sizeof(fd_timer), &ev, sizeof(ev));
 
-  // Send the message
-  e2ap_send_bytes_agent(&ag->ep, ba);
+  printf("[E2-AGENT]: Initial timer created with fd %d for RIC %s\n", fd_timer, ag->init_ric_addr);
 
+  pthread_mutex_unlock(&ag->mtx_pending);
+
+  // Generate and send initial setup request
+  printf("[E2-AGENT]: Sending SETUP-REQUEST to RIC %s\n", ag->init_ric_addr);
+
+  e2_setup_request_t sr = gen_setup_request(&ag->ap.version.type, ag);
+  byte_array_t ba = e2ap_enc_setup_request_ag(&ag->ap, &sr);
+
+  if (ba.buf && ba.len > 0) {
+    e2ap_send_bytes_agent(&ag->ep, ba);
+  } else {
+    printf("[E2-AGENT]: Failed to generate setup request\n");
+  }
+
+  free_byte_array(ba);
+  e2ap_free_setup_request(&sr);
+
+  // Start event loop
   e2_event_loop_agent(ag);
 }
 
 void e2_free_agent(e2_agent_t* ag)
 {
+  if (ag == NULL)
+    return;
+
+  // Free args structure
+  if (ag->args) {
+    if (ag->args->client_ip) {
+      free((void*)ag->args->client_ip); // Cast away const
+    }
+    if (ag->args->sm_dir) {
+      free((void*)ag->args->sm_dir); // Cast away const
+    }
+    free(ag->args);
+    // Add cleanup for ric_ip_addresses
+    if (ag->args->ric_ip_list.ric_ip_addresses[0] != NULL) {
+      free(ag->args->ric_ip_list.ric_ip_addresses[0]);
+      ag->args->ric_ip_list.ric_ip_addresses[0] = NULL;
+    }
+
+    // Clean up RIC connections
+    for (int i = 0; i < ag->num_rics; i++) {
+      free(ag->ric_connections[i].ric_addr);
+      pthread_mutex_destroy(&ag->ric_connections[i].mtx);
+    }
+    free(ag->ric_connections);
+  }
+  if (ag->init_ric_addr) {
+    free((void*)ag->init_ric_addr);
+    ag->init_ric_addr = NULL;
+  }
+
+  // Free endpoint address
+  if (ag->ep.base.addr) {
+    free((void*)ag->ep.base.addr);
+  }
+
   ag->stop_token = true;
   while (ag->agent_stopped == false) {
     usleep(1000);
   }
+  pthread_mutex_lock(&ag->mtx_pending);
+  // Clear all pending events at shutdown
+  if (bi_map_size(&ag->pending) > 0) {
+    bi_map_free(&ag->pending);
+  }
+  pthread_mutex_unlock(&ag->mtx_pending);
+
+  // Destroy mutex
+  pthread_mutex_destroy(&ag->mtx_pending);
 
   free_plugin_ag(&ag->plugin);
 

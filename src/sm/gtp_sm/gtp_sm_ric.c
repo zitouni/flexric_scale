@@ -50,7 +50,7 @@ static sm_subs_data_t on_subscription_gtp_sm_ric(sm_ric_t const* sm_ric, void* c
 
   gtp_sub_data_t gtp = {0};
 
-  const int max_str_sz = 10;
+  const int max_str_sz = 1000; // it was 10
   if (strncmp(cmd, "1_ms", max_str_sz) == 0) {
     gtp.et.ms = 1;
   } else if (strncmp(cmd, "2_ms", max_str_sz) == 0) {
@@ -59,6 +59,10 @@ static sm_subs_data_t on_subscription_gtp_sm_ric(sm_ric_t const* sm_ric, void* c
     gtp.et.ms = 5;
   } else if (strncmp(cmd, "10_ms", max_str_sz) == 0) {
     gtp.et.ms = 10;
+  } else if (strncmp(cmd, "100_ms", max_str_sz) == 0) {
+    gtp.et.ms = 100;
+  } else if (strncmp(cmd, "1000_ms", max_str_sz) == 0) {
+    gtp.et.ms = 1000;
   } else {
     assert(0 != 0 && "Invalid input");
   }

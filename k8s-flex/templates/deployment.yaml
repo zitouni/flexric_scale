@@ -1,50 +1,16 @@
-# {{- if .Values.network.enabled }}
-# ---
-# apiVersion: "k8s.cni.cncf.io/v1"
-# kind: NetworkAttachmentDefinition
-# metadata:
-#   name: {{ .Values.network.name | default "surrey-exp-near-rt-ric-net" }}
-#   namespace: {{ .Release.Namespace }} 
-# spec:
-#   config: |
-#     {
-#       "cniVersion": "0.3.1",
-#       "type": "macvlan",
-#       "mode": "bridge",
-#       "master": "{{ .Values.network.interface.master }}",
-#       "ipam": {
-#         "type": "host-local",
-#         "subnet": "{{ .Values.network.ipam.subnet }}",
-#         "rangeStart": "{{ .Values.network.ipam.rangeStart }}",
-#         "rangeEnd": "{{ .Values.network.ipam.rangeEnd }}",
-#         "routes": [
-#           {
-#             "dst": "0.0.0.0/0",
-#             "gw": "{{ .Values.network.ipam.gateway }}"
-#           }
-#         ]
-#       },
-#       "capabilities": {
-#         "mac": true,
-#         "ips": true
-#       }
-#     }
-# {{- end }}
-# ---
 
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet  # Changed to StatefulSet for predictable pod names and ordering
 metadata:
   name: {{ include "k8s-flex.fullname" . }}
   labels:
     {{- include "k8s-flex.labels" . | nindent 4 }}
 spec:
+  serviceName: {{ include "k8s-flex.fullname" . }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "k8s-flex.selectorLabels" . | nindent 6 }}
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -55,68 +21,130 @@ spec:
       annotations:
         k8s.v1.cni.cncf.io/networks: 'none'  # Explicitly disable Multus
     spec:
+      terminationGracePeriodSeconds: 30  # Explicit grace period
       hostNetwork: true  # Add this line to use host network
       dnsPolicy: ClusterFirstWithHostNet  # Add this line for DNS resolution
       serviceAccountName: {{ include "k8s-flex.serviceAccountName" . }}
-      containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-            - name: POD_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP # Changed from status.podIP to status.hostIP
-          ports:
-            {{- range .Values.service.ports }}
-            - name: {{ .name }}
-              containerPort: {{ .targetPort }}
-              protocol: {{ .protocol }}
-            {{- end }}
-          command: 
-          - /bin/sh
-          - -c
-          - |
-              # Create log directory and file
-              mkdir -p /var/log
-              touch /var/log/nearrtric.log
-              
-              # Function to log with timestamp
-              log() {
-                echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a /var/log/nearrtric.log
-              }
-              
-              log "Using Host IP: $POD_IP"
-              
-              # Create a writable config file
-              cp /flexric/flexric.conf /tmp/flexric.conf
-              sed -i "s/\${POD_IP}/$POD_IP/g" /tmp/flexric.conf
-              
-              log "Modified configuration file content:"
-              cat /tmp/flexric.conf 
-              echo '\n'
-              cat /var/log/nearrtric.log
-              
-              # Run nearRT-RIC with stdbuf to disable buffering
-              exec stdbuf -oL -eL /usr/local/flexric/nearRT-RIC -c /tmp/flexric.conf 2>&1 | while IFS= read -r line; do
-                echo "[$(date '+%Y-%m-%d %H:%M:%S')] $line"
-              done
-          volumeMounts:
-            - name: config-volume
-              mountPath: /flexric/flexric.conf
-              subPath: flexric.conf
-            - name: log-volume
-              mountPath: /var/logg
-      volumes:
-        - name: config-volume
-          configMap:
-            name: {{ .Chart.Name }}-configmap
-        - name: log-volume
-          emptyDir: {}  # This creates a temporary volume that lives as long as the pod
-      {{- with .Values.nodeSelector }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      terminationGracePeriodSeconds: 10
+        kubernetes.io/hostname: u20-25-33
+      volumes:
+      - name: config-volume
+        configMap:
+          name: {{ .Chart.Name }}-configmap
+      - name: log-volume
+        emptyDir: {}
+      - name: podinfo
+        emptyDir: {}  # Added podinfo volume definition
+      initContainers:
+      - name: network-setup
+        image: busybox
+        securityContext:
+          privileged: true
+          capabilities:
+            add: ["NET_ADMIN"]
+        volumeMounts:
+        - name: podinfo
+          mountPath: /etc/podinfo
+        command:
+        - /bin/sh
+        - -c
+        - |
+          # Get pod ordinal from hostname
+          ORDINAL=$(hostname | rev | cut -d'-' -f1 | rev)
+          # Calculate IP suffix (200 + ordinal)
+          IP_SUFFIX=$((200 + $ORDINAL))
+          
+          # Create secondary interface for static IP
+          ip link add flex0 type dummy || true
+          ip link set flex0 up
+          ip addr add 192.168.130.$IP_SUFFIX/24 dev flex0
+          ip route add 192.168.130.0/24 dev flex0
+          
+          # Save the static IP for main container
+          mkdir -p /etc/podinfo
+          echo "192.168.130.$IP_SUFFIX" > /etc/podinfo/static-ip
+          
+          # Verify configuration
+          echo "Network Configuration for pod $ORDINAL:"
+          echo "IP: 192.168.130.$IP_SUFFIX"
+          ip addr show flex0
+          ip route show
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          privileged: true
+          capabilities:
+            add: ["NET_ADMIN"]
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.resources.define }}
+        resources:
+          limits:
+            cpu: {{ .Values.resources.limits.nf.cpu | quote }}
+            memory: {{ .Values.resources.limits.nf.memory | quote }}
+          requests:
+            cpu: {{ .Values.resources.requests.nf.cpu | quote }}
+            memory: {{ .Values.resources.requests.nf.memory | quote }}
+        {{- end }}
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP # Changed from status.podIP to status.hostIP
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        ports:
+          {{- range .Values.service.ports }}
+        - name: {{ .name }}
+          containerPort: {{ .targetPort }}
+          protocol: {{ .protocol }}
+          {{- end }}
+        volumeMounts:
+        - name: config-volume
+          mountPath: /flexric/flexric.conf
+          subPath: flexric.conf
+        - name: log-volume
+          mountPath: /var/log
+        - name: podinfo
+          mountPath: /etc/podinfo
+        command: 
+        - /bin/sh
+        - -c
+        - |
+            mkdir -p /var/log
+            touch /var/log/nearrtric.log
+            
+            log() {
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a /var/log/nearrtric.log
+            }
+
+            # Trap SIGTERM
+            trap 'log "Received SIGTERM - initiating graceful shutdown"; exit 0' TERM
+
+            if ! ip addr show flex0 >/dev/null 2>&1; then
+              ip link add flex0 type dummy
+              ip link set flex0 up
+              ip addr add 192.168.130.200/24 dev flex0
+              ip route add 192.168.130.0/24 dev flex0
+            fi
+            
+            log "Using Node IP: $POD_IP"
+            log "Using Static IP: 192.168.130.200"
+            
+            cp /flexric/flexric.conf /tmp/flexric.conf
+            sed -i "s/\${POD_IP}/192.168.130.200/g" /tmp/flexric.conf
+            
+            log "Modified configuration file content:"
+            cat /tmp/flexric.conf
+            echo '\n'
+            cat /var/log/nearrtric.log
+            
+            # Save PID for graceful shutdown
+            exec stdbuf -oL -eL /usr/local/flexric/nearRT-RIC -c /tmp/flexric.conf 2>&1 | while IFS= read -r line; do
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] $line"
+            done & echo $! > /var/run/nearRT-RIC.pid
+            
+            # Wait for process to complete
+            wait $!

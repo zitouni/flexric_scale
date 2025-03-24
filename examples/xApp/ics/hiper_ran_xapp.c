@@ -359,7 +359,8 @@ int main(int argc, char* argv[])
   printf("Connected E2 nodes = %d\n", nodes.len);
 
   // Define reporting interval for GTP
-  const char* i_ms = "1_ms";
+  // Allowed 1_ms, 2_ms, 5_ms, 10_ms, 100_ms and 1000_ms
+  const char* i_ms = "100_ms";
 
   if (nodes.len > 0) {
     gtp_handle = calloc(nodes.len, sizeof(sm_ans_xapp_t));

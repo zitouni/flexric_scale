@@ -1,0 +1,1 @@
+/usr/bin/cc -g CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni.dir/ics_xapp_gtp_mac_rlc_pdcp_moni.c.o CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni.dir/__/__/__/src/util/alg_ds/alg/defer.c.o -o ics_xapp_gtp_mac_rlc_pdcp_moni  ../../../src/xApp/libe42_xapp.a -pthread -lsctp -ldl 

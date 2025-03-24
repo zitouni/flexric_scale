@@ -68,7 +68,9 @@ static inline void* static_start_agent(void* arg)
 {
   agent_instance_t* instance = (agent_instance_t*)arg;
   if (instance && instance->agent) {
+    instance->active = true;
     e2_start_agent(instance->agent);
+    instance->active = false;
   }
   return NULL;
 }
@@ -361,6 +363,37 @@ void init_agent_api(int mcc,
 
   const int e2ap_server_port = 36421;
 
+  // Create and initialize e2_agent_args_t
+  e2_agent_args_t agent_args = {0}; // Zero initialize first
+
+  // Allocate memory for RIC IP address
+  agent_args.ric_ip_list.ric_ip_addresses[0] = (char*)malloc(MAX_RIC_IP_LENGTH);
+  if (agent_args.ric_ip_list.ric_ip_addresses[0] == NULL) {
+    printf("[E2 AGENT]: Failed to allocate memory for RIC IP address\n");
+    free(server_ip_str);
+    pthread_mutex_unlock(&agents_mutex);
+    return;
+  }
+
+  // Initialize other fields
+  agent_args.ric_ip_list.num_ric_addresses = 1;
+  agent_args.client_ip = args->client_ip ? strdup(args->client_ip) : NULL;
+  agent_args.sm_dir = args->libs_dir ? strdup(args->libs_dir) : NULL;
+  agent_args.enabled = true;
+
+  // Safely copy the RIC IP address
+  if (strlen(server_ip_str) < MAX_RIC_IP_LENGTH) {
+    strncpy(agent_args.ric_ip_list.ric_ip_addresses[0], server_ip_str, MAX_RIC_IP_LENGTH - 1);
+    agent_args.ric_ip_list.ric_ip_addresses[0][MAX_RIC_IP_LENGTH - 1] = '\0';
+  } else {
+    printf("[E2 AGENT]: RIC IP address too long (max length is %d)\n", MAX_RIC_IP_LENGTH - 1);
+    free(agent_args.ric_ip_list.ric_ip_addresses[0]);
+    free(agent_args.client_ip);
+    free(agent_args.sm_dir);
+    free(server_ip_str);
+    pthread_mutex_unlock(&agents_mutex);
+    return;
+  }
   // Log connection details
   char* ran_type_str = get_ngran_name(ran_type);
   char str[128] = {0};
@@ -384,7 +417,7 @@ void init_agent_api(int mcc,
 
   // Initialize new agent instance
   agent_instance_t* instance = &agents[num_active_agents];
-  instance->agent = e2_init_agent(server_ip_str, e2ap_server_port, ge2ni, io, args->libs_dir);
+  instance->agent = e2_init_agent(server_ip_str, e2ap_server_port, ge2ni, io, args->libs_dir, &agent_args);
 
   // Check agent initialization
   if (instance->agent == NULL) {
@@ -413,6 +446,16 @@ void init_agent_api(int mcc,
 
   // Increment active agents counter and cleanup
 
+  // Don't forget to free the duplicated strings if agent initialization fails
+  if (!instance->agent) {
+    free(agent_args.client_ip);
+    free(agent_args.sm_dir);
+    // Add cleanup for ric_ip_addresses
+    if (agent_args.ric_ip_list.ric_ip_addresses[0] != NULL) {
+      free(agent_args.ric_ip_list.ric_ip_addresses[0]);
+      agent_args.ric_ip_list.ric_ip_addresses[0] = NULL;
+    }
+  }
   num_active_agents++;
   free(server_ip_str);
   pthread_mutex_unlock(&agents_mutex);
@@ -439,6 +482,11 @@ void stop_agent_api(void)
       if (agents[i].ric_ip) {
         free(agents[i].ric_ip);
         agents[i].ric_ip = NULL;
+      }
+      // Add cleanup for ric_ip_addresses if needed
+      if (agents[i].agent && agents[i].agent->args && agents[i].agent->args->ric_ip_list.ric_ip_addresses[0] != NULL) {
+        free(agents[i].agent->args->ric_ip_list.ric_ip_addresses[0]);
+        agents[i].agent->args->ric_ip_list.ric_ip_addresses[0] = NULL;
       }
     }
   }

@@ -34,12 +34,12 @@ void init_sync_ui(sync_ui_t* s)
   int rc = pthread_cond_init(&s->cv_sync, cond_attr);
   assert(rc == 0);
 
-  pthread_mutexattr_t *mtx_attr = NULL;
+  pthread_mutexattr_t* mtx_attr = NULL;
 #ifdef DEBUG
-  *mtx_attr = PTHREAD_MUTEX_ERRORCHECK; 
+  *mtx_attr = PTHREAD_MUTEX_ERRORCHECK;
 #endif
 
-  rc = pthread_mutex_init(&s->mtx_sync, mtx_attr );
+  rc = pthread_mutex_init(&s->mtx_sync, mtx_attr);
   assert(rc == 0);
 
   s->wait_ms = 5000;
@@ -52,7 +52,7 @@ void free_sync_ui(sync_ui_t* s)
 {
   assert(s != NULL);
   // Liberate the thread??? if waiting
-  s->flag_sync = true; 
+  s->flag_sync = true;
 
   int rc = pthread_cond_destroy(&s->cv_sync);
   assert(rc == 0);
@@ -61,30 +61,57 @@ void free_sync_ui(sync_ui_t* s)
   assert(rc == 0);
 }
 
-void cond_wait_sync_ui(sync_ui_t* s, uint32_t wait_ms)
+// void cond_wait_sync_ui(sync_ui_t* s, uint32_t wait_ms)
+// {
+//   assert(s != NULL);
+//   assert(wait_ms > 0);
+
+//   pthread_mutex_lock(&s->mtx_sync);
+
+//   s->flag_sync = false;
+//   s->msg_ack = false;
+//   struct timespec ts = {0};
+//   int rc = clock_gettime(CLOCK_REALTIME, &ts);
+//   assert(rc == 0);
+//   ts.tv_sec += wait_ms / 1000 + 1;
+
+//   while (s->flag_sync == false && rc == 0) {
+//     rc = pthread_cond_timedwait(&s->cv_sync, &s->mtx_sync, &ts);
+//   }
+
+//   assert(rc != ETIMEDOUT && "Timeout. No response from the E2 Node received, and neither from epoll. Unforeseen path");
+//   assert(rc == 0);
+
+//   pthread_mutex_unlock(&s->mtx_sync);
+
+//   assert(s->msg_ack == true && "No response to subscription from the RIC received\n");
+// }
+// In sync_ui.c
+void cond_wait_sync_ui(sync_ui_t* s, uint32_t ms)
 {
   assert(s != NULL);
-  assert(wait_ms > 0);
+
+  struct timespec ts;
+  clock_gettime(CLOCK_REALTIME, &ts);
+
+  // Convert ms to timespec
+  ts.tv_sec += ms / 1000;
+  ts.tv_nsec += (ms % 1000) * 1000000;
+
+  // Handle nanosecond overflow
+  if (ts.tv_nsec >= 1000000000) {
+    ts.tv_sec += 1;
+    ts.tv_nsec -= 1000000000;
+  }
 
   pthread_mutex_lock(&s->mtx_sync);
 
-  s->flag_sync = false;
-  s->msg_ack = false;
-  struct timespec ts = {0};
-  int rc = clock_gettime(CLOCK_REALTIME, &ts);
-  assert(rc == 0);
-  ts.tv_sec += wait_ms/1000 + 1;
-
-  while(s->flag_sync == false && rc == 0) {
-    rc = pthread_cond_timedwait(&s->cv_sync, &s->mtx_sync, &ts);
+  int rc = pthread_cond_timedwait(&s->cv_sync, &s->mtx_sync, &ts);
+  if (rc == ETIMEDOUT) {
+    printf("[xApp]: Timeout waiting for response\n");
   }
 
-  assert(rc != ETIMEDOUT && "Timeout. No response from the E2 Node received, and neither from epoll. Unforeseen path");
-  assert(rc == 0);
-
   pthread_mutex_unlock(&s->mtx_sync);
-
-  assert(s->msg_ack == true && "No response to subscription from the RIC received\n" );
 }
 
 void signal_sync_ui(sync_ui_t* s)
@@ -94,6 +121,5 @@ void signal_sync_ui(sync_ui_t* s)
   lock_guard(&s->mtx_sync);
   s->flag_sync = true;
   s->msg_ack = true;
-  pthread_cond_signal(&s->cv_sync); 
+  pthread_cond_signal(&s->cv_sync);
 }
-

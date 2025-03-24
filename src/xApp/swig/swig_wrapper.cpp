@@ -34,6 +34,10 @@ static const char* convert_period(Interval inter_arg)
     return "5_ms";
   } else if (inter_arg == Interval::ms_10) {
     return "10_ms";
+  } else if (inter_arg == Interval::ms_100) {
+    return "100_ms";
+  } else if (inter_arg == Interval::ms_100) {
+    return "1000_ms";
   } else {
     assert(0 != 0 && "Unknown type");
   }

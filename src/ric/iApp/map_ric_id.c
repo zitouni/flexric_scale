@@ -28,6 +28,9 @@
 
 #include <assert.h>
 
+#include <time.h>
+#include <string.h>
+
 static inline int cmp_uint32(const void* m0_v, const void* m1_v)
 {
   uint32_t* m0 = (uint32_t*)m0_v;
@@ -119,74 +122,39 @@ bool eq_uint16(void const* m0, void const* m1)
 }
 */
 
-static inline bool eq_e2_node_ric_req(void const* m0_v, void const* m1_v)
-{
-  assert(m0_v != NULL);
-  assert(m1_v != NULL);
-
-  e2_node_ric_id_t* m0 = (e2_node_ric_id_t*)m0_v;
-  e2_node_ric_id_t* m1 = (e2_node_ric_id_t*)m1_v;
-
-  // return eq_ric_gen_id(&m0->ric_id, &m1->ric_id);
-  return m0->ric_id.ric_req_id == m1->ric_id.ric_req_id;
-}
-
-void add_map_ric_id(map_ric_id_t* map, e2_node_ric_id_t* node, xapp_ric_id_t* x)
+void add_map_ric_id(map_ric_id_t* map, e2_node_ric_id_t* node, xapp_ric_id_t* xapp)
 {
   assert(map != NULL);
   assert(node != NULL);
-  assert(x != NULL);
+  assert(xapp != NULL);
 
-  // WARNING: The lock must be already acquired when calling this function
-  // int rc = pthread_rwlock_wrlock(&map->rw);
-  // assert(rc == 0);
-
-  assoc_rb_tree_t* left = &map->bimap.left;
-
-  // Keep assertions for data structure integrity
-  assert(left != NULL);
-
-  void* it = assoc_front(left);
-  void* end = assoc_end(left);
-  assert(end != NULL);
-
-  // Check if RIC request ID already exists
-  it = find_if(left, it, end, node, eq_e2_node_ric_req);
-  if (it != end) {
-    // Get the existing xApp ID for this RIC request ID
-    xapp_ric_id_t* existing_xapp = (xapp_ric_id_t*)assoc_value(left, it);
-    assert(existing_xapp != NULL); // Keep assertion for data integrity
-
-    // If it's the same xApp, just return success
-    if (existing_xapp->xapp_id == x->xapp_id) {
-      LOG_SURREY("[NEAR-RIC] Info: RIC Request ID %u already mapped to xApp ID %u\n", node->ric_id.ric_req_id, x->xapp_id);
-    }
-
-    // Different xApp - remove old mapping and add new one
-    LOG_SURREY("[NEAR-RIC] Info: Updating RIC Request ID %u mapping from xApp ID %u to xApp ID %u\n",
-               node->ric_id.ric_req_id,
-               existing_xapp->xapp_id,
-               x->xapp_id);
-
-    // Remove old mapping
-    // Extract the existing mapping
-
-    void* extracted_xapp = bi_map_extract_left(&map->bimap, node, sizeof(e2_node_ric_id_t), NULL);
-    // xtracts (removes) a mapping from a bi-directional map using the left key (key1)
-    // and returns the corresponding right key (key2
-
-    if (extracted_xapp != NULL) {
-      // The old mapping was successfully removed
-      free(extracted_xapp); // Free the returned xapp_ric_id_t
-      LOG_SURREY("[NEAR-RIC] Info: Old mapping was successfully removed\n");
-    }
+  // Simple lock without timeout
+  int rc = pthread_rwlock_wrlock(&map->rw);
+  if (rc != 0) {
+    LOG_SURREY_RIC("[iApp]: ERROR - Failed to acquire write lock in add_map_ric_id (rc=%d)\n", rc);
+    return;
   }
 
-  // Insert new mapping
-  bi_map_insert(&map->bimap, node, sizeof(e2_node_ric_id_t), x, sizeof(xapp_ric_id_t));
-  // assert(insert_status == 0 && "Failed to insert new mapping");
+  // First try to remove any existing mapping for this node
+  assoc_rb_tree_t* left = &map->bimap.left;
+  void* it = assoc_front(left);
+  void* end = assoc_end(left);
 
-  LOG_SURREY("[NEAR-RIC] Success: Mapped RIC Request ID %u to xApp ID %u\n", node->ric_id.ric_req_id, x->xapp_id);
+  it = find_if(left, it, end, node, eq_e2_node_ric_req);
+  if (it != end) {
+    // Remove existing mapping using bi_map_extract_left
+    void (*free_fn)(void*) = NULL; // We don't want to free the value
+    bi_map_extract_left(&map->bimap, node, sizeof(*node), free_fn);
+  }
+
+  // Add new mapping
+  bi_map_insert(&map->bimap, node, sizeof(*node), xapp, sizeof(*xapp));
+  LOG_SURREY_RIC("[iApp]: Added mapping for RIC Request ID %d\n", node->ric_id.ric_req_id);
+
+  rc = pthread_rwlock_unlock(&map->rw);
+  if (rc != 0) {
+    LOG_SURREY_RIC("[iApp]: ERROR - Failed to release write lock (rc=%d)\n", rc);
+  }
 }
 
 void rm_map_ric_id(map_ric_id_t* map, xapp_ric_id_t const* ric_id)
@@ -215,39 +183,67 @@ void rm_map_ric_id(map_ric_id_t* map, xapp_ric_id_t const* ric_id)
   assert(rc == 0);
 }
 
+#include "map_ric_id.h"
+#include "../../util/alg_ds/alg/alg.h"
+#include "../../util/alg_ds/ds/lock_guard/lock_guard.h"
+#include "xapp_ric_id.h"
+#include "../../../../RAN_FUNCTION/surrey_log.h"
+#include <assert.h>
+#include <time.h>
+#include <string.h>
+
+// For nanosleep
+#include <time.h>
+
 xapp_ric_id_xpct_t find_xapp_map_ric_id(map_ric_id_t* map, uint16_t ric_req_id)
 {
   assert(map != NULL);
-  // assert(ric_req_id >= 0);
-
-  e2_node_ric_id_t dummy_node = {//  global_e2_node_id_t e2_node_id;
-                                 .ric_id.ric_req_id = ric_req_id};
 
   xapp_ric_id_xpct_t ans = {.has_value = false};
 
-  int rc = pthread_rwlock_rdlock(&map->rw);
-  assert(rc == 0);
+  // Create dummy node for search
+  e2_node_ric_id_t dummy_node = {.ric_id.ric_req_id = ric_req_id, .ric_req_type = SUBSCRIPTION_RIC_REQUEST_TYPE};
+
+  // Try multiple times to acquire the lock
+  int max_retries = 3;
+  int retry_count = 0;
+  int rc;
+
+  do {
+    rc = pthread_rwlock_rdlock(&map->rw);
+    if (rc == 0) {
+      break;
+    }
+    retry_count++;
+    if (retry_count < max_retries) {
+      // Small delay before retry
+      struct timespec ts = {0, 100000000}; // 100ms
+      nanosleep(&ts, NULL);
+    }
+  } while (retry_count < max_retries);
+  if (rc != 0) {
+    LOG_SURREY_RIC("[iApp]: ERROR - Failed to acquire read lock (rc=%d)\n", rc);
+    return ans;
+  }
 
   assoc_rb_tree_t* left = &map->bimap.left;
   void* it = assoc_front(left);
   void* end = assoc_end(left);
-  it = find_if(left, it, end, &dummy_node, eq_e2_node_ric_req);
-  // Not found
-  if (it == end) {
-    rc = pthread_rwlock_unlock(&map->rw);
-    assert(rc == 0);
 
-    return ans;
+  it = find_if(left, it, end, &dummy_node, eq_e2_node_ric_req);
+
+  if (it != end) {
+    void* value = assoc_value(left, it);
+    if (value != NULL) {
+      ans.has_value = true;
+      memcpy(&ans.xapp_ric_id, value, sizeof(xapp_ric_id_t));
+      // LOG_SURREY_RIC("[iApp]: Found mapping for RIC Request ID %d\n", ric_req_id);
+    }
+  } else {
+    LOG_SURREY_RIC("[iApp]: No mapping found for RIC Request ID %d\n", ric_req_id);
   }
 
-  assert(it != end && "Not found RIC Request ID");
-
-  ans.has_value = true;
-  ans.xapp_ric_id = *(xapp_ric_id_t*)assoc_value(left, it);
-
-  rc = pthread_rwlock_unlock(&map->rw);
-  assert(rc == 0);
-
+  pthread_rwlock_unlock(&map->rw);
   return ans;
 }
 

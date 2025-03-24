@@ -322,7 +322,10 @@ e2ap_msg_t e2ap_handle_setup_response_agent(e2_agent_t* ag, const e2ap_msg_t* ms
   assert(ag != NULL);
   assert(msg != NULL);
   assert(msg->type == E2_SETUP_RESPONSE);
-  printf("[E2-AGENT]: E2 SETUP RESPONSE rx\n");
+
+  // Get current RIC IP
+  const char* current_ric_ip = ag->ep.base.addr;
+  printf("[E2-AGENT]: E2 SETUP RESPONSE rx from RIC %s\n", current_ric_ip);
 
   // Stop the timer
   pending_event_t ev = SETUP_REQUEST_PENDING_EVENT;
@@ -336,6 +339,7 @@ e2ap_msg_t e2ap_handle_setup_response_agent(e2_agent_t* ag, const e2ap_msg_t* ms
          msg->u_msgs.e2_stp_resp.trans_id);
   ag->trans_id_setup_req = 0;
 #endif
+
   e2ap_msg_t ans = {.type = NONE_E2_MSG_TYPE};
   return ans;
 }

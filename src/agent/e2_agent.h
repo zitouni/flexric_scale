@@ -35,6 +35,9 @@
 #include "plugin_agent.h"
 #include "sm/sm_io.h"
 
+#include "../../../e2_agent_arg.h"
+#include "../../../e2_agent_paramdef.h"
+
 #include <stdatomic.h>
 #include <stdbool.h>
 
@@ -48,9 +51,17 @@
 static_assert(0 != 0, "Unknown E2AP version");
 #endif
 
+#define MAX_RETRIES_PER_RIC 3
 typedef struct e2_agent_s e2_agent_t;
 
 typedef e2ap_msg_t (*handle_msg_fp_agent)(struct e2_agent_s*, const e2ap_msg_t* msg);
+
+typedef struct {
+  char* ric_addr;
+  pthread_mutex_t mtx;
+  int retry_count;
+  bool active;
+} ric_connection_t;
 
 typedef struct e2_agent_s {
   e2ap_ep_ag_t ep;
@@ -62,6 +73,14 @@ typedef struct e2_agent_s {
 
   // Registered SMs
   plugin_ag_t plugin;
+
+  // Mutex for pending events
+  pthread_mutex_t mtx_pending;
+  enum { CONNECTED, DISCONNECTED } connection_state;
+  const char* init_ric_addr; // Store RIC address at initialization
+  e2_agent_args_t* args; // Add this if not already present
+  ric_connection_t* ric_connections;
+  int num_rics;
 
   // Registered Periodic Indication events
   pthread_mutex_t mtx_ind_event;
@@ -85,7 +104,12 @@ typedef struct e2_agent_s {
   atomic_bool agent_stopped;
 } e2_agent_t;
 
-e2_agent_t* e2_init_agent(const char* addr, int port, global_e2_node_id_t ge2nid, sm_io_ag_ran_t io, char const* libs_dir);
+e2_agent_t* e2_init_agent(const char* addr,
+                          int port,
+                          global_e2_node_id_t ge2nid,
+                          sm_io_ag_ran_t io,
+                          char const* libs_dir,
+                          e2_agent_args_t* args);
 
 // Blocking call
 void e2_start_agent(e2_agent_t* ag);

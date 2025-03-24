@@ -34,9 +34,15 @@ a* You may obtain a copy of the License at
 #include "sm/gtp_sm/gtp_sm_id.h"
 #include "sm/gtp_sm/ie/gtp_data_ie.h"
 
+#include "map_ric_id.h"
+#include "../../util/alg_ds/ds/assoc_container/assoc_generic.h"
+
 #include "../../../../RAN_FUNCTION/surrey_log.h"
 
 #include <stdio.h>
+
+// add to protect forward of indication message sent to the xApp
+static pthread_mutex_t forward_mtx = PTHREAD_MUTEX_INITIALIZER;
 
 static inline size_t next_pow2(size_t x)
 {
@@ -96,28 +102,57 @@ e2ap_msg_t e2ap_handle_subscription_response_iapp(e42_iapp_t* iapp, const e2ap_m
   assert(msg->type == RIC_SUBSCRIPTION_RESPONSE);
 
   ric_subscription_response_t const* src = &msg->u_msgs.ric_sub_resp;
+  e2ap_msg_t none = {.type = NONE_E2_MSG_TYPE};
 
+  // Find the xApp mapping with better error handling
   xapp_ric_id_xpct_t const xpctd = find_xapp_map_ric_id(&iapp->map_ric_id, src->ric_id.ric_req_id);
-  assert(xpctd.has_value == true && "RIC Req Id not found!");
+  if (!xpctd.has_value) {
+    LOG_SURREY_RIC("[iApp]: ERROR - RIC Request ID %d not found in mapping\n", src->ric_id.ric_req_id);
+    return none;
+  }
+
   xapp_ric_id_t const x = xpctd.xapp_ric_id;
 
-  assert(src->ric_id.ran_func_id == x.ric_id.ran_func_id);
-  assert(src->ric_id.ric_inst_id == x.ric_id.ric_inst_id);
+  // Verify RAN function ID and RIC instance ID match
+  if (src->ric_id.ran_func_id != x.ric_id.ran_func_id) {
+    LOG_SURREY_RIC("[iApp]: ERROR - RAN Function ID mismatch. Expected %d, got %d\n",
+                   x.ric_id.ran_func_id,
+                   src->ric_id.ran_func_id);
+    return none;
+  }
 
+  if (src->ric_id.ric_inst_id != x.ric_id.ric_inst_id) {
+    LOG_SURREY_RIC("[iApp]: ERROR - RIC Instance ID mismatch. Expected %d, got %d\n",
+                   x.ric_id.ric_inst_id,
+                   src->ric_id.ric_inst_id);
+    return none;
+  }
+
+  // Create response message
   e2ap_msg_t ans = {.type = RIC_SUBSCRIPTION_RESPONSE};
   defer({ e2ap_msg_free_iapp(&iapp->ap, &ans); });
+
+  // Copy and modify response
   ric_subscription_response_t* dst = &ans.u_msgs.ric_sub_resp;
   *dst = mv_ric_subscription_respponse(src);
   dst->ric_id.ric_req_id = x.ric_id.ric_req_id;
 
+  // Prepare SCTP message
   sctp_msg_t sctp_msg = {0};
   sctp_msg.info = find_map_xapps_sad(&iapp->ep.xapps, x.xapp_id);
+
+  // Verify SCTP association
+  if (sctp_msg.info.addr.sin_port == 0) {
+    LOG_SURREY_RIC("[iApp]: ERROR - Invalid SCTP association for xApp ID %d\n", x.xapp_id);
+    return none;
+  }
+
+  // Encode and send message
   sctp_msg.ba = e2ap_msg_enc_iapp(&iapp->ap, &ans);
   defer({ free_sctp_msg(&sctp_msg); });
 
   e2ap_send_sctp_msg_iapp(&iapp->ep, &sctp_msg);
 
-  e2ap_msg_t none = {.type = NONE_E2_MSG_TYPE};
   return none;
 }
 
@@ -319,11 +354,11 @@ void print_ric_indication_content(const ric_indication_t* src)
 {
   assert(src != NULL);
 
-  printf("\n=== Indication Message Content ===\n");
-  LOG_SURREY_RIC("Message Type: RIC_INDICATION\n");
-  LOG_SURREY_RIC("RIC Request ID: %d\n", src->ric_id.ric_req_id);
-  LOG_SURREY_RIC("RIC Instance ID: %d\n", src->ric_id.ric_inst_id);
-  LOG_SURREY_RIC("RAN Function ID: %d\n", src->ric_id.ran_func_id);
+  // printf("\n=== Indication Message Content ===\n");
+  // LOG_SURREY_RIC("Message Type: RIC_INDICATION\n");
+  // LOG_SURREY_RIC("RIC Request ID: %d\n", src->ric_id.ric_req_id);
+  // LOG_SURREY_RIC("RIC Instance ID: %d\n", src->ric_id.ric_inst_id);
+  // LOG_SURREY_RIC("RAN Function ID: %d\n", src->ric_id.ran_func_id);
 
   // Print indication header if available
   // if (src->hdr.buf != NULL) {
@@ -362,7 +397,7 @@ void print_ric_indication_content(const ric_indication_t* src)
                      ho_info.target_du,
                      ho_info.ho_complete ? "true" : "false");
     }
-    printf("\n===End indication Message Content===\n");
+    // printf("\n===End indication Message Content===\n");
   }
 }
 
@@ -396,6 +431,63 @@ void decode_gtp_indication_message(ric_indication_t const* src)
   free_decoded_gtp_indication(&decoded);
 }
 
+static void forward_indication_to_xapp(e42_iapp_t* iapp, uint32_t xapp_id, const ric_indication_t* ind)
+{
+  assert(iapp != NULL);
+  assert(ind != NULL);
+
+  LOG_SURREY_RIC("[iApp]: Starting indication forward to xApp %d\n", xapp_id);
+
+  e2ap_msg_t ans = {.type = RIC_INDICATION};
+  // defer({ e2ap_msg_free_iapp(&iapp->ap, &ans); });
+
+  ric_indication_t* dst = &ans.u_msgs.ric_ind;
+
+  // Create a copy of the indication
+  ric_indication_t temp_ind = {0};
+  memcpy(&temp_ind, ind, sizeof(ric_indication_t));
+
+  // Copy buffer contents if present
+  if (ind->hdr.buf != NULL) {
+    temp_ind.hdr.buf = malloc(ind->hdr.len);
+    assert(temp_ind.hdr.buf != NULL);
+    memcpy(temp_ind.hdr.buf, ind->hdr.buf, ind->hdr.len);
+    temp_ind.hdr.len = ind->hdr.len;
+  }
+
+  if (ind->msg.buf != NULL) {
+    temp_ind.msg.buf = malloc(ind->msg.len);
+    assert(temp_ind.msg.buf != NULL);
+    memcpy(temp_ind.msg.buf, ind->msg.buf, ind->msg.len);
+    temp_ind.msg.len = ind->msg.len;
+  }
+
+  *dst = mv_ric_indication(&temp_ind);
+
+  sctp_msg_t sctp_msg = {0};
+  sctp_msg.info = find_map_xapps_sad(&iapp->ep.xapps, xapp_id);
+
+  if (sctp_msg.info.addr.sin_port == 0) {
+    LOG_SURREY_RIC("[iApp]: ERROR - xApp %d not connected for indication forwarding\n", xapp_id);
+    return;
+  }
+
+  LOG_SURREY_RIC("[iApp]: Encoding indication message for xApp %d\n", xapp_id);
+  sctp_msg.ba = e2ap_msg_enc_iapp(&iapp->ap, &ans);
+
+  if (sctp_msg.ba.buf == NULL || sctp_msg.ba.len == 0) {
+    LOG_SURREY_RIC("[iApp]: ERROR - Failed to encode indication message\n");
+    return;
+  }
+  e2ap_send_sctp_msg_iapp(&iapp->ep, &sctp_msg);
+  // defer({ free_sctp_msg(&sctp_msg); });
+
+  LOG_SURREY_RIC("[iApp]: Sending indication to xApp %d (message size: %zu bytes)\n", xapp_id, sctp_msg.ba.len);
+  // Cleanup
+  free_sctp_msg(&sctp_msg);
+  e2ap_msg_free_iapp(&iapp->ap, &ans);
+}
+
 e2ap_msg_t e2ap_handle_ric_indication_iapp(e42_iapp_t* iapp, const e2ap_msg_t* msg)
 {
   assert(iapp != NULL);
@@ -404,37 +496,54 @@ e2ap_msg_t e2ap_handle_ric_indication_iapp(e42_iapp_t* iapp, const e2ap_msg_t* m
 
   ric_indication_t const* src = &msg->u_msgs.ric_ind;
 
-  xapp_ric_id_xpct_t xpctd = find_xapp_map_ric_id(&iapp->map_ric_id, src->ric_id.ric_req_id);
+  LOG_SURREY_RIC("[iApp]: Received RIC Indication for RAN Function ID: %d\n", src->ric_id.ran_func_id);
 
-  if (xpctd.has_value == false) {
-    printf("RIC Indication message arrived for RIC REQ ID %d but no xApp associated\n", src->ric_id.ric_req_id);
-    e2ap_msg_t none = {.type = NONE_E2_MSG_TYPE};
-    return none;
+  // Debug print subscription registry state
+  pthread_mutex_lock(&iapp->subscription_registry.mutex);
+  LOG_SURREY_RIC("[iApp]: Current Subscription Registry State:\n");
+  LOG_SURREY_RIC("        Total subscriptions: %zu\n", iapp->subscription_registry.count);
+
+  bool indication_forwarded = false;
+
+  // Check all active subscriptions
+  for (size_t i = 0; i < iapp->subscription_registry.count; i++) {
+    subscription_entry_t* entry = &iapp->subscription_registry.entries[i];
+
+    LOG_SURREY_RIC(
+        "[iApp]: Checking subscription entry %zu:\n"
+        "        xApp ID: %d\n"
+        "        RAN Function ID: %d (Received: %d)\n"
+        "        Active: %s\n",
+        i,
+        entry->xapp_id,
+        entry->ran_func_id,
+        src->ric_id.ran_func_id,
+        entry->active ? "true" : "false");
+
+    if (entry->active && entry->ran_func_id == src->ric_id.ran_func_id) {
+      LOG_SURREY_RIC(
+          "[iApp]: Found matching subscription - forwarding indication\n"
+          "        From RAN func %d to xApp %d\n",
+          src->ric_id.ran_func_id,
+          entry->xapp_id);
+
+      // Forward indication to subscribed xApp
+      pthread_mutex_lock(&forward_mtx);
+      forward_indication_to_xapp(iapp, entry->xapp_id, src);
+      pthread_mutex_lock(&forward_mtx);
+      indication_forwarded = true;
+    }
+  }
+
+  pthread_mutex_unlock(&iapp->subscription_registry.mutex);
+
+  if (!indication_forwarded) {
+    LOG_SURREY_RIC("[iApp]: No active subscriptions found for RAN function %d\n", src->ric_id.ran_func_id);
   }
 
   if (src->ric_id.ric_req_id == 1) {
-    /// Surrey Testing
     print_ric_indication_content(src);
   }
-
-  xapp_ric_id_t const x = xpctd.xapp_ric_id;
-
-  assert(src->ric_id.ran_func_id == x.ric_id.ran_func_id);
-  assert(src->ric_id.ric_inst_id == x.ric_id.ric_inst_id);
-
-  e2ap_msg_t ans = {.type = RIC_INDICATION};
-  defer({ e2ap_msg_free_iapp(&iapp->ap, &ans); });
-  ric_indication_t* dst = &ans.u_msgs.ric_ind;
-  // Moving transfers ownership
-  *dst = mv_ric_indication((ric_indication_t*)src);
-  dst->ric_id.ric_req_id = x.ric_id.ric_req_id;
-
-  sctp_msg_t sctp_msg = {0};
-  sctp_msg.info = find_map_xapps_sad(&iapp->ep.xapps, x.xapp_id);
-  sctp_msg.ba = e2ap_msg_enc_iapp(&iapp->ap, &ans);
-  defer({ free_sctp_msg(&sctp_msg); });
-
-  e2ap_send_sctp_msg_iapp(&iapp->ep, &sctp_msg);
 
   e2ap_msg_t none = {.type = NONE_E2_MSG_TYPE};
   return none;
@@ -498,53 +607,123 @@ e2ap_msg_t e2ap_handle_e42_ric_subscription_request_iapp(e42_iapp_t* iapp, const
   assert(msg->type == E42_RIC_SUBSCRIPTION_REQUEST);
 
   e42_ric_subscription_request_t const* e42_sr = &msg->u_msgs.e42_ric_sub_req;
+  e2ap_msg_t none = {.type = NONE_E2_MSG_TYPE};
 
-  assert(valid_xapp_id(iapp, e42_sr->xapp_id) == true);
-  assert(valid_global_e2_node(iapp, &e42_sr->id));
+  // LOG_SURREY_RIC(
+  //     "[iApp]: Starting subscription request processing:\n"
+  //     "        xApp ID: %d\n"
+  //     "        RAN Function ID: %d\n"
+  //     "        Current registry count: %zu\n",
+  //     e42_sr->xapp_id,
+  //     e42_sr->sr.ric_id.ran_func_id,
+  //     iapp->subscription_registry.count);
 
-  // LOG_SURREY_RIC("Handle E42 SUBSCRIPTION REQUEST e42_sr->xapp_id : %d \n", e42_sr->xapp_id);
-
-  xapp_ric_id_t xapp_ric_id = {.ric_id = e42_sr->sr.ric_id, .xapp_id = e42_sr->xapp_id};
-
-  // I do not like the mtx here but there is a data race if not
-  int rc = pthread_rwlock_wrlock(&iapp->map_ric_id.rw);
-  assert(rc == 0);
-
-  // Check for existing mapping
-  // xapp_ric_id_xpct_t existing = find_xapp_map_ric_id(&iapp->map_ric_id, e42_sr->sr.ric_id.ric_req_id);
-  // if (existing.has_value) {
-  //   printf("[iApp]: WARNING - Existing mapping found for RIC Request ID %d\n", e42_sr->sr.ric_id.ric_req_id);
-  // }
-
-  uint16_t const new_ric_id = fwd_ric_subscription_request_gen(iapp->ric_if.type, &e42_sr->id, &e42_sr->sr, notify_msg_iapp_api);
-
-  e2_node_ric_id_t n = {.ric_id = e42_sr->sr.ric_id, //  new_ric_id,
-                        .e2_node_id = cp_global_e2_node_id(&e42_sr->id),
-                        .ric_req_type = SUBSCRIPTION_RIC_REQUEST_TYPE};
-
-  n.ric_id.ric_req_id = new_ric_id;
-
-  add_map_ric_id(&iapp->map_ric_id, &n, &xapp_ric_id);
-
-  rc = pthread_rwlock_unlock(&iapp->map_ric_id.rw);
-  assert(rc == 0);
-
-  // Verify mapping was added
-  xapp_ric_id_xpct_t verify = find_xapp_map_ric_id(&iapp->map_ric_id, new_ric_id);
-  if (!verify.has_value) {
-    LOG_SURREY_RIC("[iApp]: ERROR - Failed to add mapping!\n");
-  } else {
-    LOG_SURREY_RIC("[iApp]: Successfully added mapping:\n");
-    LOG_SURREY_RIC("xApp ID: %d\n", verify.xapp_ric_id.xapp_id);
-    LOG_SURREY_RIC("RIC Request ID: %d\n", new_ric_id);
+  // Validate inputs
+  if (!valid_xapp_id(iapp, e42_sr->xapp_id)) {
+    LOG_SURREY_RIC("[iApp]: ERROR - Invalid xApp ID %d\n", e42_sr->xapp_id);
+    return none;
   }
 
-  LOG_SURREY_RIC("[iApp]: SUBSCRIPTION-REQUEST RAN_FUNC_ID %d RIC_REQ_ID %d tx \n",
-                 xapp_ric_id.ric_id.ran_func_id,
-                 xapp_ric_id.ric_id.ric_req_id);
+  // Check xApp connection
+  sctp_msg_t check_msg = {0};
+  check_msg.info = find_map_xapps_sad(&iapp->ep.xapps, e42_sr->xapp_id);
+  if (check_msg.info.addr.sin_port == 0) {
+    LOG_SURREY_RIC("[iApp]: ERROR - xApp %d not connected\n", e42_sr->xapp_id);
+    return none;
+  }
 
-  e2ap_msg_t ans = {.type = NONE_E2_MSG_TYPE};
-  return ans;
+  // Generate new RIC request ID
+  uint16_t new_ric_id = fwd_ric_subscription_request_gen(iapp->ric_if.type, &e42_sr->id, &e42_sr->sr, notify_msg_iapp_api);
+
+  if (new_ric_id == 0) {
+    LOG_SURREY_RIC("[iApp]: ERROR - Failed to generate RIC request ID\n");
+    return none;
+  }
+
+  LOG_SURREY_RIC("[iApp]: Generated new RIC request ID: %d\n", new_ric_id);
+
+  // Debug print current state
+  LOG_SURREY_RIC(
+      "[iApp]: Current registry state before adding:\n"
+      "        Capacity: %zu\n"
+      "        Count: %zu\n",
+      iapp->subscription_registry.capacity,
+      iapp->subscription_registry.count);
+
+  // Check and expand capacity if needed
+  // if (iapp->subscription_registry.count >= iapp->subscription_registry.capacity) {
+  //   size_t new_capacity = (iapp->subscription_registry.capacity == 0) ? 32 : iapp->subscription_registry.capacity * 2;
+  //   LOG_SURREY_RIC("[iApp]: Expanding registry capacity from %zu to %zu\n", iapp->subscription_registry.capacity, new_capacity);
+
+  //   subscription_entry_t* new_entries = realloc(iapp->subscription_registry.entries, new_capacity *
+  //   sizeof(subscription_entry_t)); if (!new_entries) {
+  //     LOG_SURREY_RIC("[iApp]: ERROR - Failed to allocate memory for registry expansion\n");
+  //     pthread_mutex_unlock(&iapp->subscription_registry.mutex);
+  //     return none;
+  //   }
+  //   iapp->subscription_registry.entries = new_entries;
+  //   iapp->subscription_registry.capacity = new_capacity;
+  // }
+  // Replace the manual subscription handling with register_subscription
+  bool reg_success =
+      register_subscription(&iapp->subscription_registry, e42_sr->xapp_id, e42_sr->sr.ric_id.ran_func_id, new_ric_id);
+
+  if (!reg_success) {
+    LOG_SURREY_RIC("[iApp]: ERROR - Failed to register subscription\n");
+    return none;
+  }
+  // // Add new subscription
+  // size_t idx = iapp->subscription_registry.count;
+  // iapp->subscription_registry.entries[idx].xapp_id = e42_sr->xapp_id;
+  // iapp->subscription_registry.entries[idx].ran_func_id = e42_sr->sr.ric_id.ran_func_id;
+  // iapp->subscription_registry.entries[idx].ric_req_id = new_ric_id;
+  // iapp->subscription_registry.entries[idx].active = true;
+  // iapp->subscription_registry.count++;
+
+  LOG_SURREY_RIC(
+      "[iApp]: Added new subscription:\n"
+      "        xApp ID: %d\n"
+      "        RAN Function ID: %d\n"
+      "        RIC Request ID: %d\n"
+      "        New registry count: %zu\n",
+      e42_sr->xapp_id,
+      e42_sr->sr.ric_id.ran_func_id,
+      new_ric_id,
+      iapp->subscription_registry.count);
+
+  // Verify the entry was added correctly
+  // bool verify_ok = false;
+  // for (size_t i = 0; i < iapp->subscription_registry.count; i++) {
+  //   if (iapp->subscription_registry.entries[i].xapp_id == e42_sr->xapp_id
+  //       && iapp->subscription_registry.entries[i].ran_func_id == e42_sr->sr.ric_id.ran_func_id
+  //       && iapp->subscription_registry.entries[i].active) {
+  //     verify_ok = true;
+  //     break;
+  //   }
+  // }
+
+  // if (!verify_ok) {
+  //   LOG_SURREY_RIC("[iApp]: ERROR - Failed to verify subscription addition\n");
+  //   return none;
+  // }
+
+  LOG_SURREY_RIC("[iApp]: Successfully registered subscription\n");
+
+  // Add to RIC ID map
+  pthread_rwlock_wrlock(&iapp->map_ric_id.rw);
+
+  e2_node_ric_id_t node = {.ric_id = e42_sr->sr.ric_id,
+                           .e2_node_id = cp_global_e2_node_id(&e42_sr->id),
+                           .ric_req_type = SUBSCRIPTION_RIC_REQUEST_TYPE};
+  node.ric_id.ric_req_id = new_ric_id;
+
+  xapp_ric_id_t xapp_ric_id = {.ric_id = e42_sr->sr.ric_id, .xapp_id = e42_sr->xapp_id};
+  xapp_ric_id.ric_id.ric_req_id = new_ric_id;
+
+  bi_map_insert(&iapp->map_ric_id.bimap, &node, sizeof(node), &xapp_ric_id, sizeof(xapp_ric_id));
+  pthread_rwlock_unlock(&iapp->map_ric_id.rw);
+
+  return none;
 }
 
 // xApp -> iApp

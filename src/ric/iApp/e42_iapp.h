@@ -20,7 +20,7 @@
  */
 
 #ifndef E42_IAPP_H
-#define E42_IAPP_H 
+#define E42_IAPP_H
 
 // Like E2 Agent, but it does not generate the Setup Request
 #include "../../lib/e2ap/global_consts_wrapper.h"
@@ -33,36 +33,34 @@
 
 #include "../near_ric.h"
 #include "near_ric_if.h"
-//#include "../../../test/iapp-xapp/near_ric_emulator.h"
+// #include "../../../test/iapp-xapp/near_ric_emulator.h"
 
 #include "asio_iapp.h"
 #include "e2ap_iapp.h"
 #include "endpoint_iapp.h"
 #include "map_ric_id.h"
 
+#include "subscription_registry.h"
+
 #include <stdatomic.h>
 #include <stdbool.h>
 
 #ifdef E2AP_V1
 #define NUM_HANDLE_MSG 31
-#elif E2AP_V2 
+#elif E2AP_V2
 #define NUM_HANDLE_MSG 34
-#elif E2AP_V3 
+#elif E2AP_V3
 #define NUM_HANDLE_MSG 43
 #else
-static_assert(0!=0, "Unknown E2AP version");
+static_assert(0 != 0, "Unknown E2AP version");
 #endif
-
-
-
 
 typedef struct e42_iapp_s e42_iapp_t;
 
-typedef e2ap_msg_t (*handle_msg_fp_iapp)(struct e42_iapp_s*, const e2ap_msg_t* msg) ;
+typedef e2ap_msg_t (*handle_msg_fp_iapp)(struct e42_iapp_s*, const e2ap_msg_t* msg);
 
-typedef struct e42_iapp_s 
-{
-  e2ap_ep_iapp_t ep; 
+typedef struct e42_iapp_s {
+  e2ap_ep_iapp_t ep;
   e2ap_iapp_t ap;
   asio_iapp_t io;
   size_t sz_handle_msg;
@@ -71,7 +69,10 @@ typedef struct e42_iapp_s
   // Registered xApps
   uint32_t xapp_id;
 
-  // Registered E2 Nodes 
+  // Registration of number of xApps
+  subscription_registry_t subscription_registry;
+
+  // Registered E2 Nodes
   reg_e2_nodes_t e2_nodes;
 
   map_ric_id_t map_ric_id;
@@ -92,7 +93,12 @@ void free_e42_iapp(e42_iapp_t* iapp);
 #ifdef E2AP_V1
 void add_e2_node_iapp_v1(e42_iapp_t* i, global_e2_node_id_t* id, size_t len, ran_function_t const ran_func[len]);
 #else
-void add_e2_node_iapp(e42_iapp_t* i, global_e2_node_id_t* id, size_t len, ran_function_t const ran_func[len], size_t len_cca, e2ap_node_component_config_add_t const* cca);
+void add_e2_node_iapp(e42_iapp_t* i,
+                      global_e2_node_id_t* id,
+                      size_t len,
+                      ran_function_t const ran_func[len],
+                      size_t len_cca,
+                      e2ap_node_component_config_add_t const* cca);
 #endif
 
 void rm_e2_node_iapp(e42_iapp_t* i, global_e2_node_id_t* id);
@@ -102,4 +108,3 @@ void notify_msg_iapp(e42_iapp_t* iapp, e2ap_msg_t const* msg);
 #undef NUM_HANDLE_MSG
 
 #endif
-
