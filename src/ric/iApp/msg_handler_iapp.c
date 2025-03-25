@@ -41,9 +41,6 @@ a* You may obtain a copy of the License at
 
 #include <stdio.h>
 
-// add to protect forward of indication message sent to the xApp
-static pthread_mutex_t forward_mtx = PTHREAD_MUTEX_INITIALIZER;
-
 static inline size_t next_pow2(size_t x)
 {
   static_assert(sizeof(x) == 8, "Need this size to work correctly");
@@ -350,93 +347,95 @@ gtp_ho_info_t extract_handover_info_ric(const uint8_t* buffer, size_t len)
   return ho_info;
 }
 
-void print_ric_indication_content(const ric_indication_t* src)
-{
-  assert(src != NULL);
+// void print_ric_indication_content(const ric_indication_t* src)
+// {
+//   assert(src != NULL);
 
-  // printf("\n=== Indication Message Content ===\n");
-  // LOG_SURREY_RIC("Message Type: RIC_INDICATION\n");
-  // LOG_SURREY_RIC("RIC Request ID: %d\n", src->ric_id.ric_req_id);
-  // LOG_SURREY_RIC("RIC Instance ID: %d\n", src->ric_id.ric_inst_id);
-  // LOG_SURREY_RIC("RAN Function ID: %d\n", src->ric_id.ran_func_id);
+//   // printf("\n=== Indication Message Content ===\n");
+//   // LOG_SURREY_RIC("Message Type: RIC_INDICATION\n");
+//   // LOG_SURREY_RIC("RIC Request ID: %d\n", src->ric_id.ric_req_id);
+//   // LOG_SURREY_RIC("RIC Instance ID: %d\n", src->ric_id.ric_inst_id);
+//   // LOG_SURREY_RIC("RAN Function ID: %d\n", src->ric_id.ran_func_id);
 
-  // Print indication header if available
-  // if (src->hdr.buf != NULL) {
-  //   LOG_SURREY_RIC("Header Content (%zu bytes):\n", src->hdr.len);
-  //   printf("Header: \n");
-  //   for (size_t i = 0; i < src->hdr.len; i++) {
-  //     printf("%02X ", src->hdr.buf[i]);
-  //     if ((i + 1) % 16 == 0)
-  //       printf("\n     ");
-  //   }
-  //   printf("\n");
-  // }
+//   // Print indication header if available
+//   // if (src->hdr.buf != NULL) {
+//   //   LOG_SURREY_RIC("Header Content (%zu bytes):\n", src->hdr.len);
+//   //   printf("Header: \n");
+//   //   for (size_t i = 0; i < src->hdr.len; i++) {
+//   //     printf("%02X ", src->hdr.buf[i]);
+//   //     if ((i + 1) % 16 == 0)
+//   //       printf("\n     ");
+//   //   }
+//   //   printf("\n");
+//   // }
 
-  // Print indication message if available
-  if (src->msg.buf != NULL) {
-    // Get raw bytes
-    uint8_t* raw_bytes = (uint8_t*)src->msg.buf;
+//   // Print indication message if available
+//   if (src->msg.buf != NULL) {
+//     // Get raw bytes
+//     uint8_t* raw_bytes = (uint8_t*)src->msg.buf;
 
-    // Extract handover info
-    gtp_ho_info_t ho_info = extract_handover_info_ric(raw_bytes, src->msg.len);
+//     // Extract handover info
+//     gtp_ho_info_t ho_info = extract_handover_info_ric(raw_bytes, src->msg.len);
 
-    if (ho_info.ho_complete == true) {
-      // Print raw bytes LOG_SURREY_RIC("Raw bytes:\n");
-      for (size_t i = 0; i < src->msg.len; i++) {
-        printf("%02x ", raw_bytes[i]);
-        if ((i + 1) % 16 == 0)
-          printf("\n");
-      }
-      printf("\n");
+//     if (ho_info.ho_complete == true) {
+//       // Print raw bytes LOG_SURREY_RIC("Raw bytes:\n");
+//       for (size_t i = 0; i < src->msg.len; i++) {
+//         printf("%02x ", raw_bytes[i]);
+//         if ((i + 1) % 16 == 0)
+//           printf("\n");
+//       }
+//       printf("\n");
 
-      // Print the results
-      LOG_SURREY_RIC("Extracted Handover Info:\n");
-      LOG_SURREY_RIC("UE %u (Source DU: %u, Target DU: %u, HO Complete: %s)\n",
-                     ho_info.ue_id,
-                     ho_info.source_du,
-                     ho_info.target_du,
-                     ho_info.ho_complete ? "true" : "false");
-    }
-    // printf("\n===End indication Message Content===\n");
-  }
-}
+//       // Print the results
+//       LOG_SURREY_RIC("Extracted Handover Info:\n");
+//       LOG_SURREY_RIC("UE %u (Source DU: %u, Target DU: %u, HO Complete: %s)\n",
+//                      ho_info.ue_id,
+//                      ho_info.source_du,
+//                      ho_info.target_du,
+//                      ho_info.ho_complete ? "true" : "false");
+//     }
+//     // printf("\n===End indication Message Content===\n");
+//   }
+// }
 
-void decode_gtp_indication_message(ric_indication_t const* src)
-{
-  LOG_SURREY_RIC("\n=== Decoding GTP Indication at RIC ===\n");
+// void decode_gtp_indication_message(ric_indication_t const* src)
+// {
+//   LOG_SURREY_RIC("\n=== Decoding GTP Indication at RIC ===\n");
 
-  if (src == NULL || src->msg.buf == NULL) {
-    LOG_SURREY_RIC("Invalid indication message or SM payload\n");
-    return;
-  }
+//   if (src == NULL || src->msg.buf == NULL) {
+//     LOG_SURREY_RIC("Invalid indication message or SM payload\n");
+//     return;
+//   }
 
-  // Decode the message
-  gtp_ind_msg_t decoded = decode_gtp_indication(src->msg.len, (uint8_t const*)src->msg.buf);
+//   // Decode the message
+//   gtp_ind_msg_t decoded = decode_gtp_indication(src->msg.len, (uint8_t const*)src->msg.buf);
 
-  // Print decoded information
-  LOG_SURREY_RIC("\nDecoded GTP Message Content:\n");
-  LOG_SURREY_RIC("Length: %u\n", decoded.len);
+//   // Print decoded information
+//   LOG_SURREY_RIC("\nDecoded GTP Message Content:\n");
+//   LOG_SURREY_RIC("Length: %u\n", decoded.len);
 
-  // Print handover information
-  LOG_SURREY_RIC("Handover Information:\n");
-  LOG_SURREY_RIC("  UE ID: %u\n", decoded.ho_info.ue_id);
-  LOG_SURREY_RIC("  Source DU: %u\n", decoded.ho_info.source_du);
-  LOG_SURREY_RIC("  Target DU: %u\n", decoded.ho_info.target_du);
-  LOG_SURREY_RIC("  HO Complete: %s\n", decoded.ho_info.ho_complete ? "Yes" : "No");
+//   // Print handover information
+//   LOG_SURREY_RIC("Handover Information:\n");
+//   LOG_SURREY_RIC("  UE ID: %u\n", decoded.ho_info.ue_id);
+//   LOG_SURREY_RIC("  Source DU: %u\n", decoded.ho_info.source_du);
+//   LOG_SURREY_RIC("  Target DU: %u\n", decoded.ho_info.target_du);
+//   LOG_SURREY_RIC("  HO Complete: %s\n", decoded.ho_info.ho_complete ? "Yes" : "No");
 
-  LOG_SURREY_RIC("Timestamp: %lu\n", decoded.tstamp);
-  LOG_SURREY_RIC("===============================\n\n");
+//   LOG_SURREY_RIC("Timestamp: %lu\n", decoded.tstamp);
+//   LOG_SURREY_RIC("===============================\n\n");
 
-  // Clean up
-  free_decoded_gtp_indication(&decoded);
-}
+//   // Clean up
+//   free_decoded_gtp_indication(&decoded);
+// }
 
 static void forward_indication_to_xapp(e42_iapp_t* iapp, uint32_t xapp_id, const ric_indication_t* ind)
 {
   assert(iapp != NULL);
   assert(ind != NULL);
+  // Lock using the structure mutex
+  pthread_mutex_lock(&iapp->forward_mutex);
 
-  LOG_SURREY_RIC("[iApp]: Starting indication forward to xApp %d\n", xapp_id);
+  // LOG_SURREY_RIC("[iApp]: Starting indication forward to xApp %d\n", xapp_id);
 
   e2ap_msg_t ans = {.type = RIC_INDICATION};
   // defer({ e2ap_msg_free_iapp(&iapp->ap, &ans); });
@@ -472,7 +471,7 @@ static void forward_indication_to_xapp(e42_iapp_t* iapp, uint32_t xapp_id, const
     return;
   }
 
-  LOG_SURREY_RIC("[iApp]: Encoding indication message for xApp %d\n", xapp_id);
+  // LOG_SURREY_RIC("[iApp]: Encoding indication message for xApp %d\n", xapp_id);
   sctp_msg.ba = e2ap_msg_enc_iapp(&iapp->ap, &ans);
 
   if (sctp_msg.ba.buf == NULL || sctp_msg.ba.len == 0) {
@@ -482,10 +481,12 @@ static void forward_indication_to_xapp(e42_iapp_t* iapp, uint32_t xapp_id, const
   e2ap_send_sctp_msg_iapp(&iapp->ep, &sctp_msg);
   // defer({ free_sctp_msg(&sctp_msg); });
 
-  LOG_SURREY_RIC("[iApp]: Sending indication to xApp %d (message size: %zu bytes)\n", xapp_id, sctp_msg.ba.len);
+  // LOG_SURREY_RIC("[iApp]: Sending indication to xApp %d (message size: %zu bytes)\n", xapp_id, sctp_msg.ba.len);
   // Cleanup
   free_sctp_msg(&sctp_msg);
   e2ap_msg_free_iapp(&iapp->ap, &ans);
+  // Unlock using the structure mutex
+  pthread_mutex_unlock(&iapp->forward_mutex);
 }
 
 e2ap_msg_t e2ap_handle_ric_indication_iapp(e42_iapp_t* iapp, const e2ap_msg_t* msg)
@@ -496,12 +497,12 @@ e2ap_msg_t e2ap_handle_ric_indication_iapp(e42_iapp_t* iapp, const e2ap_msg_t* m
 
   ric_indication_t const* src = &msg->u_msgs.ric_ind;
 
-  LOG_SURREY_RIC("[iApp]: Received RIC Indication for RAN Function ID: %d\n", src->ric_id.ran_func_id);
+  // LOG_SURREY_RIC("[iApp]: Received RIC Indication for RAN Function ID: %d\n", src->ric_id.ran_func_id);
 
   // Debug print subscription registry state
   pthread_mutex_lock(&iapp->subscription_registry.mutex);
-  LOG_SURREY_RIC("[iApp]: Current Subscription Registry State:\n");
-  LOG_SURREY_RIC("        Total subscriptions: %zu\n", iapp->subscription_registry.count);
+  // LOG_SURREY_RIC("[iApp]: Current Subscription Registry State:\n");
+  // LOG_SURREY_RIC("        Total subscriptions: %zu\n", iapp->subscription_registry.count);
 
   bool indication_forwarded = false;
 
@@ -509,28 +510,26 @@ e2ap_msg_t e2ap_handle_ric_indication_iapp(e42_iapp_t* iapp, const e2ap_msg_t* m
   for (size_t i = 0; i < iapp->subscription_registry.count; i++) {
     subscription_entry_t* entry = &iapp->subscription_registry.entries[i];
 
-    LOG_SURREY_RIC(
-        "[iApp]: Checking subscription entry %zu:\n"
-        "        xApp ID: %d\n"
-        "        RAN Function ID: %d (Received: %d)\n"
-        "        Active: %s\n",
-        i,
-        entry->xapp_id,
-        entry->ran_func_id,
-        src->ric_id.ran_func_id,
-        entry->active ? "true" : "false");
+    // LOG_SURREY_RIC(
+    //     "[iApp]: Checking subscription entry %zu:\n"
+    //     "        xApp ID: %d\n"
+    //     "        RAN Function ID: %d (Received: %d)\n"
+    //     "        Active: %s\n",
+    //     i,
+    //     entry->xapp_id,
+    //     entry->ran_func_id,
+    //     src->ric_id.ran_func_id,
+    //     entry->active ? "true" : "false");
 
     if (entry->active && entry->ran_func_id == src->ric_id.ran_func_id) {
-      LOG_SURREY_RIC(
-          "[iApp]: Found matching subscription - forwarding indication\n"
-          "        From RAN func %d to xApp %d\n",
-          src->ric_id.ran_func_id,
-          entry->xapp_id);
+      // LOG_SURREY_RIC(
+      //     "[iApp]: Found matching subscription - forwarding indication\n"
+      //     "        From RAN func %d to xApp %d\n",
+      //     src->ric_id.ran_func_id,
+      //     entry->xapp_id);
 
       // Forward indication to subscribed xApp
-      pthread_mutex_lock(&forward_mtx);
       forward_indication_to_xapp(iapp, entry->xapp_id, src);
-      pthread_mutex_lock(&forward_mtx);
       indication_forwarded = true;
     }
   }
@@ -539,10 +538,6 @@ e2ap_msg_t e2ap_handle_ric_indication_iapp(e42_iapp_t* iapp, const e2ap_msg_t* m
 
   if (!indication_forwarded) {
     LOG_SURREY_RIC("[iApp]: No active subscriptions found for RAN function %d\n", src->ric_id.ran_func_id);
-  }
-
-  if (src->ric_id.ric_req_id == 1) {
-    print_ric_indication_content(src);
   }
 
   e2ap_msg_t none = {.type = NONE_E2_MSG_TYPE};
@@ -640,15 +635,15 @@ e2ap_msg_t e2ap_handle_e42_ric_subscription_request_iapp(e42_iapp_t* iapp, const
     return none;
   }
 
-  LOG_SURREY_RIC("[iApp]: Generated new RIC request ID: %d\n", new_ric_id);
+  // LOG_SURREY_RIC("[iApp]: Generated new RIC request ID: %d\n", new_ric_id);
 
   // Debug print current state
-  LOG_SURREY_RIC(
-      "[iApp]: Current registry state before adding:\n"
-      "        Capacity: %zu\n"
-      "        Count: %zu\n",
-      iapp->subscription_registry.capacity,
-      iapp->subscription_registry.count);
+  // LOG_SURREY_RIC(
+  //     "[iApp]: Current registry state before adding:\n"
+  //     "        Capacity: %zu\n"
+  //     "        Count: %zu\n",
+  //     iapp->subscription_registry.capacity,
+  //     iapp->subscription_registry.count);
 
   // Check and expand capacity if needed
   // if (iapp->subscription_registry.count >= iapp->subscription_registry.capacity) {
@@ -680,16 +675,16 @@ e2ap_msg_t e2ap_handle_e42_ric_subscription_request_iapp(e42_iapp_t* iapp, const
   // iapp->subscription_registry.entries[idx].active = true;
   // iapp->subscription_registry.count++;
 
-  LOG_SURREY_RIC(
-      "[iApp]: Added new subscription:\n"
-      "        xApp ID: %d\n"
-      "        RAN Function ID: %d\n"
-      "        RIC Request ID: %d\n"
-      "        New registry count: %zu\n",
-      e42_sr->xapp_id,
-      e42_sr->sr.ric_id.ran_func_id,
-      new_ric_id,
-      iapp->subscription_registry.count);
+  // LOG_SURREY_RIC(
+  //     "[iApp]: Added new subscription:\n"
+  //     "        xApp ID: %d\n"
+  //     "        RAN Function ID: %d\n"
+  //     "        RIC Request ID: %d\n"
+  //     "        New registry count: %zu\n",
+  //     e42_sr->xapp_id,
+  //     e42_sr->sr.ric_id.ran_func_id,
+  //     new_ric_id,
+  //     iapp->subscription_registry.count);
 
   // Verify the entry was added correctly
   // bool verify_ok = false;
@@ -707,7 +702,7 @@ e2ap_msg_t e2ap_handle_e42_ric_subscription_request_iapp(e42_iapp_t* iapp, const
   //   return none;
   // }
 
-  LOG_SURREY_RIC("[iApp]: Successfully registered subscription\n");
+  // LOG_SURREY_RIC("[iApp]: Successfully registered subscription\n");
 
   // Add to RIC ID map
   pthread_rwlock_wrlock(&iapp->map_ric_id.rw);

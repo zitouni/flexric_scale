@@ -32,6 +32,9 @@ e42_iapp_t* init_e42_iapp(const char* addr, near_ric_if_t ric_if)
   // Emulator
   start_near_ric_iapp_gen(iapp->ric_if.type);
 
+  // Initialize mutex here, before any other initialization
+  init_forward_indication_mutex(iapp); // ADD THIS LINE
+
   // Initialize subscription registry
   init_subscription_registry(&iapp->subscription_registry);
 
@@ -66,6 +69,16 @@ e42_iapp_t* init_e42_iapp(const char* addr, near_ric_if_t ric_if)
   iapp->stopped = false;
 
   return iapp;
+}
+
+void init_forward_indication_mutex(e42_iapp_t* iapp)
+{
+  assert(iapp != NULL);
+  pthread_mutexattr_t attr;
+  pthread_mutexattr_init(&attr);
+  pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+  pthread_mutex_init(&iapp->forward_mutex, &attr);
+  pthread_mutexattr_destroy(&attr);
 }
 
 static inline bool net_pkt(const e42_iapp_t* iapp, int fd)
@@ -266,6 +279,12 @@ void start_e42_iapp(e42_iapp_t* iapp)
   e2_event_loop_iapp(iapp);
 }
 
+void cleanup_forward_indication_mutex(e42_iapp_t* iapp)
+{
+  assert(iapp != NULL);
+  pthread_mutex_destroy(&iapp->forward_mutex);
+}
+
 void free_e42_iapp(e42_iapp_t* iapp)
 {
   assert(iapp != NULL);
@@ -284,6 +303,8 @@ void free_e42_iapp(e42_iapp_t* iapp)
 
   // Free subscription registry
   free_subscription_registry(&iapp->subscription_registry);
+
+  cleanup_forward_indication_mutex(iapp);
 
   free(iapp);
 }

@@ -64,6 +64,7 @@ typedef struct e42_iapp_s {
   e2ap_iapp_t ap;
   asio_iapp_t io;
   size_t sz_handle_msg;
+  pthread_mutex_t forward_mutex;
   handle_msg_fp_iapp handle_msg[NUM_HANDLE_MSG]; // note that not all the slots will be occupied
 
   // Registered xApps
@@ -84,6 +85,9 @@ typedef struct e42_iapp_s {
 } e42_iapp_t;
 
 e42_iapp_t* init_e42_iapp(const char* addr, near_ric_if_t ric_if); //, int port);
+
+void init_forward_indication_mutex(e42_iapp_t* iapp);
+void cleanup_forward_indication_mutex(e42_iapp_t* iapp);
 
 // Blocking call
 void start_e42_iapp(e42_iapp_t* iapp);

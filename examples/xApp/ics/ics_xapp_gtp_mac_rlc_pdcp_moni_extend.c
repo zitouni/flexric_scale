@@ -78,7 +78,7 @@ void write_mac_stats(char* buffer, mac_ue_stats_impl_t* ue_mac_stats)
       ue_mac_stats->pmi_cqi_X2,
       ue_mac_stats->phr,
       ue_mac_stats->pcmax);
-  // printf("Buffer contents:\n%s\n", buffer);
+  printf("Buffer contents:\n%s\n", buffer);
 }
 
 static void sm_cb_gtp(sm_ag_if_rd_t const* rd)
