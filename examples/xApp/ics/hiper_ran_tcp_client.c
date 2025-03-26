@@ -209,69 +209,79 @@ void* tcp_client_thread(void* arg __attribute__((unused)))
   ssize_t bytes_received;
   fd_set read_fds;
   struct timeval tv;
+  const int reconnect_delay = 1; // 1 second delay between reconnection attempts
 
-  // Initialize TCP client
-  if (init_tcp_client() < 0) {
-    printf("Failed to initialize TCP client\n");
-    return NULL;
-  }
-
-  // Set socket to non-blocking mode
-  int flags = fcntl(g_client.sock_fd, F_GETFL, 0);
-  if (flags < 0) {
-    perror("fcntl F_GETFL failed");
-    force_close_socket();
-    return NULL;
-  }
-  if (fcntl(g_client.sock_fd, F_SETFL, flags | O_NONBLOCK) < 0) {
-    perror("fcntl F_SETFL failed");
-    force_close_socket();
-    return NULL;
-  }
-
-  // Main receive loop
-  while (g_client.is_running) {
-    FD_ZERO(&read_fds);
-    FD_SET(g_client.sock_fd, &read_fds);
-
-    // Set timeout for select
-    tv.tv_sec = 0;
-    tv.tv_usec = 5000; // 5ms timeout - reduced for better responsiveness
-
-    int ready = select(g_client.sock_fd + 1, &read_fds, NULL, NULL, &tv);
-
-    if (ready < 0) {
-      if (errno == EINTR) {
-        continue;
-      }
-      perror("select failed");
-      break;
+  while (1) { // Outer loop for reconnection
+    // Initialize TCP client
+    if (init_tcp_client() < 0) {
+      printf("Failed to initialize TCP client\n");
+      sleep(reconnect_delay);
+      continue;
+    }
+    printf("Connected to RU Controler Server Successfully\n");
+    // Set socket to non-blocking mode
+    int flags = fcntl(g_client.sock_fd, F_GETFL, 0);
+    if (flags < 0) {
+      perror("fcntl F_GETFL failed");
+      force_close_socket();
+      sleep(reconnect_delay);
+      continue;
+    }
+    if (fcntl(g_client.sock_fd, F_SETFL, flags | O_NONBLOCK) < 0) {
+      perror("fcntl F_SETFL failed");
+      force_close_socket();
+      sleep(reconnect_delay);
+      return NULL;
     }
 
-    if (ready > 0 && FD_ISSET(g_client.sock_fd, &read_fds)) {
-      pthread_mutex_lock(&g_client.send_mutex);
-      bytes_received = recv(g_client.sock_fd, buffer, BUFFER_SIZE - 1, MSG_DONTWAIT);
-      pthread_mutex_unlock(&g_client.send_mutex);
+    // Main receive loop
+    while (g_client.is_running) {
+      FD_ZERO(&read_fds);
+      FD_SET(g_client.sock_fd, &read_fds);
 
-      if (bytes_received > 0) {
-        buffer[bytes_received] = '\0';
-        print_received_message(buffer, bytes_received);
-      } else if (bytes_received == 0) {
-        printf("Server closed connection\n");
+      // Set timeout for select
+      tv.tv_sec = 0;
+      tv.tv_usec = 5000; // 5ms timeout - reduced for better responsiveness
+
+      int ready = select(g_client.sock_fd + 1, &read_fds, NULL, NULL, &tv);
+
+      if (ready < 0) {
+        if (errno == EINTR) {
+          continue;
+        }
+        perror("select failed");
         break;
-      } else {
-        if (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR) {
-          perror("recv failed");
+      }
+
+      if (ready > 0 && FD_ISSET(g_client.sock_fd, &read_fds)) {
+        pthread_mutex_lock(&g_client.send_mutex);
+        bytes_received = recv(g_client.sock_fd, buffer, BUFFER_SIZE - 1, MSG_DONTWAIT);
+        pthread_mutex_unlock(&g_client.send_mutex);
+
+        if (bytes_received > 0) {
+          buffer[bytes_received] = '\0';
+          print_received_message(buffer, bytes_received);
+        } else if (bytes_received == 0) {
+          printf("Server closed connection\n");
           break;
+        } else {
+          if (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR) {
+            perror("recv failed");
+            break;
+          }
         }
       }
+      // Minimal sleep to prevent busy waiting
+      usleep(500); // 0.5ms sleep - reduced for better responsiveness
     }
-
-    // Minimal sleep to prevent busy waiting
-    usleep(500); // 0.5ms sleep - reduced for better responsiveness
+    force_close_socket();
+    // If client is no longer running, exit the thread
+    if (!g_client.is_running) {
+      break;
+    }
+    sleep(reconnect_delay); // Wait before reconnecting
   }
 
-  force_close_socket();
   return NULL;
 }
 
