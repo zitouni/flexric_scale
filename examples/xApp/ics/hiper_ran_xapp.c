@@ -48,9 +48,9 @@
 #include "hiper_ran_tcp_client.h"
 
 #define MAX_MOBILES_PER_GNB 40
-#define NBR_DATA_COLLECTED 200
+// #define NBR_DATA_COLLECTED 200
 
-int count_collect_data = 0;
+// int count_collect_data = 0;
 
 // Keep the necessary global variables
 static pthread_mutex_t gtp_stats_mutex;
@@ -209,17 +209,20 @@ static void sm_cb_gtp(sm_ag_if_rd_t const* rd)
             rd->ind.gtp.msg.ho_info.source_du,
             rd->ind.gtp.msg.ho_info.target_du);
 
-    printf("count: %d - GTP INFO: \n%s\n", count_collect_data, buffer);
+    // printf("count: %d - GTP INFO: \n%s\n", count_collect_data, buffer);
+    printf(" GTP INFO: \n%s\n", buffer);
     fflush(stdout);
     //   exit(0);
   }
-  count_collect_data++;
+  // count_collect_data++;
 
-  if (count_collect_data == NBR_DATA_COLLECTED) {
-    // if (rd->ind.gtp.msg.ho_info.ho_complete == 1) {
+  // if (count_collect_data == NBR_DATA_COLLECTED) {
+  if (rd->ind.gtp.msg.ho_info.ho_complete == 1) {
     //   Send message to the RU controler that DU Handover OK
     send_ho_ok();
-    count_collect_data = 0;
+
+    // count_collect_data = 0;
+
     LOG_SURREY("Handover OK sent to switch off the RU controller/ Source DU: %d and Target DU: %d \n",
                rd->ind.gtp.msg.ho_info.source_du,
                rd->ind.gtp.msg.ho_info.target_du);

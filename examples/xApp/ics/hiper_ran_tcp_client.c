@@ -35,6 +35,10 @@
 #include <sys/select.h>
 #include <fcntl.h>
 
+#define NBR_DATA_COLLECTED 20
+
+int count_collect_data = 0;
+
 // Structure for the message thread
 typedef struct {
   char* message;
@@ -261,6 +265,19 @@ void* tcp_client_thread(void* arg __attribute__((unused)))
         if (bytes_received > 0) {
           buffer[bytes_received] = '\0';
           print_received_message(buffer, bytes_received);
+
+          count_collect_data++;
+
+          printf("count_collect_data : %d\n", count_collect_data);
+
+          if (count_collect_data == NBR_DATA_COLLECTED) {
+            // if (rd->ind.gtp.msg.ho_info.ho_complete == 1) {
+            //   Send message to the RU controler that DU Handover OK
+            send_ho_ok();
+            count_collect_data = 0;
+            printf("Handover OK sent to switch off the RU controller/ Source DU: and Target DU: \n");
+            // cond_send_ho_ok = true;
+          }
         } else if (bytes_received == 0) {
           printf("Server closed connection\n");
           break;
