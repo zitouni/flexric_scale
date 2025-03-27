@@ -13,12 +13,12 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/__/__/__/
   /usr/include/x86_64-linux-gnu/bits/long-double.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stddef.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stddef.h \
   /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
   /usr/include/strings.h \
   /usr/include/stdio.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stdarg.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdarg.h \
   /usr/include/x86_64-linux-gnu/bits/types.h \
   /usr/include/x86_64-linux-gnu/bits/typesizes.h \
   /usr/include/x86_64-linux-gnu/bits/time64.h \
@@ -60,7 +60,7 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/__/__/__/
   /usr/include/alloca.h \
   /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
   /usr/include/inttypes.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stdint.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h \
   /usr/include/stdint.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
@@ -74,7 +74,7 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/__/__/__/
   /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
   /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
   ../external/common/platform_types.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stdbool.h
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h
 
 examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/__/__/__/src/util/alg_ds/alg/defer.c.o: ../src/util/alg_ds/alg/defer.c \
   /usr/include/stdc-predef.h \
@@ -83,8 +83,8 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/__/__/__/
 examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.c.o: ../examples/xApp/ics/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.c \
   /usr/include/stdc-predef.h \
   ../src/xApp/e42_xapp_api.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stdbool.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stdint.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h \
   /usr/include/stdint.h \
   /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
   /usr/include/features.h \
@@ -121,7 +121,7 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
   ../src/lib/3gpp/ie/global_en_gnb_id.h \
   ../src/lib/3gpp/ie/s1_setup_response.h \
   ../src/util/byte_array.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stddef.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stddef.h \
   /usr/include/string.h \
   /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
@@ -374,7 +374,7 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
   /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/include/x86_64-linux-gnu/bits/pthread_stack_min.h \
   /usr/include/stdio.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stdarg.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdarg.h \
   /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
@@ -533,10 +533,6 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
 
-../src/lib/3gpp/ie/gnb.h:
-
-../src/lib/3gpp/ie/eutra_cgi.h:
-
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/bin_range_def.h:
 
 ../src/lib/3gpp/ie/gnb_du.h:
@@ -562,8 +558,6 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie.h:
 
 ../src/lib/3gpp/ie/s1_setup_response.h:
-
-../src/lib/3gpp/ie/global_en_gnb_id.h:
 
 ../src/lib/3gpp/ie/guami.h:
 
@@ -617,6 +611,8 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 
 ../src/sm/rc_sm/ie/ir/call_proc_break.h:
 
+../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/meas_type.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/stack_t.h:
 
 ../external/common/platform_types.h:
@@ -647,6 +643,12 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 
 ../external/common/utils/hashtable/hashtable.h:
 
+../src/lib/3gpp/ie/global_en_gnb_id.h:
+
+../src/lib/3gpp/ie/gnb.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h:
+
 /usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/FILE.h:
@@ -660,10 +662,6 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 ../src/lib/e2ap/v2_03/e2ap_types/common/e2ap_node_comp_interface_type.h:
 
 /usr/include/features.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/10/include/stdbool.h:
-
-../src/sm/rc_sm/ie/ir/neighbour_relation_tbl.h:
 
 ../src/sm/rc_sm/ie/ir/ran_param_type.h:
 
@@ -680,8 +678,6 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ind_hdr_frmt_1.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/10/include/stdint.h:
 
 /usr/include/alloca.h:
 
@@ -721,6 +717,16 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 
 /usr/include/stdio.h:
 
+../src/lib/3gpp/ie/eutra_cgi.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/12/include/stdarg.h:
+
+/usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
+
+../src/sm/rc_sm/ie/ir/seq_ins_ind_act_def.h:
+
+/usr/include/x86_64-linux-gnu/sys/types.h:
+
 /usr/include/signal.h:
 
 /usr/include/strings.h:
@@ -730,6 +736,10 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 ../src/lib/e2ap/v2_03/e2ap_types/common/e2ap_node_comp_conf.h:
 
 /usr/include/x86_64-linux-gnu/bits/floatn.h:
+
+../src/lib/3gpp/ie/nr_cgi.h:
+
+../external/common/utils/hashtable/hashtable.c:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
 
@@ -755,13 +765,7 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 
 /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
 
-/usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
-
-../src/sm/rc_sm/ie/ir/seq_ins_ind_act_def.h:
-
 /usr/include/inttypes.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
 
 /usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
@@ -793,25 +797,13 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 
 /usr/include/x86_64-linux-gnu/bits/types/clock_t.h:
 
-../src/lib/3gpp/ie/nr_cgi.h:
+/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
 
-../external/common/utils/hashtable/hashtable.c:
-
-../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/meas_type.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/10/include/stddef.h:
-
-/usr/include/netdb.h:
-
-../src/lib/sm/ie/ue_id.h:
-
-../src/sm/rc_sm/ie/ir/ran_param.h:
+/usr/lib/gcc/x86_64-linux-gnu/12/include/stddef.h:
 
 ../src/lib/3gpp/ie/en_gnb.h:
 
 /usr/include/x86_64-linux-gnu/bits/waitstatus.h:
-
-/usr/include/x86_64-linux-gnu/sys/types.h:
 
 /usr/include/stdint.h:
 
@@ -823,11 +815,11 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 
 /usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/10/include/stdarg.h:
-
 /usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
 
 ../src/sm/rc_sm/ie/ir/ev_trigger_ue_info.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h:
 
 /usr/include/x86_64-linux-gnu/bits/types.h:
 
@@ -919,6 +911,10 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_call_proc_id.h:
 
+../src/sm/rc_sm/ie/ir/e2sm_rc_ev_trg_frmt_3.h:
+
+../src/lib/3gpp/ie/f1_e2sm.h:
+
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ev_trg_frmt_1.h:
 
 ../src/sm/rc_sm/ie/ir/msg_ev_trg.h:
@@ -938,6 +934,12 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 ../src/sm/rc_sm/ie/ir/individual_ue.h:
 
 ../src/sm/rc_sm/ie/ir/ran_param_test.h:
+
+/usr/include/netdb.h:
+
+../src/lib/sm/ie/ue_id.h:
+
+../src/sm/rc_sm/ie/ir/ran_param.h:
 
 ../src/sm/rc_sm/ie/ir/ran_param_test_list.h:
 
@@ -969,13 +971,9 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ctrl_hdr_frmt_1.h:
 
-../src/lib/3gpp/ie/f1_e2sm.h:
-
-../src/sm/rc_sm/ie/ir/e2sm_rc_ev_trg_frmt_3.h:
+/usr/include/x86_64-linux-gnu/bits/wchar.h:
 
 ../src/sm/rc_sm/ie/ir/seq_ran_param_3.h:
-
-/usr/include/x86_64-linux-gnu/bits/wchar.h:
 
 ../src/sm/rc_sm/ie/ir/ev_trigger_cell_info.h:
 
@@ -1012,6 +1010,8 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 ../src/sm/rc_sm/ie/ir/seq_ev_trg_style.h:
 
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ind_msg_frmt_2.h:
+
+../src/sm/rc_sm/ie/ir/neighbour_relation_tbl.h:
 
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ind_msg_frmt_4.h:
 
@@ -1079,8 +1079,8 @@ examples/xApp/ics/CMakeFiles/ics_xapp_gtp_mac_rlc_pdcp_moni_extend.dir/ics_xapp_
 
 /usr/include/sched.h:
 
-../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_ric_action_def_frm_4.h:
-
 ../src/lib/e2ap/v2_03/e2ap_types/common/e2ap_plmn.h:
+
+../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_ric_action_def_frm_4.h:
 
 /usr/include/x86_64-linux-gnu/bits/sched.h:

@@ -11,7 +11,7 @@ examples/xApp/ics/CMakeFiles/hiper_ran_xapp.dir/hiper_ran_xapp.c.o: \
  /usr/include/x86_64-linux-gnu/bits/types.h \
  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
  /usr/include/x86_64-linux-gnu/bits/time64.h \
- /usr/lib/gcc/x86_64-linux-gnu/10/include/stddef.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stddef.h \
  /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
  /usr/include/x86_64-linux-gnu/bits/endian.h \
@@ -53,7 +53,7 @@ examples/xApp/ics/CMakeFiles/hiper_ran_xapp.dir/hiper_ran_xapp.c.o: \
  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
  /usr/include/alloca.h /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
- /usr/include/stdio.h /usr/lib/gcc/x86_64-linux-gnu/10/include/stdarg.h \
+ /usr/include/stdio.h /usr/lib/gcc/x86_64-linux-gnu/12/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
@@ -87,7 +87,7 @@ examples/xApp/ics/CMakeFiles/hiper_ran_xapp.dir/hiper_ran_xapp.c.o: \
  /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
- /usr/lib/gcc/x86_64-linux-gnu/10/include/stdbool.h /usr/include/string.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h /usr/include/string.h \
  /usr/include/strings.h /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
@@ -117,7 +117,7 @@ examples/xApp/ics/CMakeFiles/hiper_ran_xapp.dir/hiper_ran_xapp.c.o: \
  /usr/include/x86_64-linux-gnu/bits/in.h /usr/include/rpc/netdb.h \
  /usr/include/x86_64-linux-gnu/bits/netdb.h /usr/include/arpa/inet.h \
  /usr/include/x86_64-linux-gnu/sys/time.h /usr/include/inttypes.h \
- /usr/lib/gcc/x86_64-linux-gnu/10/include/stdint.h /usr/include/stdint.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/examples/xApp/ics/../../../src/xApp/e42_xapp_api.h \
  /home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/examples/xApp/ics/../../../src/xApp/e2_node_arr_xapp.h \

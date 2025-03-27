@@ -4,8 +4,8 @@
 examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../examples/xApp/ics/ics_xapp_kpm_moni.c \
   /usr/include/stdc-predef.h \
   ../src/xApp/e42_xapp_api.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stdbool.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stdint.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h \
   /usr/include/stdint.h \
   /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
   /usr/include/features.h \
@@ -42,7 +42,7 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
   ../src/lib/3gpp/ie/global_en_gnb_id.h \
   ../src/lib/3gpp/ie/s1_setup_response.h \
   ../src/util/byte_array.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stddef.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stddef.h \
   /usr/include/string.h \
   /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
@@ -283,7 +283,7 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
   ../src/util/alg_ds/ds/lock_guard/lock_guard.h \
   ../src/util/alg_ds/alg/defer.h \
   /usr/include/stdio.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stdarg.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdarg.h \
   /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
@@ -399,8 +399,6 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 
 ../src/lib/3gpp/ie/e2ap_gnb_id.h:
 
-../src/lib/3gpp/ie/gnb.h:
-
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_ric_action_def_frm_2.h:
 
 ../src/sm/rc_sm/ie/ir/ran_param_insertion.h:
@@ -463,6 +461,8 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 
 /usr/include/x86_64-linux-gnu/bits/floatn-common.h:
 
+../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/meas_type.h:
+
 ../src/lib/e2ap/v2_03/e2ap_types/common/e2ap_node_comp_conf.h:
 
 /usr/include/x86_64-linux-gnu/bits/floatn.h:
@@ -487,21 +487,15 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_ric_ind_hdr.h:
 
-../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/meas_type.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/10/include/stddef.h:
-
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
 
 ../src/xApp/e2_node_arr_xapp.h:
 
-../src/lib/3gpp/ie/global_en_gnb_id.h:
+/usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
 
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/matching_cond_frm_3_lst.h:
 
 /usr/include/x86_64-linux-gnu/gnu/stubs.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
 
 ../src/lib/3gpp/ie/guami.h:
 
@@ -511,6 +505,8 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 
 ../src/lib/3gpp/ie/s1_setup_response.h:
 
+/usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h:
+
 /usr/include/x86_64-linux-gnu/bits/types.h:
 
 ../src/sm/rc_sm/ie/ir/ev_trigger_ue_info.h:
@@ -518,10 +514,6 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_ric_ind_msg_frm_2.h:
 
 ../src/sm/rc_sm/ie/ir/seq_ran_param.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/10/include/stdbool.h:
-
-../src/sm/rc_sm/ie/ir/neighbour_relation_tbl.h:
 
 ../src/util/ngran_types.h:
 
@@ -543,15 +535,27 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/label_info_lst.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/10/include/stdint.h:
+/usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
+/usr/include/stdlib.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
+../src/sm/rc_sm/ie/ir/ue_info_chng.h:
 
-/usr/include/x86_64-linux-gnu/bits/byteswap.h:
+../src/lib/3gpp/ie/global_en_gnb_id.h:
 
-/usr/include/x86_64-linux-gnu/bits/long-double.h:
+../src/lib/3gpp/ie/gnb.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h:
+
+../src/lib/3gpp/ie/f1_e2sm.h:
+
+../src/sm/rc_sm/ie/ir/e2sm_rc_ev_trg_frmt_3.h:
+
+../src/util/byte_array.h:
+
+../src/xApp/sm_ran_function.h:
+
+../src/sm/rc_sm/ie/ir/call_proc_id_frmt.h:
 
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/meas_data_lst.h:
 
@@ -565,13 +569,27 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 
 ../src/sm/rc_sm/ie/ir/seq_ins_ind_act_def.h:
 
+/usr/lib/gcc/x86_64-linux-gnu/12/include/stdarg.h:
+
 ../src/lib/3gpp/ie/global_ng_ran_node_id.h:
 
 ../src/lib/3gpp/ie/network_interface_type.h:
 
+/usr/lib/gcc/x86_64-linux-gnu/12/include/stddef.h:
+
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/test_info_lst.h:
 
 /usr/include/stdc-predef.h:
+
+../examples/xApp/ics/ics_xapp_kpm_moni.c:
+
+/usr/include/string.h:
+
+../src/xApp/sm_ran_function_def.h:
+
+../src/sm/mac_sm/ie/mac_data_ie.h:
+
+../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie.h:
 
 /usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
 
@@ -582,32 +600,6 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 ../src/lib/e2ap/v2_03/e2ap_types/common/e2ap_node_comp_interface_type.h:
 
 /usr/include/features.h:
-
-/usr/include/x86_64-linux-gnu/bits/wordsize.h:
-
-../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_ric_action_def.h:
-
-../src/sm/rc_sm/ie/ir/ran_param.h:
-
-../src/lib/sm/ie/ue_id.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
-
-../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie.h:
-
-../examples/xApp/ics/ics_xapp_kpm_moni.c:
-
-/usr/include/string.h:
-
-../src/xApp/sm_ran_function_def.h:
-
-../src/sm/mac_sm/ie/mac_data_ie.h:
-
-/usr/include/stdlib.h:
-
-../src/sm/rc_sm/ie/ir/ue_info_chng.h:
 
 /usr/include/endian.h:
 
@@ -641,23 +633,33 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 
 ../src/sm/rc_sm/ie/ir/seq_ue_id.h:
 
+/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
+
+/usr/include/x86_64-linux-gnu/bits/byteswap.h:
+
+/usr/include/x86_64-linux-gnu/bits/long-double.h:
+
 /usr/include/x86_64-linux-gnu/bits/time.h:
 
 /usr/include/x86_64-linux-gnu/bits/select.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/struct_sigstack.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
+/usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
 
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/enum_value.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
+../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_ric_action_def.h:
 
-../src/util/byte_array.h:
+/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
 
-../src/xApp/sm_ran_function.h:
+/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
 
-../src/sm/rc_sm/ie/ir/call_proc_id_frmt.h:
+../src/sm/pdcp_sm/ie/pdcp_data_ie.h:
+
+../src/sm/rc_sm/ie/ir/logical_or.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_sigstack.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
 
 ../src/lib/3gpp/ie/ng_enb_du.h:
 
@@ -666,10 +668,6 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/meas_info_frm_1_lst.h:
 
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ev_trg_frmt_4.h:
-
-../src/sm/pdcp_sm/ie/pdcp_data_ie.h:
-
-../src/sm/rc_sm/ie/ir/logical_or.h:
 
 ../src/sm/rc_sm/ie/ir/seq_cell_info_2.h:
 
@@ -703,6 +701,10 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 
 ../src/sm/rc_sm/ie/ir/ran_param_test.h:
 
+../src/lib/sm/ie/ue_id.h:
+
+../src/sm/rc_sm/ie/ir/ran_param.h:
+
 ../src/sm/rc_sm/ie/ir/ran_param_test_list.h:
 
 ../src/lib/3gpp/ie/global_ng_enb_id.h:
@@ -734,10 +736,6 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h:
 
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ctrl_hdr_frmt_1.h:
-
-../src/lib/3gpp/ie/f1_e2sm.h:
-
-../src/sm/rc_sm/ie/ir/e2sm_rc_ev_trg_frmt_3.h:
 
 ../src/sm/rc_sm/ie/ir/seq_ran_param_3.h:
 
@@ -794,6 +792,8 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 ../src/sm/rc_sm/ie/ir/seq_ev_trg_style.h:
 
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ind_msg_frmt_2.h:
+
+../src/sm/rc_sm/ie/ir/neighbour_relation_tbl.h:
 
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ind_msg_frmt_4.h:
 
@@ -867,7 +867,7 @@ examples/xApp/ics/CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o: ../exa
 
 /usr/include/stdio.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/10/include/stdarg.h:
+/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
 

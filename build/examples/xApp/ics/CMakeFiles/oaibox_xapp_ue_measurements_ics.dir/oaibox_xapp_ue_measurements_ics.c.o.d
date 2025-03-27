@@ -2,8 +2,8 @@ examples/xApp/ics/CMakeFiles/oaibox_xapp_ue_measurements_ics.dir/oaibox_xapp_ue_
  /home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/examples/xApp/ics/oaibox_xapp_ue_measurements_ics.c \
  /usr/include/stdc-predef.h \
  /home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/examples/xApp/ics/../../../src/xApp/e42_xapp_api.h \
- /usr/lib/gcc/x86_64-linux-gnu/10/include/stdbool.h \
- /usr/lib/gcc/x86_64-linux-gnu/10/include/stdint.h /usr/include/stdint.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -38,7 +38,7 @@ examples/xApp/ics/CMakeFiles/oaibox_xapp_ue_measurements_ics.dir/oaibox_xapp_ue_
  /home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/examples/xApp/ics/../../../src/xApp/../lib/e2ap/v2_03/e2ap_types/common/../../../../3gpp/ie/global_en_gnb_id.h \
  /home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/examples/xApp/ics/../../../src/xApp/../lib/e2ap/v2_03/e2ap_types/common/../../../../3gpp/ie/s1_setup_response.h \
  /home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/examples/xApp/ics/../../../src/xApp/../lib/e2ap/v2_03/e2ap_types/common/../../../../3gpp/ie/../../../util/byte_array.h \
- /usr/lib/gcc/x86_64-linux-gnu/10/include/stddef.h /usr/include/string.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stddef.h /usr/include/string.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/strings.h \
@@ -301,7 +301,7 @@ examples/xApp/ics/CMakeFiles/oaibox_xapp_ue_measurements_ics.dir/oaibox_xapp_ue_
  /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h \
  /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
  /usr/include/x86_64-linux-gnu/bits/pthread_stack_min.h \
- /usr/include/stdio.h /usr/lib/gcc/x86_64-linux-gnu/10/include/stdarg.h \
+ /usr/include/stdio.h /usr/lib/gcc/x86_64-linux-gnu/12/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \

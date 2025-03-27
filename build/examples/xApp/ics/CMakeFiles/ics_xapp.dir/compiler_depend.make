@@ -4,8 +4,8 @@
 examples/xApp/ics/CMakeFiles/ics_xapp.dir/ics_xapp.c.o: ../examples/xApp/ics/ics_xapp.c \
   /usr/include/stdc-predef.h \
   ../src/xApp/e42_xapp_api.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stdbool.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stdint.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h \
   /usr/include/stdint.h \
   /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
   /usr/include/features.h \
@@ -42,7 +42,7 @@ examples/xApp/ics/CMakeFiles/ics_xapp.dir/ics_xapp.c.o: ../examples/xApp/ics/ics
   ../src/lib/3gpp/ie/global_en_gnb_id.h \
   ../src/lib/3gpp/ie/s1_setup_response.h \
   ../src/util/byte_array.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stddef.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stddef.h \
   /usr/include/string.h \
   /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
@@ -281,7 +281,7 @@ examples/xApp/ics/CMakeFiles/ics_xapp.dir/ics_xapp.c.o: ../examples/xApp/ics/ics
   ../src/util/alg_ds/alg/defer.h \
   ../src/util/time_now_us.h \
   /usr/include/stdio.h \
-  /usr/lib/gcc/x86_64-linux-gnu/10/include/stdarg.h \
+  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdarg.h \
   /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
@@ -310,7 +310,7 @@ examples/xApp/ics/CMakeFiles/ics_xapp.dir/ics_xapp.c.o: ../examples/xApp/ics/ics
 
 /usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/10/include/stdarg.h:
+/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
 /usr/include/stdio.h:
 
@@ -366,6 +366,8 @@ examples/xApp/ics/CMakeFiles/ics_xapp.dir/ics_xapp.c.o: ../examples/xApp/ics/ics
 
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ind_msg_frmt_4.h:
 
+../src/sm/rc_sm/ie/ir/neighbour_relation_tbl.h:
+
 ../src/sm/rc_sm/ie/ir/seq_cell_info.h:
 
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ind_msg_frmt_2.h:
@@ -404,8 +406,6 @@ examples/xApp/ics/CMakeFiles/ics_xapp.dir/ics_xapp.c.o: ../examples/xApp/ics/ics
 
 ../src/sm/rc_sm/ie/ir/ev_trigger_cell_info.h:
 
-../src/sm/rc_sm/ie/ir/e2sm_rc_ev_trg_frmt_3.h:
-
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ctrl_hdr_frmt_1.h:
 
 ../src/sm/rc_sm/ie/ir/ran_param_cond_crit_def.h:
@@ -423,6 +423,8 @@ examples/xApp/ics/CMakeFiles/ics_xapp.dir/ics_xapp.c.o: ../examples/xApp/ics/ics
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ctrl_out_frmt_2.h:
 
 ../src/sm/rc_sm/ie/ir/ran_param_test_list.h:
+
+../src/sm/rc_sm/ie/ir/ran_param.h:
 
 ../src/sm/rc_sm/ie/ir/ran_param_test.h:
 
@@ -452,10 +454,6 @@ examples/xApp/ics/CMakeFiles/ics_xapp.dir/ics_xapp.c.o: ../examples/xApp/ics/ics
 
 ../src/sm/rlc_sm/ie/rlc_data_ie.h:
 
-../src/sm/rc_sm/ie/ir/logical_or.h:
-
-../src/sm/pdcp_sm/ie/pdcp_data_ie.h:
-
 ../src/sm/rc_sm/ie/ir/e2sm_rc_ev_trg_frmt_4.h:
 
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/meas_info_frm_1_lst.h:
@@ -464,25 +462,57 @@ examples/xApp/ics/CMakeFiles/ics_xapp.dir/ics_xapp.c.o: ../examples/xApp/ics/ics
 
 ../src/lib/3gpp/ie/ng_enb_du.h:
 
-../src/sm/rc_sm/ie/ir/call_proc_id_frmt.h:
-
-../src/xApp/sm_ran_function.h:
-
-/usr/include/x86_64-linux-gnu/bits/time64.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
-
 /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
+
+../src/sm/rc_sm/ie/ir/logical_or.h:
+
+../src/sm/pdcp_sm/ie/pdcp_data_ie.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
+
+../src/lib/sm/ie/ue_id.h:
+
+../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_ric_action_def.h:
+
+../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/enum_value.h:
 
 ../src/lib/3gpp/ie/global_enb_id.h:
 
 /usr/include/x86_64-linux-gnu/bits/select.h:
+
+/usr/include/x86_64-linux-gnu/bits/long-double.h:
+
+/usr/include/x86_64-linux-gnu/bits/byteswap.h:
+
+../src/sm/rc_sm/ie/ir/rrc_state_lst.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
 
 ../src/sm/rc_sm/ie/ir/seq_ue_id.h:
 
 ../src/lib/e2ap/e2ap_node_component_config_add_wrapper.h:
 
 ../src/lib/sm/ie/cell_global_id.h:
+
+/usr/include/x86_64-linux-gnu/sys/cdefs.h:
+
+../src/sm/rc_sm/ie/ir/ran_func_def_insert.h:
+
+../src/sm/rc_sm/ie/ir/ran_func_def_report.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:
+
+/usr/include/x86_64-linux-gnu/bits/time64.h:
+
+../src/sm/rc_sm/ie/ir/call_proc_id_frmt.h:
+
+../src/xApp/sm_ran_function.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
+
+../src/util/ngran_types.h:
 
 ../src/sm/kpm_sm/kpm_data_ie_wrapper.h:
 
@@ -506,57 +536,51 @@ examples/xApp/ics/CMakeFiles/ics_xapp.dir/ics_xapp.c.o: ../examples/xApp/ics/ics
 
 /usr/include/stdint.h:
 
-../src/sm/rc_sm/ie/ir/ue_info_chng.h:
-
-/usr/include/stdlib.h:
-
-../src/sm/mac_sm/ie/mac_data_ie.h:
-
-../src/xApp/sm_ran_function_def.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
-
-../src/lib/sm/ie/ue_id.h:
-
-../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_ric_action_def.h:
-
-../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/enum_value.h:
-
-/usr/include/x86_64-linux-gnu/bits/wordsize.h:
-
 /usr/include/features.h:
 
 ../src/lib/e2ap/v2_03/e2ap_types/common/e2ap_node_comp_interface_type.h:
 
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_ric_event_trigger_def_frm_1.h:
 
-/usr/include/x86_64-linux-gnu/sys/cdefs.h:
+../src/sm/rc_sm/ie/ir/e2sm_rc_ev_trg_frmt_3.h:
 
-../src/sm/rc_sm/ie/ir/ran_func_def_insert.h:
+/usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h:
 
-../src/sm/rc_sm/ie/ir/ran_func_def_report.h:
+../src/lib/3gpp/ie/global_en_gnb_id.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:
+../src/sm/rc_sm/ie/ir/e2sm_rc_ctrl_msg_frmt_2.h:
 
-../src/util/ngran_types.h:
+/usr/include/stdc-predef.h:
 
-../src/sm/rc_sm/ie/ir/neighbour_relation_tbl.h:
+/usr/lib/gcc/x86_64-linux-gnu/12/include/stddef.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/10/include/stdbool.h:
+../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/meas_bin_range_info_lst.h:
 
-/usr/include/x86_64-linux-gnu/bits/long-double.h:
+../src/sm/mac_sm/ie/mac_data_ie.h:
 
-/usr/include/x86_64-linux-gnu/bits/byteswap.h:
+../src/xApp/sm_ran_function_def.h:
 
-../src/sm/rc_sm/ie/ir/rrc_state_lst.h:
+../src/lib/3gpp/ie/network_interface_type.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
+../src/lib/3gpp/ie/global_ng_ran_node_id.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
+/usr/lib/gcc/x86_64-linux-gnu/12/include/stdarg.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/10/include/stdint.h:
+../src/sm/rc_sm/ie/ir/seq_ins_ind_act_def.h:
+
+/usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
+
+../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_ric_ind_msg_frm_1.h:
+
+../src/sm/rc_sm/ie/ir/seq_ins_sty.h:
+
+../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/meas_data_lst.h:
+
+../src/sm/rc_sm/ie/ir/ue_info_chng.h:
+
+/usr/include/stdlib.h:
+
+/usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/label_info_lst.h:
 
@@ -578,26 +602,6 @@ examples/xApp/ics/CMakeFiles/ics_xapp.dir/ics_xapp.c.o: ../examples/xApp/ics/ics
 
 /usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
 
-../src/sm/rc_sm/ie/ir/e2sm_rc_ctrl_msg_frmt_2.h:
-
-/usr/include/stdc-predef.h:
-
-../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/meas_bin_range_info_lst.h:
-
-../src/lib/3gpp/ie/network_interface_type.h:
-
-../src/lib/3gpp/ie/global_ng_ran_node_id.h:
-
-../src/sm/rc_sm/ie/ir/seq_ins_ind_act_def.h:
-
-/usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
-
-../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_ric_ind_msg_frm_1.h:
-
-../src/sm/rc_sm/ie/ir/seq_ins_sty.h:
-
-../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/data/meas_data_lst.h:
-
 ../src/sm/rc_sm/ie/ir/ev_trigger_ue_info.h:
 
 ../src/lib/3gpp/ie/s1_setup_response.h:
@@ -608,17 +612,15 @@ examples/xApp/ics/CMakeFiles/ics_xapp.dir/ics_xapp.c.o: ../examples/xApp/ics/ics
 
 ../src/lib/3gpp/ie/guami.h:
 
-/usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
-
-/usr/include/x86_64-linux-gnu/bits/types.h:
-
 /usr/include/x86_64-linux-gnu/bits/endian.h:
 
 /usr/include/x86_64-linux-gnu/gnu/stubs.h:
 
 ../src/util/byte_array.h:
 
-../src/lib/3gpp/ie/global_en_gnb_id.h:
+/usr/include/x86_64-linux-gnu/bits/types.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
 
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie.h:
 
@@ -630,15 +632,13 @@ examples/xApp/ics/CMakeFiles/ics_xapp.dir/ics_xapp.c.o: ../examples/xApp/ics/ics
 
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
 
-../src/sm/rc_sm/ie/ir/ran_param.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/10/include/stddef.h:
-
 ../src/sm/kpm_sm/kpm_sm_v02.03/ie/kpm_data_ie/kpm_ric_info/kpm_ric_ind_hdr.h:
 
 ../src/lib/e2ap/e2ap_global_node_id_wrapper.h:
 
 /usr/include/x86_64-linux-gnu/bits/waitflags.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h:
 
 ../src/sm/rc_sm/ie/ir/ran_param_ins_ind.h:
 

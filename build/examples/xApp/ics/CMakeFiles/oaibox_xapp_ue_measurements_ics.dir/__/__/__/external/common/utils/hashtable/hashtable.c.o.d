@@ -9,11 +9,11 @@ examples/xApp/ics/CMakeFiles/oaibox_xapp_ue_measurements_ics.dir/__/__/__/extern
  /usr/include/x86_64-linux-gnu/bits/long-double.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
- /usr/lib/gcc/x86_64-linux-gnu/10/include/stddef.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stddef.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/strings.h /usr/include/stdio.h \
- /usr/lib/gcc/x86_64-linux-gnu/10/include/stdarg.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/types.h \
  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
  /usr/include/x86_64-linux-gnu/bits/time64.h \
@@ -52,7 +52,7 @@ examples/xApp/ics/CMakeFiles/oaibox_xapp_ue_measurements_ics.dir/__/__/__/extern
  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/inttypes.h \
- /usr/lib/gcc/x86_64-linux-gnu/10/include/stdint.h /usr/include/stdint.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/external/common/utils/hashtable/hashtable.h \
@@ -64,4 +64,4 @@ examples/xApp/ics/CMakeFiles/oaibox_xapp_ue_measurements_ics.dir/__/__/__/extern
  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
  /home/admin5g/oai-core_ran_ric_ue/openairinterface5g/openair2/E2AP/flexric/external/common/utils/hashtable/../../platform_types.h \
- /usr/lib/gcc/x86_64-linux-gnu/10/include/stdbool.h
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h
