@@ -1,10 +1,22 @@
-*.out 
+# Build outputs
+*.out
+
+# Editor files
 *.swp
+*.code-workspace
+tags
+
+# Generated content
 *.json
 *.png
-*.code-workspace
 build/
-tags
 archives/
 test_results*.html
+
+# CMake generated files
 CMakeFiles/
+**/CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake

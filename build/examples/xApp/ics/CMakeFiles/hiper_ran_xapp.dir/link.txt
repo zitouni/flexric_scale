@@ -1,1 +1,0 @@
-/usr/bin/cc -g CMakeFiles/hiper_ran_xapp.dir/hiper_ran_xapp.c.o CMakeFiles/hiper_ran_xapp.dir/hiper_ran_tcp_client.c.o CMakeFiles/hiper_ran_xapp.dir/__/__/__/src/util/alg_ds/alg/defer.c.o CMakeFiles/hiper_ran_xapp.dir/__/__/__/external/common/utils/hashtable/hashtable.c.o -o hiper_ran_xapp  ../../../src/xApp/libe42_xapp.a -pthread -lsctp -ldl 

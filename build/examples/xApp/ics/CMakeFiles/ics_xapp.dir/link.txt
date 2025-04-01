@@ -1,1 +1,0 @@
-/usr/bin/cc -g CMakeFiles/ics_xapp.dir/ics_xapp.c.o -o ics_xapp  ../../../src/xApp/libe42_xapp.a -pthread -lsctp -ldl 

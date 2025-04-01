@@ -1,1 +1,0 @@
-/usr/bin/cc -g CMakeFiles/oaibox_xapp_ue_measurements_ics.dir/oaibox_xapp_ue_measurements_ics.c.o CMakeFiles/oaibox_xapp_ue_measurements_ics.dir/__/__/__/src/util/alg_ds/alg/defer.c.o CMakeFiles/oaibox_xapp_ue_measurements_ics.dir/__/__/__/external/common/utils/hashtable/hashtable.c.o -o oaibox_xapp_ue_measurements_ics  ../../../src/xApp/libe42_xapp.a -pthread -lsctp -ldl 

@@ -1,1 +1,0 @@
-/usr/bin/cc -g CMakeFiles/ics_xapp_kpm_moni.dir/ics_xapp_kpm_moni.c.o -o ics_xapp_kpm_moni  ../../../src/xApp/libe42_xapp.a -pthread -lsctp -ldl 

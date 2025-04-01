@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Default values
-RUN_SECONDS=120
-WAIT_SECONDS=60
+RUN_SECONDS=230
+WAIT_SECONDS=35
 CONFIG_PATH="Cu-36_Du-68_Du63.conf"
 XAPP_PATH="build/examples/xApp/ics/hiper_ran_xapp"
 RIC_PATH="build/examples/ric/nearRT-RIC"
@@ -48,7 +48,7 @@ if [ ! -f "$CONFIG_PATH" ]; then
 fi
 
 # Function to kill process and exit
-cleanup() {
+cleanupAll() {
     echo -e "\nStopping all processes..."
     sudo pkill -f "hiper_ran_xapp"
     sudo pkill -f "nearRT-RIC"
@@ -57,7 +57,7 @@ cleanup() {
 }
 
 # Trap Ctrl+C
-trap cleanup SIGINT
+trap cleanupAll SIGINT
 
 echo "Starting cycle (Run: ${RUN_SECONDS}s, Wait: ${WAIT_SECONDS}s)"
 echo "Config: $CONFIG_PATH"
@@ -81,7 +81,6 @@ while true; do
     sudo pkill -f "hiper_ran_xapp"
     sudo pkill -f "nearRT-RIC"
     sleep 2
-    
     echo "[$(date '+%H:%M:%S')] Waiting ${WAIT_SECONDS}s..."
     sleep $WAIT_SECONDS
 done

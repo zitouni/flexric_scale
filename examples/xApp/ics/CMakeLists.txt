@@ -13,15 +13,20 @@ add_executable(ics_xapp
 add_executable(oaibox_xapp_ue_measurements_ics
         oaibox_xapp_ue_measurements_ics.c
         ../../../../src/util/alg_ds/alg/defer.c
-	../../../external/common/utils/hashtable/hashtable.c
+	../../../../../../common/utils/hashtable/hashtable.c
 )
-# hiper_ran_xapp
+
 add_executable(hiper_ran_xapp 
                 hiper_ran_xapp.c
                 hiper_ran_tcp_client.c
                 ../../../../src/util/alg_ds/alg/defer.c
-                ../../../../external/common/utils/hashtable/hashtable.c
-              )
+                ../../../../../../common/utils/hashtable/hashtable.c
+              ) 
+add_executable(scale_ics_xapp 
+               scale_ics_xapp.c
+              ../../../../src/util/alg_ds/alg/defer.c
+
+            )            
 
 add_executable(ics_xapp_gtp_mac_rlc_pdcp_moni 
                 ics_xapp_gtp_mac_rlc_pdcp_moni.c
@@ -31,7 +36,7 @@ add_executable(ics_xapp_gtp_mac_rlc_pdcp_moni
 add_executable(ics_xapp_gtp_mac_rlc_pdcp_moni_extend 
               ics_xapp_gtp_mac_rlc_pdcp_moni_extend.c
               ../../../../src/util/alg_ds/alg/defer.c
-              ../../../../external/common/utils/hashtable/hashtable.c
+              ../../../../../../common/utils/hashtable/hashtable.c
             )
 
 # Specify the include directories
@@ -49,6 +54,13 @@ target_link_libraries(ics_xapp
         -ldl
 )
 
+target_link_libraries(scale_ics_xapp
+        PUBLIC
+        e42_xapp
+        -pthread
+        -lsctp
+        -ldl
+)
 
 target_link_libraries(oaibox_xapp_ue_measurements_ics
         PUBLIC

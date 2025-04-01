@@ -34,7 +34,7 @@
 #include <inttypes.h> // For PRIx32 macro
 #include "../../../src/xApp/e42_xapp_api.h"
 #include "../../../src/util/time_now_us.h"
-#include "../../../external/common/utils/hashtable/hashtable.h"
+#include "../../../../../../common/utils/hashtable/hashtable.h"
 
 #include "sm/gtp_sm/gtp_sm_id.h"
 // #include "sm/gtp_sm/gtp_sm_common.h"
