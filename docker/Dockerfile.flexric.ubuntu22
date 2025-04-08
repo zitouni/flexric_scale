@@ -40,7 +40,8 @@ RUN apt-get update && \
         sqlite3 \
         psmisc \
         libsctp1 \
-        pkg-config && \
+        pkg-config \
+        libterm-readline-perl-perl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 100 \
@@ -57,39 +58,57 @@ RUN git clone --depth 1 --branch release-4.1 https://github.com/swig/swig.git &&
     ldconfig && \
     cd .. && rm -rf swig
 
-WORKDIR /flexric
+WORKDIR /
 
 ARG CACHEBUST=1
-# Copy source code
-# COPY flexric /flexric
-# COPY RAN_FUNCTION /RAN_FUNCTION
-COPY . .
 
+# Create directory structure
+RUN mkdir -p ./common && \
+    mkdir -p ./openair2/E2AP
 
-# RUN echo "Build paused for inspection" && tail -f /dev/null
+# Copy files
+COPY ../../common/ ./common/
+COPY ./openair2/. ./openair2/
 
-# Build FlexRIC (commented out)
-RUN rm -rf build CMakeCache.txt && \
+# Build FlexRIC
+RUN cd ./openair2/E2AP/flexric && \
+    rm -rf build CMakeCache.txt && \
     mkdir -p build && \
     cd build && \
     cmake -GNinja -DCMAKE_BUILD_TYPE=Release \
-                  -DXAPP_MULTILANGUAGE=OFF \
-                  -DCMAKE_C_COMPILER=gcc-12 \
-                  -DCMAKE_CXX_COMPILER=g++-12 \
-                  -DCMAKE_C_FLAGS="-Wall -Wno-error -fno-lto" \
-                  -DCMAKE_CXX_FLAGS="-Wall -Wno-error -fno-lto" \
-                  -DCMAKE_SHARED_LINKER_FLAGS="-fno-lto" \
-                  -DCMAKE_EXE_LINKER_FLAGS="-fno-lto" \
-                  -DCMAKE_VERBOSE_MAKEFILE=ON \
-                  ..  && \
+                    -DXAPP_MULTILANGUAGE=OFF \
+                    -DCMAKE_C_COMPILER=gcc-12 \
+                    -DCMAKE_CXX_COMPILER=g++-12 \
+                    -DCMAKE_C_FLAGS="-Wall -Wno-error -fno-lto" \
+                    -DCMAKE_CXX_FLAGS="-Wall -Wno-error -fno-lto" \
+                    -DCMAKE_SHARED_LINKER_FLAGS="-fno-lto" \
+                    -DCMAKE_EXE_LINKER_FLAGS="-fno-lto" \
+                    -DE2AP_VERSION="E2AP_V2" \
+                    -DKPM_VERSION="KPM_V2_03" \
+                    -DCMAKE_VERBOSE_MAKEFILE=ON \
+                    .. && \
     ninja clean && \
     ninja -v -j1 && \
     ninja install && \
     echo "FlexRIC build completed successfully"
+    # Add debug information
+    RUN mkdir -p /usr/local/lib/flexric && \
+    mkdir -p /flexric/build/src/xApp && \
+    find /usr/local/lib/flexric -type f -name "*.so" -ls && \
+    find /flexric/build/src/xApp -type f -name "*.so" -ls
 
+# After building FlexRIC, verify the files exist
+RUN echo "Verifying built files..." && \
+    ls -la /flexric/build/src/xApp/ || true && \
+    ls -la /usr/local/lib/flexric/ || true && \
+    find /flexric -name "*.so" || true
+
+# Second stage
 FROM $BASE_IMAGE AS flexric
 ENV TZ=Europe/London
+ENV DEBIAN_FRONTEND=noninteractive
 
+# Install required packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         libsctp1 \
@@ -101,6 +120,11 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /
+
+
+# Verify the copied files
+RUN echo "Verifying the current WORKDIR ..." && \
+    ls -la . 
 
 COPY --from=oai-flexric-builder \
     /usr/local/lib/flexric/libmac_sm.so \
@@ -114,27 +138,31 @@ COPY --from=oai-flexric-builder \
     /usr/local/lib/flexric/
 
 COPY --from=oai-flexric-builder \
-    /flexric/build/src/xApp/libe42_xapp_shared.so \
-    /flexric/build/src/xApp/
+    /openair2/E2AP/flexric/build/src/xApp/libe42_xapp_shared.so \
+    /openair2/E2AP/flexric/build/src/xApp/
+
+# COPY --from=oai-flexric-builder \
+#     /flexric/build/examples/ric/nearRT-RIC /usr/local/flexric/nearRT-RIC
+COPY --from=oai-flexric-builder \
+    /openair2/E2AP/flexric/build/examples/ric/nearRT-RIC /usr/local/flexric/nearRT-RIC
+
+
 
 COPY --from=oai-flexric-builder \
-    /flexric/build/examples/ric/nearRT-RIC /usr/local/flexric/nearRT-RIC
-
-COPY --from=oai-flexric-builder \
-    /flexric/flexric.conf /usr/local/etc/flexric/flexric.conf
+    /openair2/E2AP/flexric/flexric.conf /usr/local/etc/flexric/flexric.conf
 
 
 ## Copy xApps
 COPY --from=oai-flexric-builder \
-    /flexric/build/examples/xApp /usr/local/flexric/xApp
+    /openair2/E2AP/flexric/build/examples/xApp /usr/local/flexric/xApp
 
 
-
+# Verify the files and set up dependencies
 RUN ldconfig && \
     echo "--- Check shared objects dependencies for executable nearRT-RIC ---" && \
     ldd /usr/local/flexric/nearRT-RIC && \
     echo "--- Check shared objects dependencies for xApp shared library ---" && \
-    ldd /flexric/build/src/xApp/libe42_xapp_shared.so && \
+    ldd /openair2/E2AP/flexric/build/src/xApp/libe42_xapp_shared.so && \
     echo "--- Check shared objects dependencies for flexric shared libraries ---" && \
     ldd /usr/local/lib/flexric/*.so
 
