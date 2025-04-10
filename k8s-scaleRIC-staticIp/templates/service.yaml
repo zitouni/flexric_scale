@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "k8s-flex.fullname" . }}
+  labels:
+    {{- include "k8s-flex.labels" . | nindent 4 }}
+  annotations:
+    service.beta.kubernetes.io/sctp-service: "true"  # Add this for SCTP support
+spec:
+  type: {{ .Values.service.type }}      # Service type (ClusterIP, NodePort, LoadBalancer)
+  ports:
+    {{- range .Values.service.ports }}
+    - name: {{ .name }}                 # Name of the service port (e.g., e2, e42)
+      port: {{ .port }}                 # Port exposed by the service (e.g., 36421, 36422)
+      targetPort: {{ .targetPort }}      # Container port (matching the container spec)
+      protocol: {{ .protocol | default "TCP" }}
+      {{- if and (eq $.Values.service.type "NodePort") .nodePort }}
+      nodePort: {{ .nodePort }}
+      {{- end }}
+    {{- end }}
+  selector:
+    {{- include "k8s-flex.selectorLabels" . | nindent 4 }}  # Match pod labels
