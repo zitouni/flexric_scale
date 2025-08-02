@@ -1,7 +1,7 @@
 # Deploy Distributed RIC System
 
 
-## 1) Deploy of 5G Core
+## 1) Deploy of 5G Core Network
 
 Deploy the 5G Core Network following the [Home Deployment Guide](https://github.com/zitouni/oai-cn5g-fed/blob/master/docs/DEPLOY_HOME.md):
 
@@ -20,7 +20,7 @@ done
 
 Expected result showing all modules running:
 
-![5G Core Network Status](../../../../5GCN-OK.png)
+![5G Core Network Status](https://github.com/zitouni/distributedRIC/blob/main/5GCN-OK.png)
 
 
 ## 2) Deploy the gNB  
