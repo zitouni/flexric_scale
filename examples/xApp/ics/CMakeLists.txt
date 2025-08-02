@@ -10,11 +10,7 @@ add_executable(ics_xapp
         ics_xapp.c
 )
 
-add_executable(oaibox_xapp_ue_measurements_ics
-        oaibox_xapp_ue_measurements_ics.c
-        ../../../../src/util/alg_ds/alg/defer.c
-	../../../../../../common/utils/hashtable/hashtable.c
-)
+
 
 add_executable(hiper_ran_xapp 
                 hiper_ran_xapp.c
@@ -62,13 +58,6 @@ target_link_libraries(scale_ics_xapp
         -ldl
 )
 
-target_link_libraries(oaibox_xapp_ue_measurements_ics
-        PUBLIC
-        e42_xapp
-        -pthread
-        -lsctp
-        -ldl
-)
 target_link_libraries(ics_xapp_kpm_moni
         PUBLIC
         e42_xapp
