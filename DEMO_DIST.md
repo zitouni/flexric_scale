@@ -1,4 +1,4 @@
-# Deploy Distributed RIC System
+# Run Distributed near-RT RIC Demo
 
 
 ## 1) Deploy of 5G Core Network
@@ -23,7 +23,7 @@ Expected result showing all modules running:
 ![5G Core Network Status](https://github.com/zitouni/distributedRIC/blob/main/5GCN-OK.png)
 
 
-## 2) Deploy the gNB  
+## 2) Run the gNB  
 
 From the path:  
 `/distributedRIC/openairinterface5g/cmake_targets/ran_build/build`
@@ -36,7 +36,7 @@ sudo ./nr-softmodem -O ../../../ci-scripts/CONF_25-33/gnb_oaicore.conf --rfsimul
 
 ---
 
-## 3) Deploy UE RF SIM  
+## 3) Run UE RF SIM  
 
 From the path:  
 `/distributedRIC/openairinterface5g/cmake_targets/ran_build/build`
@@ -44,7 +44,7 @@ From the path:
 Run the following command:
 
 ```sh
-sudo ./nr-uesoftmodem -r 106 --numerology 1 --band 78 -C 3319320000 --ssb 192 --rfsim --rfsimulator.serveraddr 127.0.0.1 --sa  -O  ../ci-scripts/CONF_25-33/ue_oaicore.conf
+sudo ./nr-uesoftmodem -r 106 --numerology 1 --band 78 -C 3619200000 --ssb 516 --rfsim --rfsimulator.serveraddr 127.0.0.1 --sa  -O   ../../../ci-scripts/CONF_25-33/ue_oaicore.conf
 ```
 
 ---
@@ -52,7 +52,7 @@ sudo ./nr-uesoftmodem -r 106 --numerology 1 --band 78 -C 3319320000 --ssb 192 --
 ## 4) Create the Dummy Configured IP Interfaces for Near-RT RIC Instances  
 
 From the path:  
-`~/distributedRIC/flexric/demo-scale`
+`~/distributedRIC/flexric/demo-dist`
 
 Run:
 
@@ -73,25 +73,65 @@ From the path:
 Run:
 
 ```sh
-./nearRT-RIC -c ../../../demo-scale/scaleRIC_200.conf
-./nearRT-RIC -c ../../../demo-scale/scaleRIC_201.conf
-./nearRT-RIC -c ../../../demo-scale/scaleRIC_202.conf
-./nearRT-RIC -c ../../../demo-scale/scaleRIC_203.conf
+./nearRT-RIC -c ../../../demo-dist/RIC_200.conf
+./nearRT-RIC -c ../../../demo-dist/RIC_201.conf
+./nearRT-RIC -c ../../../demo-dist/RIC_202.conf
+./nearRT-RIC -c ../../../demo-dist/RIC_203.conf
 ```
 
 ---
 
 ## 6) Run the xApps Connected to the Different Near-RT RICs  
 
-### Run the First xApp with 4 E2SMs (MAC, PDCP, RLC, GTP)  
+### Display xApp Help
+
+To see all available options for the distributed RIC xApp:
+
+```sh
+sudo ./dist_ric_xapp --help
+```
+
+Expected output:
+```
+Usage: ./dist_ric_xapp [OPTIONS]
+
+Distributed RIC xApp - Multi-Service Model Monitor
+
+Options:
+  -c, --config <file>     Configuration file path (required)
+                          Example: ../../../../demo-dist/RIC_200.conf
+  -db, --database <file>  Database file name (required)
+                          Example: latency_all_sm.db
+  -sm, --service-model <type>  Service model type (required)
+                          Options: all, gtp, mac, pdcp, rlc
+  -h, --help              Show this help message
+
+Example usage:
+  sudo ./dist_ric_xapp -c ../../../../demo-dist/RIC_200.conf -db latency_all_sm.db -sm all
+  sudo ./dist_ric_xapp -c ../../../../demo-dist/RIC_201.conf -db latency_mac_sm.db -sm mac
+
+Service Models:
+  all   - Monitor all service models (GTP, MAC, PDCP, RLC)
+  gtp   - Monitor GTP service model only
+  mac   - Monitor MAC service model only
+  pdcp  - Monitor PDCP service model only
+  rlc   - Monitor RLC service model only
+
+Database location: /var/lib/grafana/<database_file>
+
+Author: Rafik ZITOUNI
+License: MIT License
+```
+
+### Run the First xApp with 4 E2SMs (MAC, PDCP, RLC, GTP) or All E2SMs 
 
 From the path:  
-`~/distributedRIC/flexric/build/examples/xApp/c/monitor`
+`~/distributedRIC/flexric/build/examples/xApp/dist-ric`
 
 Run:
 
 ```sh
-sudo ./xapp_gtp_mac_rlc_pdcp_moni -c ../../../../demo-scale/scaleRIC_200.conf
+sudo ./dist_ric_xapp -c ../../../../demo-dist/RIC_200.conf -db latency_all_sm.db -sm all
 ```
 
 ### Run the Other xApps  
@@ -99,9 +139,9 @@ sudo ./xapp_gtp_mac_rlc_pdcp_moni -c ../../../../demo-scale/scaleRIC_200.conf
 From the same path:
 
 ```sh
-sudo ./xapp_gtp_mac_rlc_pdcp_moni -c ../../../../demo-scale/scaleRIC_201.conf
-sudo ./xapp_gtp_mac_rlc_pdcp_moni -c ../../../../demo-scale/scaleRIC_202.conf
-sudo ./xapp_gtp_mac_rlc_pdcp_moni -c ../../../../demo-scale/scaleRIC_203.conf
+sudo ./dist_ric_xapp -c ../../../../demo-dist/RIC_201.conf -db latency_mac_sm.db -sm mac
+sudo ./dist_ric_xapp -c ../../../../demo-dist/RIC_202.conf -db latency_gtp_sm.db -sm gtp
+sudo ./dist_ric_xapp -c ../../../../demo-dist/RIC_203.conf -db latency_rlc_sm.db -sm rlc
 ```
 
 ---
@@ -114,3 +154,7 @@ The link after accessing the testbed network via VPN:
 ### Dashboard Name: HiPerRAN Southbound RIC Scalability  
 
 [View the Dashboard](http://10.5.25.33:3000/d/behax1g21u5fke/hiperran-southbound-ric-scalability?orgId=1&from=2025-03-30T15:31:14.000Z&to=2025-03-30T15:53:33.000Z&timezone=browser&refresh=30s)
+
+---
+
+© 2025 Rafik ZITOUNI

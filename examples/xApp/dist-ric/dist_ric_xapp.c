@@ -1,11 +1,11 @@
 /*
- * File: ics_xapp_gtp_mac_rlc_pdcp_moni_extend.c
+ * File: dist_ric_xapp.c
  * Author: Rafik ZITOUNI
- * Date: 2024-11-08
+ * Date: 2024-11-03
  *
  * License: MIT License
  *
- * Copyright (c) 2024 Rafik ZITOUNI
+ * Copyright (c) 2025 Rafik ZITOUNI
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -14,6 +14,7 @@
  * furnished to do so, subject to the following conditions:
  * ...
  */
+
 #include <pthread.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -81,6 +82,33 @@ static char db_path[512];
 void intHandler()
 {
   keepRunning = false;
+}
+
+// Function to display help information
+void show_help(const char* program_name)
+{
+  printf("Usage: %s [OPTIONS]\n", program_name);
+  printf("\nDistributed RIC xApp - Multi-Service Model Monitor\n");
+  printf("\nOptions:\n");
+  printf("  -c, --config <file>     Configuration file path (required)\n");
+  printf("                          Example: ../../../../demo-dist/RIC_200.conf\n");
+  printf("  -db, --database <file>  Database file name (required)\n");
+  printf("                          Example: latency_all_sm.db\n");
+  printf("  -sm, --service-model <type>  Service model type (required)\n");
+  printf("                          Options: all, gtp, mac, pdcp, rlc\n");
+  printf("  -h, --help              Show this help message\n");
+  printf("\nExample usage:\n");
+  printf("  sudo %s -c ../../../../demo-dist/RIC_200.conf -db latency_all_sm.db -sm all\n", program_name);
+  printf("  sudo %s -c ../../../../demo-dist/RIC_201.conf -db latency_mac_sm.db -sm mac\n", program_name);
+  printf("\nService Models:\n");
+  printf("  all   - Monitor all service models (GTP, MAC, PDCP, RLC)\n");
+  printf("  gtp   - Monitor GTP service model only\n");
+  printf("  mac   - Monitor MAC service model only\n");
+  printf("  pdcp  - Monitor PDCP service model only\n");
+  printf("  rlc   - Monitor RLC service model only\n");
+  printf("\nDatabase location: /var/lib/grafana/<database_file>\n");
+  printf("\nAuthor: Rafik ZITOUNI\n");
+  printf("License: MIT License\n");
 }
 
 // Initialize database connection
@@ -357,6 +385,14 @@ int handle_extra_option(int argc, char* argv[], int* new_argc, char*** new_argv)
     return -1;
   }
   filtered_argc++;
+
+  // Check for help option first
+  for (int i = 1; i < argc; i++) {
+    if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
+      show_help(argv[0]);
+      exit(0);
+    }
+  }
 
   // Copy arguments, skipping -db and its value
   for (int i = 1; i < argc; i++) {
