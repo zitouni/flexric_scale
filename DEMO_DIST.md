@@ -146,14 +146,9 @@ sudo ./dist_ric_xapp -c ../../../../demo-dist/RIC_203.conf -db latency_rlc_sm.db
 
 ---
 
-## 7) Visualization via Grafana  
+## 7) Grafana Dashboard Visualization
 
-The link after accessing the testbed network via VPN:  
-[http://10.5.25.33:3000/dashboards](http://10.5.25.33:3000/dashboards)
-
-### Dashboard Name: HiPerRAN Southbound RIC Scalability  
-
-[View the Dashboard](http://10.5.25.33:3000/d/behax1g21u5fke/hiperran-southbound-ric-scalability?orgId=1&from=2025-03-30T15:31:14.000Z&to=2025-03-30T15:53:33.000Z&timezone=browser&refresh=30s)
+![Grafana Dashboard](https://github.com/zitouni/distributedRIC/blob/main/GrafanaDashboard.png)
 
 ---
 
