@@ -146,7 +146,7 @@ sudo ./dist_ric_xapp -c ../../../../demo-dist/RIC_203.conf -db latency_rlc_sm.db
 
 ---
 
-## 7) Grafana Dashboard Visualization
+## 7) Grafana Dashboard Visualization 
 
 ![Grafana Dashboard](https://github.com/zitouni/distributedRIC/blob/main/GrafanaDashboard.png)
 
